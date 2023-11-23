@@ -1,44 +1,44 @@
-# Android-Client:
+# Android client:
 	
-	1. Apk installieren
+	1. install Apk
 	
-	2. App ausführen
+	2. run the app
 	
-	3. Anmelden auf einen Server
+	3. log in to a server
 
-# Desktop-Client: 
+# Desktop client: 
 
-	1. Jar ausführen	
+	1. run jar	
 
-	2. Anmelden auf einen Server
+	2. log in to a server
 	
-# KI:	
-    1. Falls auf localhost 33100 verbunden werden soll, dann einfach Jar ausführen
+# AI:	
+    1. if you want to connect to localhost 33100, then simply run Jar
     
-    2. Ansonsten über Terminal mit java -jar <jarname>.jar -ip=<IP/HOST/URL> -port=<port> -name=<name>
+    2. otherwise via terminal with java -jar <jarname>.jar -ip=<IP/HOST/URL> -port=<port> -name=<name>
 
 # Server:
-	1. Starten eines Spieles
+	1. start a game
 
     
-	2. Die Datei "Server.jar" ausführen
+	2. execute the file "Server.jar"
 
     
-	3. Button "Spiel hinzufügen" anklicken
+	3. click on the "Add game" button
 
     
-	4. Wählen, ob eine Konfiguration aus einer Datei geladen werden 
-		4.1. soll oder ob diese per Hand erstellt werden soll        
-		4.2. Auf Spiel erstellen klicken
+	4. select whether a configuration should be loaded from a file 
+		4.1. or whether it should be created manually        
+		4.2 Click on Create game
 
     
-	6. Auf das Tab "Wartend" wechseln
+	6. switch to the "Waiting" tab
 
     
-	7. Den Button "Spiel starten" betätigen
+	7. click on the "Start game" button
 
     
-	8. Nun den Button "Spieler Laden" drücken, um eine Reihenfolge festzulegen
+	8. now press the "Load players" button to set a sequence
 
     
-	9. Final das Spiel starten mit dem Button "Spiel starten"
+	9. finally start the game with the "Start game" button
