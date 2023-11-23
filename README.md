@@ -1,4 +1,15 @@
-# Android client:
+# QwirkleOnline
+
+<div align="center">
+  <img height="300" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopSpielfeld.JPG">
+</div>
+
+
+
+
+
+
+## Android client:
 	
 	1. install Apk
 	
@@ -6,18 +17,18 @@
 	
 	3. log in to a server
 
-# Desktop client: 
+## Desktop client: 
 
 	1. run jar	
 
 	2. log in to a server
 	
-# AI:	
+## AI:	
     1. if you want to connect to localhost 33100, then simply run Jar
     
     2. otherwise via terminal with java -jar <jarname>.jar -ip=<IP/HOST/URL> -port=<port> -name=<name>
 
-# Server:
+## Server:
 	1. start a game
 
     
