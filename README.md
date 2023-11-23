@@ -3,7 +3,7 @@ Award-winning online cross platform Qwirkle board game for Android and Desktop.
 
 ## Login
 <div align="center">
-    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopLogin.jpg">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopLogin.JPG">
     <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/AndroidLogin.jpg">
 </div>
 
