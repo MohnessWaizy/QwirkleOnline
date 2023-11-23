@@ -1,12 +1,36 @@
 # QwirkleOnline
+Award-winning online cross platform Qwirkle board game for Android and Desktop.
 
+## Login
 <div align="center">
-  <img height="300" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopSpielfeld.JPG">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopLogin.jpg">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/AndroidLogin.jpg">
+</div>
+
+## Lobby
+<div align="center">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopLobby.png">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/AndroidLobby.jpg">
 </div>
 
 
+## Game board
+<div align="center">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/DesktopSpielfeld.JPG">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/Android.jpg">
+</div>
 
+## Server
 
+### Add Clients
+<div align="center">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/ServerAddClients.JPG">
+</div>
+
+### Lobby
+<div align="center">
+    <img height="200" src="docs/Abgabedokumente/04_Endabgabe/Website/images/ServerLobby.JPG">
+</div>
 
 
 ## Android client:
