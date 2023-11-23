@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="368.0" prefWidth="449.0" scaleShape="false" styleClass="dialogBackground" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+   	  <ComboBox id="comboBox_Ip" fx:id="comboBox_Ip" editable="true" layoutX="14.0" layoutY="163.0" prefHeight="39.0" prefWidth="300.0" promptText="IP" />
+      <TextField id="textField_port" fx:id="textField_port" layoutX="314.0" layoutY="163.0" prefHeight="39.0" prefWidth="125.0" promptText="Port" />
+      <TextField id="textField_name" fx:id="textField_name" layoutX="14.0" layoutY="208.0" prefHeight="39.0" prefWidth="425.0" promptText="Anzeigename" />
+      <Label id="label_login" layoutX="14.0" layoutY="119.0" prefHeight="17.0" prefWidth="86.0" text="Login" />
+      <Pane layoutY="293.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="459.0" styleClass="bottomBar">
+         <children>
+            <Button id="button_login" fx:id="button_login" layoutX="391.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="39.0" styleClass="button_loginIcon" />
+         </children>
+      </Pane>
+      <ImageView fitHeight="123.0" fitWidth="355.0" layoutX="71.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/icons/qwirkle_neueFarbe3.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="label_error" layoutX="14.0" layoutY="253.0" prefHeight="39.0" prefWidth="425.0" />
+      
+   </children>
+</AnchorPane>

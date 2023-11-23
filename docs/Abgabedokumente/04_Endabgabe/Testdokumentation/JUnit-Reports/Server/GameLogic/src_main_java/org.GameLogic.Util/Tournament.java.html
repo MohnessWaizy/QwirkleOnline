@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Tournament.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Util</a> &gt; <span class="el_source">Tournament.java</span></div><h1>Tournament.java</h1><pre class="source lang-java linenums">package org.GameLogic.Util;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.Game;
+
+public class Tournament {
+	
+	private Set&lt;Game&gt; games;
+	private List&lt;Client&gt; clientsNotInGame;
+	private String tournamentName;
+	private Configuration config;
+	
+<span class="nc" id="L19">	public Tournament(String tournamentName, Configuration config) {</span>
+<span class="nc" id="L20">		this.games = new HashSet&lt;Game&gt;();</span>
+<span class="nc" id="L21">		this.clientsNotInGame = new ArrayList&lt;Client&gt;();</span>
+<span class="nc" id="L22">		this.tournamentName = tournamentName;</span>
+<span class="nc" id="L23">		this.config = config;</span>
+<span class="nc" id="L24">	}</span>
+	
+	public String getTournamentName() {
+<span class="nc" id="L27">		return tournamentName;</span>
+	}
+
+	public Configuration getConfig() {
+<span class="nc" id="L31">		return config;</span>
+	}
+
+	public Set&lt;Game&gt; getGames() {
+<span class="nc" id="L35">		return games;</span>
+	}
+	
+	public List&lt;Client&gt; getClients(){
+<span class="nc" id="L39">		return clientsNotInGame;</span>
+	}
+
+	public void setClientsNotInGame(List&lt;Client&gt; clientsNotInGame) {
+<span class="nc" id="L43">		this.clientsNotInGame = clientsNotInGame;</span>
+<span class="nc" id="L44">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

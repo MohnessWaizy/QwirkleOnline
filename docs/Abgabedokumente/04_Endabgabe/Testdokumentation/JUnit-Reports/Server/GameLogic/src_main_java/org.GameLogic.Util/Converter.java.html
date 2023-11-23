@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Converter.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Util</a> &gt; <span class="el_source">Converter.java</span></div><h1>Converter.java</h1><pre class="source lang-java linenums">package org.GameLogic.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.DataStructures.Participant;
+import org.GameLogic.DataStructures.Tuple;
+
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.TileOnPosition;
+
+/**
+ * Used for converting instances of tileOnPosition to our internal structures
+ */
+<span class="nc" id="L18">public final class Converter {</span>
+	/**
+	 * Converts a list of {@link de.upb.swtpra1819interface.models.TileOnPosition
+	 * TilesOnPosition instances} to a list of tuples of {@link Coordinate} and
+	 * {@link Tile}
+	 * 
+	 * @param tileOnPosition TileOnPositoion
+	 * @return Tuple of type coordinate and tile
+	 */
+	public static List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; toGameTileCoord(List&lt;TileOnPosition&gt; tileOnPosition) {
+
+		/*
+		 * Safety due to possibility of invalid incoming objects
+		 */
+
+<span class="nc bnc" id="L33" title="All 2 branches missed.">		if (tileOnPosition == null) {</span>
+<span class="nc" id="L34">			return null;</span>
+		}
+
+<span class="nc" id="L37">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; converted = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		for (TileOnPosition top : tileOnPosition) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">			if (top == null) {</span>
+<span class="nc" id="L41">				converted.add(null);</span>
+<span class="nc" id="L42">			} else {</span>
+<span class="nc" id="L43">				converted.add(</span>
+<span class="nc" id="L44">						new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(top.getCoordX(), top.getCoordY()), top.getTile()));</span>
+			}
+		}
+<span class="nc" id="L47">		return converted;</span>
+
+	}
+
+	/**
+	 * Converts a list of tuples of {@link Coordinate} and {@link Tile} to a list of
+	 * {@link de.upb.swtpra1819interface.models.TileOnPosition TilesOnPosition
+	 * instances}
+	 * 
+	 * @param tupleWithCoordinateAndTile Tuple of type coordinate and tile
+	 * @return TileOnPositon instance
+	 */
+	public static List&lt;TileOnPosition&gt; toNetworkTileCoord(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tupleWithCoordinateAndTile) {
+
+<span class="nc" id="L61">		return tupleWithCoordinateAndTile.stream()</span>
+<span class="nc" id="L62">				.map(tuple -&gt; new TileOnPosition(tuple.getFirst().getX(), tuple.getFirst().getY(), tuple.getSecond()))</span>
+<span class="nc" id="L63">				.collect(Collectors.toList());</span>
+
+	}
+
+	/**
+	 * Converts a {@link Participant} to a
+	 * {@link de.upb.swtpra1819interface.models.Client Client}.
+	 * 
+	 * @param participants List of participants
+	 * @return List of clients
+	 */
+
+	public static List&lt;Client&gt; toNetworkClient(List&lt;? extends Participant&gt; participants) {
+<span class="nc" id="L76">		return participants.stream().map(participant -&gt; participant.getClient()).collect(Collectors.toList());</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="200.0" maxWidth="100.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label id="label_gameName" fx:id="label_gameName" text="Spielname: " />
+            <Label id="label_countColor" fx:id="label_countColor" text="Anzahl Farben: " />
+            <Label id="label_countTiles" fx:id="label_countTiles" text="Anzahl Steine: " />
+            <Label id="label_handTiles" fx:id="label_handTiles" text="Steine auf der Hand: " />
+            <Label id="label_turnTime" fx:id="label_turnTime" text="Zeit für ein Zug: " />
+            <Label id="label_visuTime" fx:id="label_visuTime" text="Visualisierungszeit: " />
+            <Label id="label_wrongMove" fx:id="label_wrongMove" text="Falscher Spielzug: " />
+            <Label id="label_wrongMovePenalty" fx:id="label_wrongMovePenalty" text="Bestrafung für falschen Spielzug: " />
+            <Label id="label_slowMove" fx:id="label_slowMove" text="Langsamer Spielzug: " />
+            <Label id="label_slowMovePenalty" fx:id="label_slowMovePenalty" text="Bestrafung für langsamen Spielzug: " />
+            <Label id="label_maxPlayerAmount" fx:id="label_maxPlayerAmount" text="Maximale Spieleranzahl: " />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

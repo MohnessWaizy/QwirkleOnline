@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>InterfaceParser.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">parser</a> &gt; <span class="el_source">InterfaceParser.java</span></div><h1>InterfaceParser.java</h1><pre class="source lang-java linenums">package parser;
+
+import org.NetworkInterface.NetClient;
+
+import de.upb.swtpra1819interface.messages.Message;
+
+<span class="nc" id="L7">public abstract class InterfaceParser implements ParserClockInterface {</span>
+
+	protected NetClient client;
+	private ParserClock clock;
+
+	public NetClient getClient() {
+<span class="nc" id="L13">		return client;</span>
+	}
+
+	public void setClient(NetClient client) {
+<span class="nc" id="L17">		this.client = client;</span>
+<span class="nc" id="L18">	}</span>
+
+	public void initClock(long cycle) {
+<span class="nc" id="L21">		clock = new ParserClock(cycle, this);</span>
+<span class="nc" id="L22">	}</span>
+
+	public void startQueueWorker() {
+<span class="nc" id="L25">		clock.startTicking();</span>
+<span class="nc" id="L26">	}</span>
+
+	/**
+	 * Parser will be stopped. Clock thread will be destroyed. You should call this
+	 * function when parse is not needed anymore.
+	 */
+	public void stopParser() {
+<span class="nc" id="L33">		clock.destroy();</span>
+<span class="nc" id="L34">	}</span>
+
+	/**
+	 * Parser will be paused. No messages will be parsed.
+	 */
+	public void pauseParser() {
+<span class="nc" id="L40">		clock.stopTicking();</span>
+<span class="nc" id="L41">	}</span>
+
+	/**
+	 * Parser will be resumed. Messages in queue will be parsed again.
+	 */
+	public void resumeParser() {
+<span class="nc" id="L47">		clock.resumeTicking();</span>
+<span class="nc" id="L48">	}</span>
+
+	/**
+	 * 
+	 * @param msg
+	 */
+	public void parseMessage(Message msg) {
+		// switch statement
+<span class="nc" id="L56">	}</span>
+
+	/**
+	 * Redirect messages in message queue to {@link parseMessage}.
+	 */
+	public void getAllQueueMessages() {
+		//System.out.println(&quot;Elapsed&quot;);
+		
+		Message msg;
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (client != null) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">			while ((msg = client.getNextMsg()) != null) {</span>
+<span class="nc" id="L67">				parseMessage(msg);</span>
+			}
+		}
+<span class="nc" id="L70">	}</span>
+
+	/**
+	 * Disconnects client from server via socket.
+	 */
+	public void disconnect() {
+<span class="nc" id="L76">		client.disconnect();</span>
+<span class="nc" id="L77">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

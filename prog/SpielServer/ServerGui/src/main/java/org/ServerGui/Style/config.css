@@ -1,0 +1,72 @@
+#label_gameName{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#label_countColor{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#label_countTiles{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#label_handTiles{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#label_turnTime{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;	
+}
+
+#label_visuTime{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;	
+}
+#label_wrongMove{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+#label_wrongMovePenalty{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;	
+}
+#label_slowMove{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+#label_slowMovePenalty{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;		
+}
+
+#label_maxPlayerAmount{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="143.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane id="pane_mainPane" prefHeight="90.0" prefWidth="360.0">
+         <children>
+            <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sie haben die Möglichkeit eine gespeicherte Konfiguration zu verwenden oder ein neues Spiel zu erstellen." wrappingWidth="310.54620361328125" />
+         </children>
+      </Pane>
+      <Pane id="pane_bottomBar" layoutY="90.0" prefHeight="53.0" prefWidth="360.0">
+         <children>
+            <Button fx:id="button_createNewGame" layoutX="219.0" layoutY="14.0" mnemonicParsing="false" text="Neues Spiel erstellen" />
+            <Button fx:id="button_loadConfig" layoutX="61.0" layoutY="14.0" mnemonicParsing="false" text="Spiel aus Vorlage laden" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

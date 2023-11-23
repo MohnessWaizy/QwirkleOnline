@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameManagement.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Handler</a> &gt; <span class="el_source">GameManagement.java</span></div><h1>GameManagement.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package org.GameLogic.Handler;</span>
+
+import java.io.File;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import org.NetworkInterface.MessageWithClientId;
+import org.NetworkInterface.NetworkServer;
+import org.ConfigManager.ConfigManager;
+import org.CostumMessages.ClientConnect;
+import org.CostumMessages.FinishGame;
+import org.CostumMessages.GameAbort;
+import org.CostumMessages.GameAbortError;
+import org.CostumMessages.GamePaused;
+import org.CostumMessages.GamePausedError;
+import org.CostumMessages.GameResume;
+import org.CostumMessages.GameResumeError;
+import org.CostumMessages.GameStart;
+import org.CostumMessages.GameStartError;
+import org.GameLogic.Communication.CommunicationHandler;
+import org.ServerGui.Controller.SuperController;
+import org.ServerGui.Model.GuiCommunication;
+import org.GameLogic.Util.MessageCodes;
+
+import de.upb.swtpra1819interface.messages.*;
+import de.upb.swtpra1819interface.models.*;
+
+/**
+ * 
+ * Central class of the game server. All messages are routed here and every game
+ * is created and managed in this class.
+ *
+ */
+public class GameManagement {
+<span class="nc" id="L40">	private NetworkServer server = null;</span>
+<span class="nc" id="L41">	private Lobby lobby = null;</span>
+<span class="nc" id="L42">	private HashMap&lt;Integer, Integer&gt; clientIdToGameId = null;</span>
+<span class="nc" id="L43">	private HashMap&lt;Integer, HashSet&lt;Integer&gt;&gt; gameIdToClientId = null;</span>
+<span class="nc" id="L44">	private HashMap&lt;Integer, Thread&gt; gameMap = null;</span>
+<span class="nc" id="L45">	private HashMap&lt;Thread, CommunicationHandler&gt; threadMap = null;</span>
+<span class="nc" id="L46">	private HashMap&lt;Integer, Client&gt; players = null;</span>
+<span class="nc" id="L47">	private HashSet&lt;Integer&gt; playerspectators = null;</span>
+<span class="nc" id="L48">	private static int gameIdCount = 0;</span>
+<span class="nc" id="L49">	private volatile boolean running = true;</span>
+
+	/**
+	 * @param server Gets a reference to the NetworkServer that handles all
+	 *               connections.
+	 * @param data   Gets a reference to the GuiData.
+	 */
+<span class="nc" id="L56">	public GameManagement(NetworkServer server, SuperController controller) {</span>
+<span class="nc" id="L57">		this.server = server;</span>
+
+<span class="nc" id="L59">		this.clientIdToGameId = new HashMap&lt;Integer, Integer&gt;();</span>
+<span class="nc" id="L60">		this.gameIdToClientId = new HashMap&lt;Integer, HashSet&lt;Integer&gt;&gt;();</span>
+<span class="nc" id="L61">		this.gameMap = new HashMap&lt;Integer, Thread&gt;();</span>
+<span class="nc" id="L62">		this.threadMap = new HashMap&lt;Thread, CommunicationHandler&gt;();</span>
+<span class="nc" id="L63">		this.players = new HashMap&lt;Integer, Client&gt;();</span>
+<span class="nc" id="L64">		this.playerspectators = new HashSet&lt;Integer&gt;();</span>
+
+<span class="nc" id="L66">		GuiCommunication guiCommunication = controller.getGuiCommunication();</span>
+		// create Lobby
+<span class="nc" id="L68">		this.lobby = new Lobby(this, guiCommunication);</span>
+<span class="nc" id="L69">		controller.setLobby(lobby);</span>
+<span class="nc" id="L70">		Thread lobbyThread = new Thread(lobby);</span>
+<span class="nc" id="L71">		lobbyThread.start();</span>
+<span class="nc" id="L72">		lobbyThread.setName(&quot;Lobby&quot;);</span>
+<span class="nc" id="L73">		gameMap.put(-1, lobbyThread);</span>
+<span class="nc" id="L74">		gameIdToClientId.put(-1, new HashSet&lt;Integer&gt;());</span>
+
+<span class="nc" id="L76">	}</span>
+
+	/**
+	 * Callbacks from CommunicationHandler
+	 **/
+	public void errorOnGameStart(int gameId) {
+<span class="nc" id="L82">		lobby.addToMessageQueue(new MessageWithClientId(new GameStartError(gameId), -1));</span>
+<span class="nc" id="L83">	}</span>
+
+	public void errorOnGameAbort(int gameId) {
+<span class="nc" id="L86">		lobby.addToMessageQueue(new MessageWithClientId(new GameAbortError(gameId), -1));</span>
+<span class="nc" id="L87">	}</span>
+
+	public void errorOnGamePaused(int gameId) {
+<span class="nc" id="L90">		lobby.addToMessageQueue(new MessageWithClientId(new GamePausedError(gameId), -1));</span>
+<span class="nc" id="L91">	}</span>
+
+	public void errorOnGameResume(int gameId) {
+<span class="nc" id="L94">		lobby.addToMessageQueue(new MessageWithClientId(new GameResumeError(gameId), -1));</span>
+<span class="nc" id="L95">	}</span>
+
+	public void notifyOfFinish(Winner winner, int gameId) {
+<span class="nc" id="L98">		lobby.addToMessageQueue(new MessageWithClientId(new FinishGame(winner, gameId), -1));</span>
+<span class="nc" id="L99">	}</span>
+
+	/**
+	 * Generates a new Id for a game.
+	 * 
+	 * @return returns a new Id.
+	 */
+	public int getNewId() {
+<span class="nc" id="L107">		gameIdCount++;</span>
+		// handle overflow into lobby id
+<span class="nc bnc" id="L109" title="All 2 branches missed.">		if (gameIdCount == -1) {</span>
+<span class="nc" id="L110">			throw new RuntimeException(&quot;Not enough GameIds available.&quot;);</span>
+		}
+<span class="nc" id="L112">		return gameIdCount;</span>
+
+	}
+
+	/**
+	 * Main entry point for the server.
+	 * 
+	 * @param args Console arguments
+	 */
+	public static void main(String[] args) {
+<span class="nc" id="L122">		Thread guiThread = new Thread() {</span>
+			@Override
+			public void run() {
+<span class="nc" id="L125">				javafx.application.Application.launch(SuperController.class);</span>
+<span class="nc" id="L126">			}</span>
+		};
+<span class="nc" id="L128">		guiThread.start();</span>
+<span class="nc" id="L129">		guiThread.setName(&quot;Gui Thread&quot;);</span>
+<span class="nc" id="L130">		SuperController controller = SuperController.waitForSuperController();</span>
+
+<span class="nc" id="L132">		GameManagement management = new GameManagement(new NetworkServer(33100), controller);</span>
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">		while (management.isRunning()) {</span>
+<span class="nc" id="L135">			management.route();</span>
+<span class="nc" id="L136">			management.update();</span>
+			try {
+<span class="nc" id="L138">				Thread.sleep(1);</span>
+<span class="nc" id="L139">			} catch (InterruptedException e) {</span>
+<span class="nc" id="L140">				e.printStackTrace();</span>
+			}
+		}
+
+		try {
+<span class="nc" id="L145">			guiThread.join();</span>
+<span class="nc" id="L146">		} catch (InterruptedException e) {</span>
+			// we don't interrupt threads so should never occur.
+		}
+<span class="nc" id="L149">		management.shutdown();</span>
+<span class="nc" id="L150">	}</span>
+
+	/**
+	 * 
+	 * handles Exception: send Error message and increases kickCounter/kicks Client
+	 * 
+	 * @param clientId  Id of the Client that caused the exception
+	 * @param messageId Id of the Message that caused the exception
+	 * @param msg       Description of the Exception cause
+	 */
+	public void handleNotAllowed(int clientId, int messageId, String msg) {
+<span class="nc" id="L161">		server.sendMsg(new NotAllowed(msg, messageId), clientId);</span>
+		try {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">			if (server.getKickMap().get(clientId) &gt; 5) {</span>
+<span class="nc" id="L164">				server.kick(clientId);</span>
+<span class="nc" id="L165">			} else {</span>
+<span class="nc" id="L166">				server.getKickMap().put(clientId, server.getKickMap().get(clientId) + 1);</span>
+			}
+<span class="nc" id="L168">		} catch (NullPointerException e) {</span>
+			// Client isn't connected so we don't need to do anything.
+		}
+
+<span class="nc" id="L172">	}</span>
+
+	/**
+	 * 
+	 * handles Exception: send Error message and increases kickCounter/kicks Client
+	 * 
+	 * @param clientId  Id of the Client that caused the exception
+	 * @param messageId Id of the Message that caused the exception
+	 * @param msg       Description of the Exception cause
+	 */
+	public void handleAccessDenied(int clientId, int messageId, String msg) {
+<span class="nc" id="L183">		server.sendMsg(new AccessDenied(msg, messageId), clientId);</span>
+		try {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">			if (server.getKickMap().get(clientId) &gt; 5) {</span>
+<span class="nc" id="L186">				server.kick(clientId);</span>
+<span class="nc" id="L187">			} else {</span>
+<span class="nc" id="L188">				server.getKickMap().put(clientId, server.getKickMap().get(clientId) + 1);</span>
+			}
+<span class="nc" id="L190">		} catch (NullPointerException e) {</span>
+			// Client isn't connected so we don't need to do anything.
+		}
+<span class="nc" id="L193">	}</span>
+
+	/**
+	 * Routes the messages of all clients to the correct game and handles new
+	 * connections.
+	 */
+	private void route() {
+
+<span class="nc" id="L201">		MessageWithClientId msg = server.getNextMsg();</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">		if (msg != null) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">			if (msg.getMsg().getUniqueId() == MessageCodes.DISCONNECT) {</span>
+				
+				// handle special case disconnect
+<span class="nc" id="L206">				Client clientToRemove = players.remove(msg.getClientId());</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">				if (clientToRemove != null) {</span>
+<span class="nc" id="L208">					System.out.println(&quot;Disconnect of &quot;+clientToRemove.getClientName());</span>
+<span class="nc" id="L209">					int gameId = clientIdToGameId.remove(msg.getClientId());</span>
+<span class="nc" id="L210">					gameIdToClientId.get(gameId).remove(msg.getClientId());</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">					if (gameId != -1) {</span>
+<span class="nc" id="L212">						threadMap.get(gameMap.get(gameId)).addToMessageQueue(msg);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">						if (clientToRemove.getClientType() == ClientType.PLAYER</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">								&amp;&amp; !lobby.removeClientFromGame(clientToRemove, gameId)) {</span>
+<span class="nc" id="L215">							throw new RuntimeException(&quot;Something went wrong with updating players&quot;);</span>
+						}
+					} else {
+<span class="nc" id="L218">						lobby.addToMessageQueue(msg);</span>
+					}
+					
+<span class="nc" id="L221">					playerspectators.remove(msg.getClientId());</span>
+<span class="nc" id="L222">				} else {</span>
+<span class="nc" id="L223">					System.out.println(&quot;Disconnect not complete&quot;);</span>
+				}
+
+<span class="nc bnc" id="L226" title="All 2 branches missed.">			} else if (clientIdToGameId.get(msg.getClientId()) == null) {</span>
+<span class="nc" id="L227">				System.out.println(&quot;Unbekannter client&quot;);</span>
+				// Client not logged into the Server
+<span class="nc bnc" id="L229" title="All 2 branches missed.">				if (msg.getMsg().getUniqueId() == MessageCodes.CONNECTREQUEST) {</span>
+					// handle logging in
+<span class="nc" id="L231">					clientIdToGameId.put(msg.getClientId(), -1);</span>
+<span class="nc" id="L232">					gameIdToClientId.get(-1).add(msg.getClientId());</span>
+
+					// save players for type identification
+<span class="nc" id="L235">					players.put(msg.getClientId(),</span>
+<span class="nc" id="L236">							new Client(msg.getClientId(), ((ConnectRequest) msg.getMsg()).getClientName(),</span>
+<span class="nc" id="L237">									((ConnectRequest) msg.getMsg()).getClientType()));</span>
+
+<span class="nc" id="L239">					lobby.addToMessageQueue(new MessageWithClientId(</span>
+<span class="nc" id="L240">							new ClientConnect(msg.getClientId(), (ConnectRequest) msg.getMsg()), -1));</span>
+
+<span class="nc" id="L242">					sendMsg(new ConnectAccepted(msg.getClientId()), msg.getClientId());</span>
+<span class="nc" id="L243">				} else {</span>
+					// not logged in
+<span class="nc" id="L245">					handleAccessDenied(msg.getClientId(), msg.getMsg().getUniqueId(), &quot;Nicht angemeldet.&quot;);</span>
+				}
+<span class="nc bnc" id="L247" title="All 2 branches missed.">			} else if (clientIdToGameId.get(msg.getClientId()) == -1) {</span>
+				// Client is in lobby
+<span class="nc" id="L249">				int messageId = msg.getMsg().getUniqueId();</span>
+<span class="nc bnc" id="L250" title="All 4 branches missed.">				if (messageId == MessageCodes.GAMELISTREQUEST || messageId == MessageCodes.GAMEJOINREQUEST</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">						|| messageId == MessageCodes.SPECTATORJOINREQUEST) {</span>
+					// redirect messages to lobby
+<span class="nc" id="L253">					lobby.addToMessageQueue(msg);</span>
+<span class="nc" id="L254">				} else {</span>
+<span class="nc bnc" id="L255" title="All 4 branches missed.">					if (messageId == MessageCodes.LEAVINGREQUEST || messageId == MessageCodes.SCOREREQUEST</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">							|| messageId == MessageCodes.TURNTIMELEFTREQUEST</span>
+<span class="nc bnc" id="L257" title="All 4 branches missed.">							|| messageId == MessageCodes.TOTALTIMEREQUEST || messageId == MessageCodes.GAMEDATAREQUEST</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">							|| (messageId == MessageCodes.TILESWAPREQUEST</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.PLAYER)</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">							|| (messageId == MessageCodes.PLAYTILES</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.PLAYER)</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">							|| (messageId == MessageCodes.BAGREQUEST</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.SPECTATOR)</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">							|| (messageId == MessageCodes.PLAYERHANDSREQUEST</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.SPECTATOR)) {</span>
+						// handle not allowed actions
+<span class="nc" id="L267">						handleNotAllowed(msg.getClientId(), messageId,</span>
+<span class="nc" id="L268">								&quot;Diese Aktion kann in der Lobby nicht ausgeführt werden.&quot;);</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">					} else if ((messageId == MessageCodes.PLAYTILES</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">							&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.SPECTATOR)</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">							|| (messageId == MessageCodes.TILESWAPREQUEST</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.SPECTATOR)</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">							|| (messageId == MessageCodes.BAGREQUEST</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.PLAYER)</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">							|| (messageId == MessageCodes.PLAYERHANDSREQUEST</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">									&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.PLAYER)) {</span>
+
+						// handle everything that clients are not allowed to to
+<span class="nc" id="L279">						handleAccessDenied(msg.getClientId(), messageId,</span>
+<span class="nc" id="L280">								&quot;Diese Aktion kann von diesem Client nicht ausgeführt werden.&quot;);</span>
+<span class="nc" id="L281">					} else {</span>
+						// handle everything else
+<span class="nc" id="L283">						server.sendMsg(new ParsingError(&quot;Error.&quot;, messageId), msg.getClientId());</span>
+					}
+
+				}
+
+<span class="nc" id="L288">			} else {</span>
+				// Client is in a game
+<span class="nc" id="L290">				int messageId = msg.getMsg().getUniqueId();</span>
+<span class="nc bnc" id="L291" title="All 4 branches missed.">				if (messageId == MessageCodes.MESSAGESEND || messageId == MessageCodes.LEAVINGREQUEST</span>
+<span class="nc bnc" id="L292" title="All 4 branches missed.">						|| messageId == MessageCodes.TILESWAPREQUEST || messageId == MessageCodes.PLAYTILES</span>
+<span class="nc bnc" id="L293" title="All 4 branches missed.">						|| messageId == MessageCodes.SCOREREQUEST || messageId == MessageCodes.TURNTIMELEFTREQUEST</span>
+<span class="nc bnc" id="L294" title="All 4 branches missed.">						|| messageId == MessageCodes.TOTALTIMEREQUEST || messageId == MessageCodes.BAGREQUEST</span>
+<span class="nc bnc" id="L295" title="All 4 branches missed.">						|| messageId == MessageCodes.PLAYERHANDSREQUEST || messageId == MessageCodes.GAMEDATAREQUEST) {</span>
+
+<span class="nc" id="L297">					threadMap.get(gameMap.get(clientIdToGameId.get(msg.getClientId()))).addToMessageQueue(msg);</span>
+
+<span class="nc bnc" id="L299" title="All 4 branches missed.">				} else if (messageId == MessageCodes.CONNECTREQUEST || messageId == MessageCodes.GAMELISTREQUEST</span>
+<span class="nc bnc" id="L300" title="All 2 branches missed.">						|| (messageId == MessageCodes.GAMEJOINREQUEST</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">								&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.PLAYER)</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">						|| (messageId == MessageCodes.SPECTATORJOINREQUEST)) {</span>
+
+					// handle not allowed actions
+<span class="nc" id="L305">					server.sendMsg(</span>
+<span class="nc" id="L306">							new NotAllowed(&quot;Diese Aktion kann in einem Spiel nicht ausgeführt werden.&quot;, messageId),</span>
+<span class="nc" id="L307">							msg.getClientId());</span>
+
+<span class="nc bnc" id="L309" title="All 2 branches missed.">				} else if ((messageId == MessageCodes.GAMEJOINREQUEST</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">						&amp;&amp; players.get(msg.getClientId()).getClientType() == ClientType.SPECTATOR)) {</span>
+
+					// handle everything that clients are not allowed to to
+<span class="nc" id="L313">					server.sendMsg(</span>
+<span class="nc" id="L314">							new AccessDenied(&quot;Diese Aktion kann von diesem Client nicht ausgeführt werden.&quot;, messageId),</span>
+<span class="nc" id="L315">							msg.getClientId());</span>
+
+<span class="nc" id="L317">				} else {</span>
+					// handle everything else
+<span class="nc" id="L319">					server.sendMsg(new ParsingError(&quot;Error.&quot;, messageId), msg.getClientId());</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">					if (server.getKickMap().get(msg.getClientId()) &gt; 5) {</span>
+<span class="nc" id="L321">						server.kick(msg.getClientId());</span>
+<span class="nc" id="L322">					} else {</span>
+<span class="nc" id="L323">						server.getKickMap().put(msg.getClientId(), server.getKickMap().remove(msg.getClientId()) + 1);</span>
+					}
+				}
+			}
+<span class="nc" id="L327">		} else {</span>
+			try {
+<span class="nc" id="L329">				Thread.sleep(10);</span>
+<span class="nc" id="L330">			} catch (InterruptedException e) {</span>
+<span class="nc" id="L331">				e.printStackTrace();</span>
+			}
+		}
+<span class="nc" id="L334">	}</span>
+
+	/**
+	 * Cleans up all finished threads.
+	 */
+	private void update() {
+		try {
+<span class="nc" id="L341">			Set&lt;Integer&gt; toRemoveKey = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L342">			Set&lt;Thread&gt; toRemoveVal = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L343">			Iterator&lt;Entry&lt;Integer, Thread&gt;&gt; it = gameMap.entrySet().iterator();</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">			while (it.hasNext()) {</span>
+<span class="nc" id="L345">				Map.Entry&lt;Integer, Thread&gt; pair = (Map.Entry&lt;Integer, Thread&gt;) it.next();</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">				if (pair.getKey() != -1) {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">					if (!pair.getValue().isAlive()) {</span>
+<span class="nc" id="L348">						toRemoveKey.add(pair.getKey());</span>
+<span class="nc" id="L349">						toRemoveVal.add(pair.getValue());</span>
+					}
+				}
+			}
+<span class="nc" id="L353">			gameMap.keySet().removeAll(toRemoveKey);</span>
+<span class="nc" id="L354">			gameIdToClientId.keySet().removeAll(toRemoveKey);</span>
+<span class="nc" id="L355">			threadMap.keySet().removeAll(toRemoveVal);</span>
+<span class="nc" id="L356">		} catch (ConcurrentModificationException e) {</span>
+			try {
+<span class="nc" id="L358">				Thread.sleep(10);</span>
+<span class="nc" id="L359">			} catch (InterruptedException e1) {</span>
+				// We are not interrupting Threads so this shouldn't happen
+			}
+<span class="nc" id="L362">			update();</span>
+		}
+
+<span class="nc" id="L365">	}</span>
+
+	/**
+	 * Sends a message to a client.
+	 * 
+	 * @param msg      Message that should be send.
+	 * @param clientId Receiver identification.
+	 */
+	public void sendMsg(Message msg, int clientId) {
+<span class="nc" id="L374">		server.sendMsg(msg, clientId);</span>
+<span class="nc" id="L375">	}</span>
+
+	/**
+	 * Sends a message to all clients in the game.
+	 * 
+	 * @param msg    Message that should be send.
+	 * @param gameID Id of the game the message should be send to.
+	 */
+	public void sendMsgToGame(Message msg, int gameId) {
+<span class="nc bnc" id="L384" title="All 2 branches missed.">		for (int ids : gameIdToClientId.get(gameId)) {</span>
+<span class="nc" id="L385">			server.sendMsg(msg, ids);</span>
+		}
+
+<span class="nc" id="L388">	}</span>
+
+	/**
+	 * Starts the game.
+	 * 
+	 * @param gameId Id of the game started.
+	 */
+	public void startGame(int gameId) {
+<span class="nc" id="L396">		threadMap.get(gameMap.get(gameId)).addToMessageQueue(new MessageWithClientId(new GameStart(), -1));</span>
+<span class="nc" id="L397">	}</span>
+
+	/**
+	 * Aborts the game.
+	 * 
+	 * @param gameId Id of the game aborted
+	 */
+	public void abortGame(int gameId, Client winner) {
+<span class="nc" id="L405">		threadMap.get(gameMap.get(gameId)).addToMessageQueue(new MessageWithClientId(new GameAbort(winner), -1));</span>
+<span class="nc" id="L406">	}</span>
+
+	/**
+	 * Pauses the game.
+	 * 
+	 * @param gameId Id of the game paused
+	 */
+	public void pauseGame(int gameId) {
+<span class="nc" id="L414">		threadMap.get(gameMap.get(gameId)).addToMessageQueue(new MessageWithClientId(new GamePaused(), -1));</span>
+<span class="nc" id="L415">	}</span>
+
+	/**
+	 * Resumes the game.
+	 * 
+	 * @param gameId Id of the game resumed
+	 */
+	public void resumeGame(int gameId) {
+<span class="nc" id="L423">		threadMap.get(gameMap.get(gameId)).addToMessageQueue(new MessageWithClientId(new GameResume(), -1));</span>
+<span class="nc" id="L424">	}</span>
+
+	/**
+	 * Creates a new game without players
+	 * 
+	 * @param game Information needed to create a game
+	 * @return Returns the Id of the new Game
+	 */
+	public int createGame(Game game) {
+<span class="nc bnc" id="L433" title="All 6 branches missed.">		if (game == null || game.getGameName().equals(&quot;&quot;) || game.getConfig() == null) {</span>
+<span class="nc" id="L434">			return -1;</span>
+		}
+<span class="nc" id="L436">		int id = getNewId();</span>
+<span class="nc" id="L437">		game.setGameId(id);</span>
+<span class="nc" id="L438">		CommunicationHandler communicationHandler = new CommunicationHandler(game, this);</span>
+<span class="nc" id="L439">		Thread gameThread = new Thread(communicationHandler);</span>
+<span class="nc" id="L440">		gameThread.start();</span>
+<span class="nc" id="L441">		gameThread.setName(&quot;game&quot; + id);</span>
+<span class="nc" id="L442">		gameMap.put(id, gameThread);</span>
+<span class="nc" id="L443">		gameIdToClientId.put(id, new HashSet&lt;Integer&gt;());</span>
+<span class="nc" id="L444">		threadMap.put(gameThread, communicationHandler);</span>
+<span class="nc" id="L445">		return id;</span>
+	}
+
+	/**
+	 * 
+	 * Moves a client from the lobby to a game
+	 * 
+	 * @param game   Object of the game the client should be moved to
+	 * @param client Object of the client that should be moved
+	 * @return whether the move was a success
+	 */
+	public boolean moveToGame(Game game, Client client) {
+<span class="nc bnc" id="L457" title="All 6 branches missed.">		if (game == null || client == null || clientIdToGameId.get(client.getClientId()) == null</span>
+<span class="nc bnc" id="L458" title="All 2 branches missed.">				|| clientIdToGameId.get(client.getClientId()) != -1) {</span>
+<span class="nc" id="L459">			return false;</span>
+		} else {
+<span class="nc" id="L461">			clientIdToGameId.remove(client.getClientId());</span>
+<span class="nc" id="L462">			gameIdToClientId.get(-1).remove(client.getClientId());</span>
+
+<span class="nc" id="L464">			clientIdToGameId.put(client.getClientId(), game.getGameId());</span>
+<span class="nc" id="L465">			gameIdToClientId.get(game.getGameId()).add(client.getClientId());</span>
+<span class="nc" id="L466">			threadMap.get(gameMap.get(game.getGameId()))</span>
+<span class="nc" id="L467">					.addToMessageQueue(new MessageWithClientId(new ClientConnect(client), -1));</span>
+<span class="nc bnc" id="L468" title="All 2 branches missed.">			if (client.getClientType() == ClientType.PLAYER) {</span>
+<span class="nc" id="L469">				sendMsg(new GameJoinAccepted(game), client.getClientId());</span>
+<span class="nc" id="L470">			} else {</span>
+<span class="nc" id="L471">				sendMsg(new SpectatorJoinAccepted(game), client.getClientId());</span>
+<span class="nc bnc" id="L472" title="All 2 branches missed.">				if(players.get(client.getClientId()).getClientType()==ClientType.PLAYER) {</span>
+<span class="nc" id="L473">					playerspectators.add(client.getClientId());</span>
+<span class="nc" id="L474">					players.get(client.getClientId()).setClientType(ClientType.SPECTATOR);</span>
+				}
+			}
+<span class="nc" id="L477">			return true;</span>
+		}
+	}
+
+	/**
+	 * 
+	 * Moves a client from the game to a lobby
+	 * 
+	 * @param client    Object of the client that should be moved
+	 * @param oldGameId Id of the old game
+	 * @return whether the move was a success
+	 */
+	public boolean moveToLobby(Client client, int oldGameId) {
+<span class="nc bnc" id="L490" title="All 2 branches missed.">		if (client == null) {</span>
+<span class="nc" id="L491">			return false;</span>
+		} else {
+<span class="nc" id="L493">			clientIdToGameId.remove(client.getClientId());</span>
+<span class="nc" id="L494">			gameIdToClientId.get(oldGameId).remove(client.getClientId());</span>
+
+<span class="nc" id="L496">			clientIdToGameId.put(client.getClientId(), -1);</span>
+<span class="nc" id="L497">			gameIdToClientId.get(-1).add(client.getClientId());</span>
+
+<span class="nc bnc" id="L499" title="All 4 branches missed.">			if (client.getClientType() == ClientType.PLAYER &amp;&amp; !lobby.removeClientFromGame(client, oldGameId)) {</span>
+<span class="nc" id="L500">				throw new RuntimeException(&quot;Something went wrong with updating players&quot;);</span>
+			}
+			
+<span class="nc bnc" id="L503" title="All 4 branches missed.">			if (client.getClientType() == ClientType.SPECTATOR &amp;&amp; playerspectators.contains(client.getClientId())) {</span>
+<span class="nc" id="L504">				client.setClientType(ClientType.PLAYER);</span>
+<span class="nc" id="L505">				players.get(client.getClientId()).setClientType(ClientType.PLAYER);</span>
+<span class="nc" id="L506">				playerspectators.remove(client.getClientId());</span>
+			}
+
+<span class="nc" id="L509">			lobby.addToMessageQueue(new MessageWithClientId(new ClientConnect(client), -1));</span>
+<span class="nc" id="L510">			System.out.println(client.getClientName() + &quot; was moved to lobby&quot;);</span>
+<span class="nc" id="L511">			return true;</span>
+		}
+	}
+
+	/**
+	 * Is called when the server is shutting down.
+	 */
+	private void shutdown() {
+<span class="nc" id="L519">		System.out.println(&quot;GameManagement Shutdown called&quot;);</span>
+		try {
+<span class="nc" id="L521">			lobby.shutdown();</span>
+<span class="nc" id="L522">			gameMap.remove(-1).join();</span>
+<span class="nc" id="L523">		} catch (InterruptedException e) {</span>
+			// We don't interrupt threads so should never occur.
+		}
+<span class="nc" id="L526">		Iterator&lt;Entry&lt;Integer, Thread&gt;&gt; it = gameMap.entrySet().iterator();</span>
+<span class="nc bnc" id="L527" title="All 2 branches missed.">		while (it.hasNext()) {</span>
+<span class="nc" id="L528">			Map.Entry&lt;Integer, Thread&gt; pair = (Map.Entry&lt;Integer, Thread&gt;) it.next();</span>
+<span class="nc" id="L529">			CommunicationHandler game = threadMap.get(pair.getValue());</span>
+<span class="nc" id="L530">			game.shutdown();</span>
+			try {
+<span class="nc" id="L532">				pair.getValue().join();</span>
+<span class="nc" id="L533">			} catch (InterruptedException e) {</span>
+<span class="nc" id="L534">				e.printStackTrace();</span>
+			}
+		}
+<span class="nc" id="L537">		server.shutdown();</span>
+<span class="nc" id="L538">		System.out.println(&quot;Shutdown finished..&quot;);</span>
+<span class="nc" id="L539">	}</span>
+
+	public boolean isRunning() {
+<span class="nc" id="L542">		return running;</span>
+	}
+
+	public void notRunning() {
+<span class="nc" id="L546">		this.running = false;</span>
+<span class="nc" id="L547">	}</span>
+
+	/**
+	 * @see ConfigManager
+	 */
+	public boolean saveConfig(File file, Configuration config) {
+<span class="nc" id="L553">		return ConfigManager.saveConfig(file, config);</span>
+	}
+
+	/**
+	 * @see ConfigManager
+	 */
+	public Configuration loadConfig(File file) {
+<span class="nc" id="L560">		return ConfigManager.loadConfig(file);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameHandlerTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic</a> &gt; <span class="el_source">GameHandlerTest.java</span></div><h1>GameHandlerTest.java</h1><pre class="source lang-java linenums">package org.GameLogic;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.Clock.ClockState;
+import org.GameLogic.Communication.CommunicationHandlerCallback;
+import org.GameLogic.DataStructures.Player;
+import org.GameLogic.DataStructures.Spectator;
+import org.GameLogic.DataStructures.Tuple;
+import org.GameLogic.Exceptions.NotAllowedException;
+import org.GameLogic.Exceptions.ParserException;
+import org.GameLogic.Handler.GameHandler;
+import org.junit.Test;
+
+import com.google.common.collect.HashMultiset;
+
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.ClientType;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.GameState;
+import de.upb.swtpra1819interface.models.SlowMove;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.WrongMove;
+
+<span class="fc" id="L34">public class GameHandlerTest {</span>
+
+	private GameHandler gameHandler;
+<span class="fc" id="L37">	private final static Configuration STANDARDCONFIGURATION = new Configuration(6, 1, 6, 30, 10, WrongMove.NOTHING, 4,</span>
+			SlowMove.POINT_LOSS, 0, 2);
+<span class="fc" id="L39">	private CommunicationHandlerCallback chc = new ComHandler();</span>
+
+<span class="fc" id="L41">	public class ComHandler implements CommunicationHandlerCallback {</span>
+
+		@Override
+		public void callbackPlayerKicked(Player player) {
+			// TODO Auto-generated method stub
+
+<span class="fc" id="L47">		}</span>
+
+		@Override
+		public void callbackNextPlayer(Player player) {
+			// TODO Auto-generated method stub
+
+<span class="fc" id="L53">		}</span>
+
+		@Override
+		public void callbackPlayerTiles(Player player, List&lt;Tile&gt; newHandTiles) {
+			// TODO Auto-generated method stub
+
+<span class="fc" id="L59">		}</span>
+
+		@Override
+		public void callbackGameFinish(boolean rightfullyFinished) {
+			// TODO Auto-generated method stub
+
+<span class="fc" id="L65">		}</span>
+
+	}
+
+<span class="fc" id="L69">	private Client clientPlayer1 = new Client(0, &quot;Name1&quot;, ClientType.PLAYER);</span>
+<span class="fc" id="L70">	private Client clientSpectator1 = new Client(1, &quot;Name2&quot;, ClientType.SPECTATOR);</span>
+<span class="fc" id="L71">	private Client clientPlayer2 = new Client(2, &quot;Name3&quot;, ClientType.PLAYER);</span>
+<span class="fc" id="L72">	private Client clientPlayer3 = new Client(3, &quot;Name4&quot;, ClientType.PLAYER);</span>
+<span class="fc" id="L73">	private Client clientSpectator2 = new Client(4, &quot;Name5&quot;, ClientType.SPECTATOR);</span>
+
+	@Test
+	public void testRequestJoinNewClient() {
+<span class="fc" id="L77">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L80">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">			assertTrue(1 == gameHandler.getPlayers().size());</span>
+<span class="nc" id="L82">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L83">			fail();</span>
+<span class="fc" id="L84">		}</span>
+<span class="fc" id="L85">	}</span>
+
+	@Test
+	public void TestRequestJoinMaxClients() {
+<span class="fc" id="L89">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L92">			gameHandler.requestJoin(clientPlayer1);</span>
+<span class="fc" id="L93">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">			assertTrue(2 == gameHandler.getPlayers().size());</span>
+<span class="nc" id="L95">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L96">			fail();</span>
+<span class="fc" id="L97">		}</span>
+<span class="fc" id="L98">	}</span>
+
+	@Test
+	public void TestRequestJoinTooMuchClientsNotAllowed() {
+<span class="fc" id="L102">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L105">			gameHandler.requestJoin(clientPlayer1);</span>
+<span class="fc" id="L106">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="nc" id="L107">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L108">			fail();</span>
+<span class="fc" id="L109">		} catch (NotAllowedException ex) {</span>
+<span class="fc" id="L110">			assertTrue(true);</span>
+<span class="nc" id="L111">		}</span>
+<span class="fc" id="L112">	}</span>
+
+	@Test
+	public void testRequestJoinTwiceSpectatorNotAllowed() {
+<span class="fc" id="L116">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L119">			gameHandler.requestJoin(clientSpectator1);</span>
+<span class="nc" id="L120">			gameHandler.requestJoin(clientSpectator1);</span>
+<span class="nc" id="L121">			fail();</span>
+<span class="fc" id="L122">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L123">			assertTrue(true);</span>
+<span class="nc" id="L124">		}</span>
+<span class="fc" id="L125">	}</span>
+
+	@Test
+	public void TestRequestRemoveClientIsAllowed() {
+<span class="fc" id="L129">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L132">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L133">			gameHandler.requestRemove(clientPlayer2);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">			assertTrue(0 == gameHandler.getPlayers().size());</span>
+<span class="nc" id="L135">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L136">			fail();</span>
+<span class="fc" id="L137">		}</span>
+<span class="fc" id="L138">	}</span>
+
+	@Test
+	public void TestRequestRemoveClientGameOverAllowed() {
+<span class="fc" id="L142">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L145">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L146">			gameHandler.endGame();</span>
+<span class="fc" id="L147">			gameHandler.requestRemove(clientPlayer1);</span>
+<span class="fc" id="L148">			assertTrue(true);</span>
+<span class="nc" id="L149">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L150">			fail();</span>
+<span class="fc" id="L151">		}</span>
+<span class="fc" id="L152">	}</span>
+
+	@Test
+	public void testRequestRemoveSpectatorAllowed() {
+<span class="fc" id="L156">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L159">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L160">			gameHandler.requestJoin(clientPlayer1);</span>
+<span class="fc" id="L161">			gameHandler.requestJoin(clientSpectator1);</span>
+<span class="fc" id="L162">			gameHandler.startGame();</span>
+<span class="fc" id="L163">			gameHandler.requestRemove(clientSpectator1);</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">			assertTrue(gameHandler.getSpectators().size() == 0);</span>
+<span class="nc" id="L165">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L166">			fail();</span>
+<span class="fc" id="L167">		}</span>
+<span class="fc" id="L168">	}</span>
+
+	@Test
+	public void testRequestRemoveSpectatorIsAllowed() {
+<span class="fc" id="L172">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L175">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L176">			gameHandler.requestJoin(clientPlayer1);</span>
+<span class="fc" id="L177">			gameHandler.requestJoin(clientSpectator2);</span>
+
+<span class="fc" id="L179">			gameHandler.startGame();</span>
+
+<span class="fc" id="L181">			gameHandler.requestRemove(clientSpectator1);</span>
+
+<span class="fc" id="L183">			assertTrue(true);</span>
+<span class="nc" id="L184">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L185">			fail();</span>
+<span class="fc" id="L186">		}</span>
+<span class="fc" id="L187">	}</span>
+
+	@Test
+	public void TestRequestRemoveNotExistingClient() {
+<span class="fc" id="L191">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L194">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L195">			gameHandler.requestRemove(clientPlayer1);</span>
+
+<span class="fc" id="L197">			assertTrue(true);</span>
+<span class="nc" id="L198">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L199">			fail();</span>
+<span class="fc" id="L200">		}</span>
+<span class="fc" id="L201">	}</span>
+
+	@Test
+	public void TestRequestRemoveClientAndGameOverAllowed() {
+<span class="fc" id="L205">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L207">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L208">			gameHandler.requestJoin(clientPlayer1);</span>
+
+<span class="fc" id="L210">			gameHandler.startGame();</span>
+
+<span class="fc" id="L212">			gameHandler.requestRemove(clientPlayer1);</span>
+
+<span class="fc" id="L214">			assertEquals(GameState.ENDED, gameHandler.getGameState());</span>
+<span class="nc" id="L215">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L216">			fail();</span>
+<span class="fc" id="L217">		}</span>
+<span class="fc" id="L218">	}</span>
+
+	@Test
+	public void testRequestCurrentPayerAllowed() {
+<span class="fc" id="L222">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L224">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L225">			gameHandler.requestJoin(clientPlayer1);</span>
+
+<span class="fc" id="L227">			gameHandler.startGame();</span>
+
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestCurrentPayer() == gameHandler.getPlayers().get(0));</span>
+<span class="nc" id="L230">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L231">			fail();</span>
+<span class="fc" id="L232">		}</span>
+<span class="fc" id="L233">	}</span>
+
+	@Test
+	public void TestRequestJoinPlayerToStartingGameNotAllowed() {
+<span class="fc" id="L237">		Configuration config = new Configuration(6, 1, 6, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L238">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L241">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L242">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L244">			gameHandler.startGame();</span>
+
+<span class="nc" id="L246">			gameHandler.requestJoin(clientPlayer1);</span>
+<span class="nc" id="L247">			fail();</span>
+<span class="fc" id="L248">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L249">			assertTrue(true);</span>
+<span class="nc" id="L250">		}</span>
+<span class="fc" id="L251">	}</span>
+
+	@Test
+	public void testStartGameOnePlayerNotAllowed() {
+<span class="fc" id="L255">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L258">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="nc" id="L259">			gameHandler.startGame();</span>
+<span class="nc" id="L260">			fail();</span>
+<span class="fc" id="L261">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L262">			assertTrue(true);</span>
+<span class="nc" id="L263">		}</span>
+<span class="fc" id="L264">	}</span>
+
+	@Test
+	public void TestStartGameTwoPlayersAllowed() {
+<span class="fc" id="L268">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L271">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L272">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L274">			gameHandler.startGame();</span>
+
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">			assertTrue(gameHandler.getGameState() == GameState.IN_PROGRESS);</span>
+<span class="nc" id="L277">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L278">			fail();</span>
+<span class="fc" id="L279">		}</span>
+<span class="fc" id="L280">	}</span>
+
+	@Test
+	public void testStartGameEdnedNotAllowed() {
+<span class="fc" id="L284">		Configuration config = new Configuration(6, 1, 6, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L285">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L288">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L289">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L291">			gameHandler.startGame();</span>
+<span class="fc" id="L292">			gameHandler.endGame();</span>
+<span class="nc" id="L293">			gameHandler.startGame();</span>
+<span class="nc" id="L294">			fail();</span>
+<span class="fc" id="L295">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L296">			assertTrue(true);</span>
+
+<span class="nc" id="L298">		}</span>
+<span class="fc" id="L299">	}</span>
+
+	@Test
+	public void TestRequestJoinSpectatorToStartingGameAllowed() {
+<span class="fc" id="L303">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L306">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L307">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L309">			gameHandler.startGame();</span>
+
+<span class="fc" id="L311">			gameHandler.requestJoin(clientSpectator1);</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">			assertTrue(gameHandler.getSpectators().size() == 1);</span>
+<span class="nc" id="L313">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L314">			fail(e.getMessage());</span>
+<span class="fc" id="L315">		}</span>
+<span class="fc" id="L316">	}</span>
+
+	@Test
+	public void TestEndStartingGameAllowed() {
+<span class="fc" id="L320">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L323">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L324">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L326">			gameHandler.startGame();</span>
+<span class="fc" id="L327">			gameHandler.endGame();</span>
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">			assertTrue(gameHandler.getGameState() == GameState.ENDED);</span>
+<span class="nc" id="L329">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L330">			fail();</span>
+<span class="fc" id="L331">		}</span>
+<span class="fc" id="L332">	}</span>
+
+	@Test
+	public void TestEndEndedGameNotAllowed() {
+<span class="fc" id="L336">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L339">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L340">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L342">			gameHandler.startGame();</span>
+<span class="fc" id="L343">			gameHandler.endGame();</span>
+<span class="nc" id="L344">			gameHandler.endGame();</span>
+<span class="fc" id="L345">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L346">			assertTrue(true);</span>
+<span class="nc" id="L347">		}</span>
+<span class="fc" id="L348">	}</span>
+
+	@Test
+	public void testPauseGameStartingAllowed() {
+<span class="fc" id="L352">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L355">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L356">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L358">			gameHandler.startGame();</span>
+<span class="fc" id="L359">			gameHandler.pauseGame();</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">			assertTrue(gameHandler.getGameState() == GameState.PAUSED);</span>
+<span class="nc" id="L361">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L362">			fail();</span>
+<span class="fc" id="L363">		}</span>
+<span class="fc" id="L364">	}</span>
+
+	@Test
+	public void TestPauseGameStartedNotAllowed() {
+<span class="fc" id="L368">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L371">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L372">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="nc" id="L374">			gameHandler.pauseGame();</span>
+<span class="nc" id="L375">			assertTrue(&quot;Missing exception after pausing not started game&quot;, false);</span>
+<span class="fc" id="L376">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L377">			assertTrue(true);</span>
+<span class="nc" id="L378">		}</span>
+<span class="fc" id="L379">	}</span>
+
+	@Test
+	public void testResumeGameAllowed() {
+<span class="fc" id="L383">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L386">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L387">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L389">			gameHandler.startGame();</span>
+<span class="fc" id="L390">			gameHandler.pauseGame();</span>
+<span class="fc" id="L391">			gameHandler.resumeGame();</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">			assertTrue(gameHandler.getGameState() == GameState.IN_PROGRESS);</span>
+<span class="nc" id="L393">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L394">			fail();</span>
+<span class="fc" id="L395">		}</span>
+<span class="fc" id="L396">	}</span>
+
+	@Test
+	public void testResumeGameNotAllowed() {
+<span class="fc" id="L400">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L403">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L404">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L405">			gameHandler.resumeGame();</span>
+<span class="nc" id="L406">			fail();</span>
+<span class="fc" id="L407">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L408">			assertTrue(true);</span>
+
+<span class="nc" id="L410">		}</span>
+<span class="fc" id="L411">	}</span>
+
+	@Test
+	public void testRequestWinnerGameNotFinishedNotAllowed() {
+<span class="fc" id="L415">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L417">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L418">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L420">			gameHandler.startGame();</span>
+<span class="nc" id="L421">			gameHandler.requestWinner();</span>
+<span class="fc" id="L422">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L423">			assertTrue(true);</span>
+<span class="nc" id="L424">		}</span>
+<span class="fc" id="L425">	}</span>
+
+	@Test
+	public void testRequestWinnerWinnerReturned() {
+<span class="fc" id="L429">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L431">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L432">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L434">			gameHandler.startGame();</span>
+<span class="fc" id="L435">			gameHandler.endGame();</span>
+<span class="fc" id="L436">			assertNotNull(gameHandler.requestWinner());</span>
+<span class="nc" id="L437">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L438">			fail();</span>
+<span class="fc" id="L439">		}</span>
+<span class="fc" id="L440">	}</span>
+
+	@Test
+	public void testRequestPlayTilesPlayerNotAllowedToSetTiles() {
+<span class="fc" id="L444">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L446">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L447">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L448">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L449">			fail();</span>
+<span class="fc" id="L450">		}</span>
+
+<span class="fc" id="L452">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+		try {
+<span class="nc" id="L455">			gameHandler.requestPlayTiles(clientPlayer1, tilesWithCoordinate);</span>
+<span class="nc" id="L456">			fail();</span>
+<span class="fc" id="L457">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L458">			assertTrue(true);</span>
+
+<span class="nc" id="L460">		}</span>
+
+<span class="fc" id="L462">	}</span>
+
+	@Test
+	public void testRequestPlayNoTilesNotAllowed() {
+<span class="fc" id="L466">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L468">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L469">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L471">			gameHandler.startGame();</span>
+<span class="nc" id="L472">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L473">			fail();</span>
+<span class="fc" id="L474">		}</span>
+
+<span class="fc" id="L476">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+		try {
+<span class="nc" id="L479">			gameHandler.requestPlayTiles(clientPlayer2, tilesWithCoordinate);</span>
+<span class="nc" id="L480">			fail();</span>
+<span class="fc" id="L481">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L482">			assertTrue(true);</span>
+<span class="nc" id="L483">		}</span>
+<span class="fc" id="L484">	}</span>
+
+	@Test
+	public void testRequestPlayNotCurrentNotAllowed() {
+<span class="fc" id="L488">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L490">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L491">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L492">			gameHandler.startGame();</span>
+
+<span class="nc" id="L494">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L495">			fail();</span>
+<span class="fc" id="L496">		}</span>
+
+<span class="fc" id="L498">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L499">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+
+		try {
+<span class="nc" id="L502">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L503">			fail();</span>
+<span class="fc" id="L504">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L505">			assertTrue(true);</span>
+<span class="nc" id="L506">		}</span>
+<span class="fc" id="L507">	}</span>
+
+	@Test
+	public void testRequestPlayerTilesAllowed() {
+<span class="fc" id="L511">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L513">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L514">			gameHandler.requestPlayerTiles(clientPlayer2);</span>
+
+<span class="fc" id="L516">			Player player1 = gameHandler.getPlayers().get(0);</span>
+
+<span class="pc bpc" id="L518" title="1 of 2 branches missed.">			assertTrue(player1.getTiles().size() == 0);</span>
+<span class="nc" id="L519">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L520">			fail();</span>
+<span class="fc" id="L521">		}</span>
+<span class="fc" id="L522">	}</span>
+
+	@Test
+	public void testRequestPlayerHasNotTilesNotAllowed() {
+<span class="fc" id="L526">		Configuration config = new Configuration(6, 1, 3, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L527">		gameHandler = new GameHandler(chc, config);</span>
+		try {
+<span class="fc" id="L529">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L530">			gameHandler.requestJoin(clientPlayer2);</span>
+
+<span class="fc" id="L532">			gameHandler.startGame();</span>
+<span class="nc" id="L533">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L534">			fail();</span>
+<span class="fc" id="L535">		}</span>
+
+<span class="fc" id="L537">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L538">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+
+		try {
+<span class="nc" id="L541">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L542">			fail();</span>
+<span class="fc" id="L543">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L544">			assertTrue(true);</span>
+<span class="nc" id="L545">		}</span>
+<span class="fc" id="L546">	}</span>
+
+	@Test
+	public void testRequestTilesNotValidePointLoss() {
+<span class="fc" id="L550">		Configuration config = new Configuration(6, 1, 3, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+
+<span class="fc" id="L552">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L555">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L556">			gameHandler.requestJoin(clientPlayer2);</span>
+
+<span class="fc" id="L558">			gameHandler.startGame();</span>
+<span class="nc" id="L559">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L560">			fail();</span>
+<span class="fc" id="L561">		}</span>
+		
+<span class="fc" id="L563">		gameHandler.requestPlayerHands().get(clientPlayer3).add( new Tile(0, 70, 1));</span>
+<span class="fc" id="L564">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L565">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 70, 1)));</span>
+		
+		try {
+<span class="nc" id="L568">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L569">			fail();</span>
+<span class="nc" id="L570">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L571">			fail();</span>
+<span class="fc" id="L572">		} catch (ParserException e1) {</span>
+<span class="fc" id="L573">			assertTrue(true);</span>
+<span class="nc" id="L574">		}</span>
+<span class="fc" id="L575">	}</span>
+
+	@Test
+	public void testRequestPlayerTilesClientNotPlayerAllowed() {
+<span class="fc" id="L579">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L581">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L582">			gameHandler.requestPlayerTiles(clientPlayer2);</span>
+<span class="nc" id="L583">			fail();</span>
+<span class="fc" id="L584">		} catch (NotAllowedException e) {</span>
+<span class="fc" id="L585">			assertTrue(true);</span>
+<span class="nc" id="L586">		}</span>
+<span class="fc" id="L587">	}</span>
+
+	@Test
+	public void testRequestTilesNotValideNotAllowed() {
+<span class="fc" id="L591">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L592">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L595">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L596">			gameHandler.requestJoin(clientPlayer2);</span>
+
+<span class="fc" id="L598">			gameHandler.startGame();</span>
+<span class="nc" id="L599">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L600">			fail();</span>
+<span class="fc" id="L601">		}</span>
+
+<span class="fc" id="L603">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L604">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+<span class="fc" id="L605">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 1), new Tile(0, 1, 2)));</span>
+<span class="fc" id="L606">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(0, 2, 3)));</span>
+
+		try {
+<span class="nc" id="L609">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L610">			fail();</span>
+<span class="fc" id="L611">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L612">			assertTrue(true);</span>
+<span class="nc" id="L613">		} catch (ParserException e1) {</span>
+<span class="nc" id="L614">			fail();</span>
+<span class="pc" id="L615">		}</span>
+<span class="fc" id="L616">	}</span>
+	
+	@Test
+	public void testRequestTilesNotStartedNotAllowed() {
+<span class="fc" id="L620">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L621">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L624">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L625">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="nc" id="L626">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L627">			fail();</span>
+<span class="fc" id="L628">		}</span>
+
+<span class="fc" id="L630">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L631">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+<span class="fc" id="L632">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 1), new Tile(0, 1, 2)));</span>
+<span class="fc" id="L633">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(0, 2, 3)));</span>
+
+		try {
+<span class="nc" id="L636">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L637">			fail();</span>
+<span class="fc" id="L638">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L639">			assertTrue(true);</span>
+<span class="nc" id="L640">		} catch (ParserException e1) {</span>
+<span class="nc" id="L641">			fail();</span>
+<span class="pc" id="L642">		}</span>
+<span class="fc" id="L643">	}</span>
+	
+	@Test
+	public void testRequestTilesTooManyNotAllowed() {
+<span class="fc" id="L647">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L648">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L651">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L652">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L653">			gameHandler.startGame();</span>
+<span class="nc" id="L654">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L655">			fail();</span>
+<span class="fc" id="L656">		}</span>
+
+<span class="fc" id="L658">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L659">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+<span class="fc" id="L660">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 1), new Tile(0, 1, 2)));</span>
+<span class="fc" id="L661">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(0, 2, 3)));</span>
+<span class="fc" id="L662">		List&lt;Tile&gt; toBeAddTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L663">		toBeAddTiles.add(new Tile(0, 0, 1));</span>
+<span class="fc" id="L664">		toBeAddTiles.add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L665">		toBeAddTiles.add(new Tile(0, 2, 3));</span>
+<span class="fc" id="L666">		gameHandler.getPlayers().get(0).getTiles().addAll(toBeAddTiles);</span>
+		
+		try {
+<span class="nc" id="L669">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="nc" id="L670">			fail();</span>
+<span class="fc" id="L671">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L672">			assertTrue(true);</span>
+<span class="nc" id="L673">		} catch (ParserException e1) {</span>
+<span class="nc" id="L674">			fail();</span>
+<span class="pc" id="L675">		}</span>
+<span class="fc" id="L676">	}</span>
+	
+	@Test
+	public void testRequestTiles() {
+<span class="fc" id="L680">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+<span class="fc" id="L681">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L684">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L685">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L686">			gameHandler.startGame();</span>
+<span class="nc" id="L687">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L688">			fail();</span>
+<span class="fc" id="L689">		}</span>
+
+<span class="fc" id="L691">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L692">		tilesWithCoordinate.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+		
+<span class="fc" id="L694">		List&lt;Tile&gt; toBeAddTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L695">		toBeAddTiles.add(new Tile(0, 0, 1));</span>
+		
+<span class="pc bpc" id="L697" title="1 of 2 branches missed.">		assertTrue(gameHandler.requestScore().get(clientPlayer3) == 0);</span>
+<span class="fc" id="L698">		gameHandler.getPlayers().get(0).getTiles().addAll(toBeAddTiles);</span>
+		
+		try {
+<span class="fc" id="L701">			gameHandler.requestPlayTiles(clientPlayer3, tilesWithCoordinate);</span>
+<span class="pc bpc" id="L702" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestScore().get(clientPlayer3) == 1);</span>
+<span class="nc" id="L703">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L704">			fail();</span>
+<span class="nc" id="L705">		} catch (ParserException e1) {</span>
+<span class="nc" id="L706">			fail();</span>
+<span class="pc" id="L707">		}</span>
+<span class="fc" id="L708">	}</span>
+	
+
+	@Test
+	public void testRequestGameDataPlayer() {
+<span class="fc" id="L713">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L716">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L717">			gameHandler.requestJoin(clientSpectator1);</span>
+<span class="fc" id="L718">			assertTrue(gameHandler.requestGameData(clientPlayer2) instanceof GameDataResponse);</span>
+<span class="fc" id="L719">			assertTrue(gameHandler.requestGameData(clientSpectator1) instanceof GameDataResponse);</span>
+<span class="nc" id="L720">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L721">			fail();</span>
+<span class="fc" id="L722">		}</span>
+<span class="fc" id="L723">	}</span>
+
+	@Test
+	public void testRequestTileSwapNotCrrent() {
+<span class="fc" id="L727">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L730">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L731">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L732">			gameHandler.startGame();</span>
+<span class="nc" id="L733">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L734">			fail();</span>
+<span class="fc" id="L735">		}</span>
+
+<span class="fc" id="L737">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+
+		try {
+<span class="nc" id="L740">			gameHandler.requestTileSwap(clientPlayer3, toBeSwappedTiles);</span>
+<span class="nc" id="L741">			fail();</span>
+<span class="fc" id="L742">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L743">			assertTrue(true);</span>
+<span class="nc" id="L744">		}</span>
+<span class="fc" id="L745">	}</span>
+
+	@Test
+	public void testRequestTileSwapNoTilesToSetTiles() {
+<span class="fc" id="L749">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L752">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L753">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L754">			gameHandler.startGame();</span>
+<span class="nc" id="L755">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L756">			fail();</span>
+<span class="fc" id="L757">		}</span>
+
+<span class="fc" id="L759">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+
+		try {
+<span class="nc" id="L762">			gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles);</span>
+<span class="nc" id="L763">			fail();</span>
+
+<span class="fc" id="L765">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L766">			assertTrue(true);</span>
+<span class="nc" id="L767">		} catch (ParserException e1) {</span>
+<span class="nc" id="L768">			fail();</span>
+<span class="pc" id="L769">		}</span>
+<span class="fc" id="L770">	}</span>
+
+	@Test
+	public void testRequestTileSwapNoTilesNotAllowedToSetTiles() {
+<span class="fc" id="L774">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L776">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L777">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L778">			gameHandler.startGame();</span>
+<span class="nc" id="L779">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L780">			fail();</span>
+<span class="fc" id="L781">		}</span>
+
+<span class="fc" id="L783">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L784">		toBeSwappedTiles.add(new Tile(0, 0, 1));</span>
+
+		try {
+<span class="nc" id="L787">			gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles);</span>
+<span class="nc" id="L788">			fail();</span>
+<span class="fc" id="L789">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L790">			assertTrue(true);</span>
+<span class="nc" id="L791">		}</span>
+<span class="fc" id="L792">	}</span>
+
+	@Test
+	public void testRequestTileSwapNoValidate() {
+<span class="fc" id="L796">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+		try {
+<span class="fc" id="L798">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L799">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L800">			gameHandler.startGame();</span>
+<span class="nc" id="L801">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L802">			fail();</span>
+<span class="fc" id="L803">		}</span>
+
+<span class="fc" id="L805">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 1, -2));</span>
+<span class="fc" id="L806">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(3, 2, 3));</span>
+<span class="fc" id="L807">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 3, 4));</span>
+
+<span class="fc" id="L809">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L810">		toBeSwappedTiles.add(new Tile(0, 1, -2));</span>
+<span class="fc" id="L811">		toBeSwappedTiles.add(new Tile(3, 2, 3));</span>
+<span class="fc" id="L812">		toBeSwappedTiles.add(new Tile(0, 3, 4));</span>
+
+		try {
+<span class="nc" id="L815">			gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles);</span>
+<span class="nc" id="L816">			fail();</span>
+<span class="fc" id="L817">		} catch (NotAllowedException | ParserException e) {</span>
+<span class="fc" id="L818">			assertTrue(true);</span>
+<span class="nc" id="L819">		}</span>
+<span class="fc" id="L820">	}</span>
+	
+	@Test
+	public void testRequestTileSwapTooManyTiles() {
+<span class="fc" id="L824">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.KICK, 4, SlowMove.POINT_LOSS, 0, 3);</span>
+
+<span class="fc" id="L826">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L829">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L830">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L831">			gameHandler.startGame();</span>
+<span class="nc" id="L832">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L833">			fail();</span>
+<span class="fc" id="L834">		}</span>
+
+<span class="fc" id="L836">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L837">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(3, 2, 3));</span>
+<span class="fc" id="L838">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 3, 4));</span>
+
+<span class="fc" id="L840">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L841">		toBeSwappedTiles.add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L842">		toBeSwappedTiles.add(new Tile(3, 2, 3));</span>
+<span class="fc" id="L843">		toBeSwappedTiles.add(new Tile(0, 3, 4));</span>
+
+		try {
+<span class="nc" id="L846">			gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles);</span>
+<span class="nc" id="L847">			fail();</span>
+<span class="fc" id="L848">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L849">			assertTrue(true);</span>
+<span class="nc" id="L850">		} catch (ParserException e1) {</span>
+<span class="nc" id="L851">			fail();</span>
+<span class="pc" id="L852">		}</span>
+<span class="fc" id="L853">	}</span>
+
+	@Test
+	public void testRequestTileSwapBagSize() {
+<span class="fc" id="L857">		Configuration config = new Configuration(3, 1, 4, 30, 10, WrongMove.NOTHING, 4, SlowMove.KICK, 0, 3);</span>
+
+<span class="fc" id="L859">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L862">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L863">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L864">			gameHandler.startGame();</span>
+<span class="nc" id="L865">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L866">			fail();</span>
+<span class="fc" id="L867">		}</span>
+<span class="fc" id="L868">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 0, 2));</span>
+<span class="fc" id="L869">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 1, 3));</span>
+<span class="fc" id="L870">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(1, 0, 4));</span>
+<span class="fc" id="L871">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(1, 1, 5));</span>
+
+<span class="fc" id="L873">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L874">		toBeSwappedTiles.add(new Tile(0, 0, 2));</span>
+<span class="fc" id="L875">		toBeSwappedTiles.add(new Tile(0, 1, 3));</span>
+<span class="fc" id="L876">		toBeSwappedTiles.add(new Tile(1, 0, 4));</span>
+<span class="fc" id="L877">		toBeSwappedTiles.add(new Tile(1, 1, 5));</span>
+
+		try {
+<span class="nc" id="L880">			gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles);</span>
+<span class="nc" id="L881">			fail();</span>
+<span class="fc" id="L882">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L883">			assertTrue(true);</span>
+<span class="nc" id="L884">		} catch (ParserException e1) {</span>
+<span class="nc" id="L885">			fail();</span>
+<span class="pc" id="L886">		}</span>
+<span class="fc" id="L887">	}</span>
+	
+	@Test
+	public void testRequestTileSwapNotStartet() {
+<span class="fc" id="L891">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L894">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L895">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L896">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L897">			fail();</span>
+<span class="fc" id="L898">		}</span>
+
+<span class="fc" id="L900">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L901">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 2, 3));</span>
+<span class="fc" id="L902">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 3, 4));</span>
+
+<span class="fc" id="L904">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L905">		toBeSwappedTiles.add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L906">		toBeSwappedTiles.add(new Tile(0, 2, 3));</span>
+
+		try {
+<span class="nc bnc" id="L909" title="All 2 branches missed.">			assertTrue(gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles).size() == 2);</span>
+<span class="fc" id="L910">		} catch (NotAllowedException e1) {</span>
+<span class="pc bpc" id="L911" title="1 of 2 branches missed.">			assertTrue(gameHandler.getGameState() == GameState.NOT_STARTED);</span>
+<span class="nc" id="L912">		} catch (ParserException e1) {</span>
+<span class="nc" id="L913">			fail();</span>
+<span class="pc" id="L914">		}</span>
+<span class="fc" id="L915">	}</span>
+	
+	@Test
+	public void testRequestTileSwap() {
+<span class="fc" id="L919">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L922">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L923">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="fc" id="L924">			gameHandler.startGame();</span>
+<span class="nc" id="L925">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L926">			fail();</span>
+<span class="fc" id="L927">		}</span>
+		
+<span class="fc" id="L929">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L930">		toBeSwappedTiles.addAll(gameHandler.requestPlayerHands().get(clientPlayer2));</span>
+
+		try {
+<span class="pc bpc" id="L933" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestTileSwap(clientPlayer2, toBeSwappedTiles).size() == gameHandler.getPlayers().get(0).getTiles().size());</span>
+<span class="nc" id="L934">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L935">			fail();</span>
+<span class="nc" id="L936">		} catch (ParserException e1) {</span>
+<span class="nc" id="L937">			fail();</span>
+<span class="pc" id="L938">		}</span>
+<span class="fc" id="L939">	}</span>
+
+	@Test
+	public void testRequestPlayerTilesBySpectator() {
+<span class="fc" id="L943">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L946">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L947">			gameHandler.requestJoin(clientSpectator1);</span>
+
+<span class="nc" id="L949">			gameHandler.requestPlayerTiles(clientSpectator1);</span>
+<span class="nc" id="L950">			fail();</span>
+<span class="fc" id="L951">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L952">			assertTrue(true);</span>
+<span class="nc" id="L953">		}</span>
+<span class="fc" id="L954">	}</span>
+
+	@Test
+	public void testRequestPlayerTilesPlayer() {
+<span class="fc" id="L958">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L961">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L962">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L964">			gameHandler.requestPlayerTiles(clientPlayer2);</span>
+
+<span class="pc bpc" id="L966" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestPlayerTiles(clientPlayer2) != null);</span>
+<span class="fc" id="L967">			assertTrue(gameHandler.requestPlayerTiles(clientPlayer2) instanceof ArrayList&lt;?&gt;);</span>
+<span class="pc bpc" id="L968" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestPlayerTiles(clientPlayer2).size() == 0);</span>
+
+<span class="fc" id="L970">			gameHandler.startGame();</span>
+<span class="pc bpc" id="L971" title="1 of 2 branches missed.">			assertTrue(gameHandler.requestPlayerTiles(clientPlayer2).size() == 6);</span>
+<span class="nc" id="L972">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L973">			fail();</span>
+<span class="fc" id="L974">		}</span>
+<span class="fc" id="L975">	}</span>
+	
+	@Test
+	public void testCheckWrongMove() {
+<span class="fc" id="L979">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.KICK, 4, SlowMove.KICK, 0, 3);</span>
+
+<span class="fc" id="L981">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L984">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L985">			gameHandler.requestJoin(clientPlayer3);</span>
+
+<span class="fc" id="L987">			assertTrue(true);</span>
+<span class="nc" id="L988">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L989">			fail();</span>
+<span class="fc" id="L990">		}</span>
+
+<span class="fc" id="L992">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 1, 2));</span>
+<span class="fc" id="L993">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 2, 3));</span>
+<span class="fc" id="L994">		gameHandler.getPlayers().get(0).getTiles().add(new Tile(0, 3, 4));</span>
+
+<span class="fc" id="L996">		List&lt;Tile&gt; toBeSwappedTiles = new ArrayList&lt;Tile&gt;();</span>
+
+		try {
+<span class="nc" id="L999">			gameHandler.requestTileSwap(clientPlayer3, toBeSwappedTiles);</span>
+<span class="nc" id="L1000">			fail();</span>
+<span class="fc" id="L1001">		} catch (NotAllowedException e1) {</span>
+<span class="fc" id="L1002">			assertTrue(true);</span>
+<span class="nc" id="L1003">		} catch (ParserException e1) {</span>
+<span class="nc" id="L1004">			fail();</span>
+<span class="pc" id="L1005">		}</span>
+<span class="fc" id="L1006">	}</span>
+	
+	@Test
+	public void testTurnTimeElapsed() {
+<span class="fc" id="L1010">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.POINT_LOSS, 20, 3);</span>
+<span class="fc" id="L1011">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L1014">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L1015">			gameHandler.requestJoin(clientPlayer1);</span>
+
+<span class="fc" id="L1017">			gameHandler.getPlayers().get(0).modifyScore(100);</span>
+<span class="nc" id="L1018">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L1019">			fail();</span>
+<span class="fc" id="L1020">		}</span>
+
+<span class="fc" id="L1022">		gameHandler.turnTimeElapsed();</span>
+<span class="pc bpc" id="L1023" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(0).getScore() == 80);</span>
+<span class="fc" id="L1024">	}</span>
+
+	@Test
+	public void testTurnTimeElapsedKik() {
+<span class="fc" id="L1028">		Configuration config = new Configuration(6, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.KICK, 20, 3);</span>
+<span class="fc" id="L1029">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L1032">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L1033">			gameHandler.requestJoin(clientPlayer1);</span>
+
+<span class="fc" id="L1035">			gameHandler.getPlayers().get(0).modifyScore(100);</span>
+<span class="nc" id="L1036">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L1037">			fail();</span>
+<span class="fc" id="L1038">		}</span>
+
+<span class="fc" id="L1040">		gameHandler.turnTimeElapsed();</span>
+<span class="pc bpc" id="L1041" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(0).getId() == 0);</span>
+<span class="fc" id="L1042">	}</span>
+
+	@Test
+	public void testVisualisationTimeElapsedBagFull() {
+<span class="fc" id="L1046">		gameHandler = new GameHandler(chc, STANDARDCONFIGURATION);</span>
+
+		try {
+<span class="fc" id="L1049">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L1050">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L1051">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L1052">			fail();</span>
+<span class="fc" id="L1053">		}</span>
+
+<span class="pc bpc" id="L1055" title="1 of 2 branches missed.">		assertTrue(&quot;client3 is current&quot;, gameHandler.getPlayers().get(0).getId() == 2);</span>
+<span class="pc bpc" id="L1056" title="1 of 2 branches missed.">		assertTrue(&quot;client3 has no Tiles in Hand&quot;, gameHandler.getPlayers().get(0).getTilesOnHandCount() == 0);</span>
+<span class="fc" id="L1057">		gameHandler.visualisationTimeElapsed();</span>
+<span class="pc bpc" id="L1058" title="1 of 2 branches missed.">		assertFalse(&quot;client3 is not current&quot;, gameHandler.getPlayers().get(0).getId() == 3);</span>
+<span class="pc bpc" id="L1059" title="1 of 2 branches missed.">		assertTrue(&quot;client3 has 6 Tiles in Hand&quot;, gameHandler.getPlayers().get(1).getTilesOnHandCount() == 6);</span>
+<span class="fc" id="L1060">	}</span>
+
+	@Test
+	public void testVisualisationTimeElapsedBagEmpty() {
+<span class="fc" id="L1064">		Configuration config = new Configuration(2, 1, 2, 30, 10, WrongMove.NOTHING, 4, SlowMove.KICK, 20, 3);</span>
+<span class="fc" id="L1065">		gameHandler = new GameHandler(chc, config);</span>
+
+		try {
+<span class="fc" id="L1068">			gameHandler.requestJoin(clientPlayer2);</span>
+<span class="fc" id="L1069">			gameHandler.requestJoin(clientPlayer3);</span>
+<span class="nc" id="L1070">		} catch (NotAllowedException e1) {</span>
+<span class="nc" id="L1071">			fail();</span>
+<span class="fc" id="L1072">		}</span>
+
+<span class="fc" id="L1074">		gameHandler.requestBag().removeAll(gameHandler.requestBag());</span>
+<span class="pc bpc" id="L1075" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(1).getScore() == 0);</span>
+<span class="pc bpc" id="L1076" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(0).getScore() == 0);</span>
+
+<span class="fc" id="L1078">		gameHandler.requestPlayerHands().get(clientPlayer3).add(new Tile(1, 0, 1));</span>
+<span class="fc" id="L1079">		gameHandler.visualisationTimeElapsed();</span>
+<span class="pc bpc" id="L1080" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(1).getScore() == 0);</span>
+<span class="pc bpc" id="L1081" title="1 of 2 branches missed.">		assertTrue(gameHandler.getPlayers().get(0).getScore() == 6);</span>
+<span class="fc" id="L1082">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

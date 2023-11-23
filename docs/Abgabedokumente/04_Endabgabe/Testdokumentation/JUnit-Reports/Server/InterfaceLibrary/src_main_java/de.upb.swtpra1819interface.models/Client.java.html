@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">InterfaceLibrary</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">de.upb.swtpra1819interface.models</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">package de.upb.swtpra1819interface.models;
+
+import java.util.Objects;
+
+public class Client {
+	private int clientId;
+	private String clientName;
+	private ClientType clientType;
+
+<span class="fc" id="L10">	public Client(int clientId, String clientName, ClientType clientType) {</span>
+<span class="fc" id="L11">		this.clientId = clientId;</span>
+<span class="fc" id="L12">		this.clientName = clientName;</span>
+<span class="fc" id="L13">		this.clientType = clientType;</span>
+<span class="fc" id="L14">	}</span>
+
+	public int getClientId() {
+<span class="fc" id="L17">		return clientId;</span>
+	}
+
+	public String getClientName() {
+<span class="fc" id="L21">		return clientName;</span>
+	}
+
+	public ClientType getClientType() {
+<span class="fc" id="L25">		return clientType;</span>
+	}
+
+	public void setClientId(int clientId) {
+<span class="nc" id="L29">		this.clientId = clientId;</span>
+<span class="nc" id="L30">	}</span>
+
+	public void setClientName(String clientName) {
+<span class="nc" id="L33">		this.clientName = clientName;</span>
+<span class="nc" id="L34">	}</span>
+
+	public boolean equals(Object o) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		if (this == o) {</span>
+<span class="fc" id="L38">			return true;</span>
+		}
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">		if (!(o instanceof Client)) {</span>
+<span class="nc" id="L41">			return false;</span>
+		}
+<span class="fc" id="L43">		Client client = (Client) o;</span>
+<span class="pc bpc" id="L44" title="3 of 4 branches missed.">		return (getClientId() == client.getClientId()) &amp;&amp; (Objects.equals(getClientName(), client.getClientName()))</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">				&amp;&amp; (getClientType() == client.getClientType());</span>
+	}
+
+	public int hashCode() {
+<span class="fc" id="L49">		return Objects.hash(new Object[] { Integer.valueOf(getClientId()), getClientName(), getClientType() });</span>
+	}
+
+	public void setClientType(ClientType type) {
+<span class="nc" id="L53">		clientType = type;</span>
+
+<span class="nc" id="L55">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,13 @@
+## This file must *NOT* be checked into Version Control Systems,
+# as it contains information specific to your local configuration.
+#
+# Location of the SDK. This is only used by Gradle.
+# For customization when using a Version Control System, please read the
+# header note.
+<<<<<<< HEAD
+#Tue Jan 15 10:20:28 CET 2019
+sdk.dir=C\:\\Users\\Public\\Documents\\SDK
+=======
+#Sat Jan 12 14:27:05 CET 2019
+sdk.dir=C\:\\Users\\mohne\\AppData\\Local\\Android\\Sdk
+>>>>>>> feature-ac-laytiles

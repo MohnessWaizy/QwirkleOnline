@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameData.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">GameData.java</span></div><h1>GameData.java</h1><pre class="source lang-java linenums">package model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+
+
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.messages.Winner;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.Game;
+import de.upb.swtpra1819interface.models.GameState;
+import de.upb.swtpra1819interface.models.TileOnPosition;
+
+
+public class GameData {
+
+	private int gameID;
+	private ArrayList&lt;Client&gt; clients;
+	private GameState gameState;
+	private List&lt;TileOnPosition&gt; board;
+	private HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt; hands;
+	private HashMap&lt;Client, Integer&gt; scores;
+	private Client currentPlayer;
+	private Client previousPlayer;
+	private Bag bag;
+	private Winner winner;
+	private Configuration config;
+
+<span class="fc" id="L34">	public GameData() {</span>
+<span class="fc" id="L35">		this.clients = new ArrayList&lt;Client&gt;();</span>
+<span class="fc" id="L36">		this.board = new ArrayList&lt;TileOnPosition&gt;();</span>
+<span class="fc" id="L37">		this.hands = new HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt;();</span>
+<span class="fc" id="L38">		this.scores = new HashMap&lt;Client, Integer&gt;();</span>
+<span class="fc" id="L39">		this.bag = new Bag();</span>
+<span class="fc" id="L40">		this.gameID = -1;</span>
+<span class="fc" id="L41">		this.previousPlayer = new Client(-1, null, null);</span>
+<span class="fc" id="L42">	}</span>
+
+<span class="fc" id="L44">	public GameData(int gameID, ArrayList&lt;Client&gt; clients, GameState state, Client currentPlayer, Bag bag,</span>
+			Winner winner, HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt; hands, List&lt;TileOnPosition&gt; board, Configuration config, Client previousPlayer) {
+<span class="fc" id="L46">		this.gameID = gameID;</span>
+<span class="fc" id="L47">		this.clients = clients;</span>
+<span class="fc" id="L48">		this.gameState = state;</span>
+<span class="fc" id="L49">		this.board = board;</span>
+<span class="fc" id="L50">		this.currentPlayer = currentPlayer;</span>
+<span class="fc" id="L51">		this.bag = bag;</span>
+<span class="fc" id="L52">		this.winner = winner;</span>
+<span class="fc" id="L53">		this.hands = hands;</span>
+<span class="fc" id="L54">		this.config = config;</span>
+<span class="fc" id="L55">		this.previousPlayer = previousPlayer;</span>
+<span class="fc" id="L56">	}</span>
+	
+	
+	public void setGame(Game game) {
+<span class="fc" id="L60">		this.gameID = game.getGameId();</span>
+<span class="fc" id="L61">		this.clients = (ArrayList&lt;Client&gt;) game.getPlayers();</span>
+<span class="fc" id="L62">		this.gameState = game.getGameState();</span>
+<span class="fc" id="L63">		this.config = game.getConfig();</span>
+<span class="fc" id="L64">	}</span>
+
+	public int getGameID() {
+<span class="nc" id="L67">		return gameID;</span>
+	}
+
+	public void setGameID(int gameID) {
+<span class="nc" id="L71">		this.gameID = gameID;</span>
+<span class="nc" id="L72">	}</span>
+
+	public ArrayList&lt;Client&gt; getClients() {
+<span class="fc" id="L75">		return clients;</span>
+	}
+
+	public void setClients(ArrayList&lt;Client&gt; clients) {
+<span class="nc" id="L79">		this.clients = clients;</span>
+<span class="nc" id="L80">	}</span>
+
+	public GameState getGameState() {
+<span class="fc" id="L83">		return gameState;</span>
+	}
+
+	public void setGameState(GameState gameState) {
+<span class="nc" id="L87">		this.gameState = gameState;</span>
+<span class="nc" id="L88">	}</span>
+
+	public List&lt;TileOnPosition&gt; getBoard() {
+<span class="fc" id="L91">		return board;</span>
+	}
+
+	public void setBoard(ArrayList&lt;TileOnPosition&gt; board) {
+<span class="nc" id="L95">		this.board = board;</span>
+<span class="nc" id="L96">	}</span>
+	
+	public void addBoardTiles(Collection&lt;TileOnPosition&gt; tiles) {
+<span class="nc" id="L99">		this.board.addAll(tiles);</span>
+<span class="nc" id="L100">	}</span>
+
+	public HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt; getHands() {
+<span class="fc" id="L103">		return hands;</span>
+	}
+
+	public void setHands(HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt; hands) {
+<span class="fc" id="L107">		this.hands = new HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt;();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">		for (Entry&lt;Client, ArrayList&lt;Tile&gt;&gt; entry : hands.entrySet()) {</span>
+<span class="fc" id="L109">			this.hands.put(entry.getKey().getClientId(), entry.getValue());</span>
+		}
+<span class="fc" id="L111">	}</span>
+
+	public HashMap&lt;Client, Integer&gt; getScores() {
+<span class="nc" id="L114">		return scores;</span>
+	}
+
+	public void setScores(HashMap&lt;Client, Integer&gt; scores) {
+<span class="nc" id="L118">		this.scores = scores;</span>
+<span class="nc" id="L119">	}</span>
+
+	public Client getCurrentPlayer() {
+<span class="fc" id="L122">		return currentPlayer;</span>
+	}
+
+	public void setCurrentPlayer(Client currentPlayer) {
+<span class="fc" id="L126">		this.currentPlayer = currentPlayer;</span>
+<span class="fc" id="L127">	}</span>
+
+	public Bag getBag() {
+<span class="nc" id="L130">		return bag;</span>
+	}
+
+	public void setBag(Bag bag) {
+<span class="nc" id="L134">		this.bag = bag;</span>
+<span class="nc" id="L135">	}</span>
+	
+	/**
+	 * Puts the data in gameDataResponse into the attributes of this class
+	 * 
+	 * @param gameDataResponse
+	 */
+
+	public void importGameData(GameDataResponse gameDataResponse) {
+<span class="fc" id="L144">		this.board = (List&lt;TileOnPosition&gt;) gameDataResponse.getBoard();</span>
+<span class="fc" id="L145">		this.currentPlayer = gameDataResponse.getCurrentClient();</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">		if (gameDataResponse.getGameState().equals(GameState.PAUSED)) {</span>
+<span class="fc" id="L147">			this.gameState = GameState.PAUSED;</span>
+<span class="fc" id="L148">		} else {</span>
+<span class="fc" id="L149">			this.gameState = GameState.IN_PROGRESS;</span>
+		}
+
+<span class="fc" id="L152">	}</span>
+
+	public Winner getWinner() {
+<span class="nc" id="L155">		return winner;</span>
+	}
+
+	public void setWinner(Winner winner) {
+<span class="nc" id="L159">		this.winner = winner;</span>
+<span class="nc" id="L160">		this.setScores(new HashMap&lt;Client, Integer&gt;(winner.getLeaderboard()));</span>
+<span class="nc" id="L161">	}</span>
+
+	public Configuration getConfig() {
+<span class="nc" id="L164">		return config;</span>
+	}
+
+	public void setConfig(Configuration config) {
+<span class="nc" id="L168">		this.config = config;</span>
+<span class="nc" id="L169">	}</span>
+
+	public Client getPreviousPlayer() {
+<span class="nc" id="L172">		return previousPlayer;</span>
+	}
+
+	public void setPreviousPlayer(Client previousPlayer) {
+<span class="nc" id="L176">		this.previousPlayer = previousPlayer;</span>
+<span class="nc" id="L177">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

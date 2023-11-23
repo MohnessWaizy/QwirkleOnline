@@ -1,0 +1,115 @@
+\documentclass[11pt, a4paper]{article} % Set the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
+\input{structure2.tex} % Include the file that specifies the document structure
+
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ofoot{ahoiSoftware $\cdot$ Warburger Straße $\cdot$ 33100 Paderborn}
+\ifoot{\pagemark}
+
+\begin{document}
+\setcounter{page}{3}
+%\pagenumbering{gobble}
+\section*{Erläuterung des Projektplans}
+
+Unser Entwicklungsprozess besteht aus drei aufeinander aufbauenden Phasen. Unterteilt werden diese durch drei Meilensteine:
+\begin{enumerate}
+\item Meilenstein Planung: schließt die erste Phase am 12.11.2018 ab
+\item Meilenstein Messe: schließt die zweite Phase am 10.12.2018 ab
+\item Meilenstein Endabgabe: schließt die dritte Phase am 25.01.2019 ab
+\end{enumerate}
+Die einzelnen Phasen sind in die unten erläuterten wöchentlichen Sprints unterteilt, für die jeweils 10 Personen eingeteilt sind, mit einem Workload von 178 Personenstunden pro Sprint. Jeder dieser Sprints beginnt mit einem Meeting des ganzen Teams und beinhaltet weitere Meetings und Konferenzen der Server- und  Beobachter-Teams.\\
+
+\subsection*{1. Phase}
+
+\ \\Für die erste Phase, welche die Planung umfasst fallen 142 Personenstunden an. Zunächst werden die Anforderungen an die Software auf Grundlage, der von Ihnen zur Verfügung gestellten Product Vision erarbeitet und in User Stories festgehalten. Sie beschreiben die verschiedenen Funktionalitäten aus Sicht der entsprechenden Nutzer und dienen als Basis des Product Backlogs. Hier werden die User Stories verwaltet und den verschiedenen Entwicklungsschritten und Sprints zugeteilt, um einen gegliederten und koordinierten Entwicklungsprozess zu ermöglichen. 
+
+\ \\Unsere Planung teilt sich zu Beginn in zwei Aspekte auf: den Spielserver und den Desktop Beobachter.
+Der Spielserver beschreibt die Spielkonfiguration, den Spielablauf sowie die Darstellung für die Endnutzer. Dazu gehören zum einen die Spiellogik, also Regeln nach denen gespielt wird, die Koordination der Spielzüge und für einen Endnutzer zugängliche Konfigurationsmöglichkeiten, um das Spiel seinen Wünschen anzupassen. In der Planung wird festgelegt, welche Komponenten bzw. Klassen benötigt werden, welche Eigenschaften diese haben müssen und wie sie untereinander in Beziehung stehen. Weiterhin wird der Aufbau einer Benutzeroberfläche gestaltet, über welche die gewünschten Konfigurationen vorgenommen und Spiele erstellt werden können.
+Der Desktopbeobachter verfügt über eine Benutzeroberfläche, über die das Spielgeschehen graphisch dargestellt wird. Dafür muss geplant werden, aus welchen Elementen sie besteht und wie sie aufgebaut ist. Außerdem muss festgelegt werden, welche Klassen benötigt werden, um dem beobachtenden Teilnehmer die Funktionalität zur Handhabung der ihm gegebenen Informationen zu ermöglichen. 
+
+\ \\Server und Beobachter müssen dabei im ständigen Austausch stehen. Ein eigens dafür gegründetes Interface-Komitee berät sich und legt fest, wie die Kommunikation zwischen den einzelnen Komponenten abläuft und standardisiert diese, um die fehlerfreie Interaktion der Systeme sicherzustellen.
+
+\ \\Neben den menschlichen Endnutzern gibt es noch einen Engine Teilnehmer – eine künstliche Intelligenz – die in der Lage ist eigenständig Spielzüge auszuführen und gegen andere Teilnehmer, menschliche, oder andere Engine-Teilnehmer anzutreten.\\\\
+
+\ \\Ein weiterer wichtiger Bestandteil ist das Testen. Genauere Spezifikation, wann und wie getestet wird, legen wir im Quality-Assurance-Dokument fest, um einen geregelten Ablauf zu erreichen. Um die Qualität des Prozesses weiter sicher zu stellen, wird in diesem außerdem eine Definition-of-Done festgelegt. Diese ermöglicht es den Gruppenmitgliedern, durch eine Richtlinie wann eine Aufgabe abgeschlossen ist, klar zwischen den verschiedenen Zielen abzugrenzen, um so die geplante Einteilung und Struktur des Projekts beizubehalten.\\
+
+
+\subsection*{2. Phase}
+
+\ \\In der zweiten Phase startet die Entwicklung des Desktop-Beobachters und Spielservers. Die Phase der Entwicklung beinhaltet die ersten vier Sprints.
+
+\ \\\textbf{Sprint 1}
+\ \\Im ersten Sprint wird sowohl die Server-Grundstruktur anhand des Interface Dokuments, als auch die Benutzeroberfläche des Desktop-Beobachters implementiert.
+
+\ \\\textbf{Sprint 2}
+\ \\Der zweite Sprint befasst sich mit der Entwicklung der serverseitigen Spiellogik. Des weiteren stellt das Desktop-Beobachter Team die Benutzeroberfläche fertig.
+
+\ \\\textbf{Sprint 3}
+\ \\Hier wird die Implementierung der Spiellogik des Spielservers fertiggestellt. Das DevOps-Dokument wird für Sie erstellt und die Programmlogik für den Desktop-Beobachter implementiert.
+
+\ \\\textbf{Sprint 4}
+\ \\Im letzten Sprint vor der Messe wird das DevOps-Dokument fertig gestellt und der Desktop-Beobachter ausführlich getestet um Ihnen ein einwandfrei funktionierendes Produkt vorstellen zu können.
+
+
+\ \\Das für Sie erstellte DevOps-Dokument erhalten Sie wie vereinbart am 09.12.18. Des weiteren bereiten wir Ihnen eine Präsentation vor, damit Sie sich bei der Messe von der Qualität unseres Produkts überzeugen können.\\
+
+
+\subsection*{3. Phase}
+
+\ \\In der dritten und somit letzten Phase wird der Android-Beobachter zu einem vollwertigen Client implementiert und es werden ausführliche Tests für alle Komponenten durchgeführt. Eine Besonderheit gibt es bei Sprint 7, da dieser über die Weihnachtsfeiertage fällt, wird hier die Retroperspektive im darauffolgenden Sprint nachgeholt.
+
+\ \\\textbf{Sprint 5}
+\ \\Der fünfte Sprint befasst sich mit der Analyse des eingekauften Android-Beobachters. Darauf aufbauend wird geplant, wie der Beobachter zu einem vollwertigen Client erweitert werden kann.\\
+
+\ \\\textbf{Sprint 6}
+\ \\In diesem Sprint wird der Spielserver angepasst. Außerdem beginnt bereits die Anpassungsarbeit des Android-Beobachters.
+
+\ \\\textbf{Sprint 7}
+\ \\Hier wird der Android-Beobachter implementiert und getestet.
+
+\ \\\textbf{Sprint 8}
+\ \\Im achten Sprint wird sowohl die Webseite erstellt, als auch der Engine-Teilnehmer implementiert. Des weiteren werden in diesem Sprint Hot- und Bugfixes des Android-Beobachters durchgeführt.
+
+\ \\\textbf{Sprint 9}
+\ \\Für diesen Sprint ist Erstellung und Anpassung der Abgabedokumente geplant. Während dieses Sprints wird auch Engine-Teilnehmer getestet.
+
+\ \\\textbf{Sprint 10}
+\ \\Im letzten Sprint wird die Turnierversion vorbereitet.
+
+\ \\\\Zum 25.01.2019 ist die Endabgabe des Produkts geplant. Am 1.02.2019 können wir die Turnierversion übergeben und das Projekt abschließen.\\\\\\
+
+\hspace{-1cm}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}[b]{|l|l|p{4.5cm}|}
+\toprule
+Verantwortliche(r) & Name & E-Mail\\
+\toprule[1.5pt]
+\textbf{Scrum Master} & Steffen Sassalla & sassalla@mail.upb.de\\
+\midrule
+\textbf{Teamleiter} & Steffen Sassalla & sassalla@mail.upb.de\\
+\midrule
+\textbf{Product Owner} & Lukas Gehring & lgehring@mail.upb.de\\
+\midrule
+Entwickler & gesamtes Team & \\
+\midrule
+Qualitätsmanager & Artem Burchanow & artemb@mail.upb.de\\
+\midrule
+Testmanager & Lukas Boschanski & bluk@mail.upb.de\\
+\midrule
+Produktmanager & Lukas Gehring & lgehring@mail.upb.de\\
+\midrule
+Werkzeugbeauftragter & Tim Dahm & dahmt@mail.upb.de\\
+\midrule
+Dokumentationsmanager & Tim Dahm & dahmt@mail.upb.de\\
+\midrule
+\textbf{Kommitee-Mitglied} & Linus Jungemann & linusjun@mail.upb.de\\
+\midrule
+Verantwortlicher Spielserver & Linus Jungemann & linusjun@mail.upb.de\\
+\midrule
+Verantwortlicher Desktopbeobachter & Artem Burchanow & artemb@mail.upb.de\\
+\bottomrule
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\end{document}

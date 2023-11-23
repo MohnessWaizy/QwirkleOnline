@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CommunicationHandler.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Communication</a> &gt; <span class="el_source">CommunicationHandler.java</span></div><h1>CommunicationHandler.java</h1><pre class="source lang-java linenums">package org.GameLogic.Communication;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.BasicCommunication.BasicCommunicationHandler;
+import org.GameLogic.DataStructures.Player;
+import org.GameLogic.Exceptions.NotAllowedException;
+import org.GameLogic.Handler.GameHandler;
+import org.GameLogic.Handler.GameManagement;
+import org.NetworkInterface.MessageWithClientId;
+
+import de.upb.swtpra1819interface.messages.*;
+import de.upb.swtpra1819interface.models.*;
+
+public class CommunicationHandler extends BasicCommunicationHandler implements CommunicationHandlerCallback {
+
+	/**
+	 * Send and receive messages
+	 */
+	private GameManagement gameManagement;
+	/**
+	 * Mapping for id and client, no need to iterate over every client
+	 */
+	private Map&lt;Integer, Client&gt; idMapping;
+	/**
+	 * 
+	 */
+	private GameHandler gameHandler;
+	/**
+	 * Game id
+	 */
+	private int gameId;
+	/**
+	 * time to sleep
+	 */
+	private long sleepTime;
+	/**
+	 * routing of messages
+	 */
+	private GameRunner gameRunner;
+
+	/**
+	 * Creates a &lt;b&gt;CommunicationHandler&lt;/b&gt; which will take input messages and
+	 * apply them to the game. Same goes for output messages of the game. All in all
+	 * this class does operate the GameHandler
+	 * 
+	 * @param game
+	 *            Interface Game instance, here to create the GameHandler
+	 * @param gameManagement
+	 */
+	public CommunicationHandler(Game game, GameManagement gameManagement) {
+<span class="nc" id="L54">		super();</span>
+<span class="nc" id="L55">		this.idMapping = new HashMap&lt;Integer, Client&gt;();</span>
+<span class="nc" id="L56">		this.gameManagement = gameManagement;</span>
+<span class="nc" id="L57">		this.gameId = game.getGameId();</span>
+<span class="nc" id="L58">		this.gameHandler = new GameHandler(this, game.getConfig());</span>
+<span class="nc" id="L59">		this.sleepTime = 5L;</span>
+<span class="nc" id="L60">		this.gameRunner = new StandardGameCycle();</span>
+<span class="nc" id="L61">	}</span>
+
+	/**
+	 * The switch implements all relevant request codes in
+	 * {@link org.GameLogic.Util.MessageCodes}. Every request then has a suitable
+	 * method to call, which a all in the interface {@link Communication}
+	 */
+	@Override
+	public void run() {
+
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		while (canReceiveMessage()) {</span>
+<span class="nc" id="L72">			MessageWithClientId messageWithClientId = pollNextMessage();</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (messageWithClientId != null) {</span>
+<span class="nc" id="L75">				gameRunner.routeMessage(messageWithClientId, gameHandler, gameManagement, idMapping, gameId);</span>
+<span class="nc" id="L76">			} else {</span>
+				try {
+<span class="nc" id="L78">					Thread.sleep(sleepTime);</span>
+<span class="nc" id="L79">				} catch (InterruptedException e) {</span>
+<span class="nc" id="L80">					e.printStackTrace();</span>
+				}
+			}
+
+		}
+
+<span class="nc" id="L86">	}</span>
+
+	@Override
+	public void callbackPlayerKicked(Player player) {
+<span class="nc" id="L90">		gameManagement.sendMsgToGame(new LeavingPlayer(player.getClient()), gameId);</span>
+<span class="nc" id="L91">		idMapping.remove(player.getClient().getClientId());</span>
+<span class="nc" id="L92">		gameManagement.moveToLobby(player.getClient(), gameId);</span>
+<span class="nc" id="L93">	}</span>
+
+	@Override
+	public void callbackNextPlayer(Player player) {
+<span class="nc" id="L97">		gameManagement.sendMsgToGame(new CurrentPlayer(player.getClient()), gameId);</span>
+<span class="nc" id="L98">	}</span>
+
+	@Override
+	public void callbackPlayerTiles(Player player, List&lt;Tile&gt; newHandTiles) {
+<span class="nc" id="L102">		gameManagement.sendMsg(new SendTiles(newHandTiles), player.getId());</span>
+<span class="nc" id="L103">	}</span>
+
+	@Override
+	public void callbackGameFinish(boolean rightfullyFinished) {
+<span class="nc" id="L107">		gameManagement.sendMsgToGame(new EndGame(), gameId);</span>
+
+<span class="nc" id="L109">		this.gameRunner = new EndedGameCycle();</span>
+<span class="nc" id="L110">		this.sleepTime = 100L;</span>
+
+		try {
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">			if (rightfullyFinished) {</span>
+<span class="nc" id="L115">				Winner winner = gameHandler.requestWinner();</span>
+<span class="nc" id="L116">				gameManagement.sendMsgToGame(winner, gameId);</span>
+<span class="nc" id="L117">				gameManagement.notifyOfFinish(winner, gameId);</span>
+			}
+
+			try {
+<span class="nc" id="L121">				Thread.sleep(5);</span>
+<span class="nc" id="L122">			} catch (InterruptedException e) {</span>
+				// TODO Auto-generated catch block
+<span class="nc" id="L124">				e.printStackTrace();</span>
+			}
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">			for (Client client : idMapping.values()) {</span>
+<span class="nc" id="L128">				gameManagement.moveToLobby(client, gameId);</span>
+			}
+
+<span class="nc" id="L131">		} catch (NotAllowedException e) {</span>
+<span class="nc" id="L132">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L134">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>NetworkServer.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">NetworkInterface</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.NetworkInterface</a> &gt; <span class="el_source">NetworkServer.java</span></div><h1>NetworkServer.java</h1><pre class="source lang-java linenums">package org.NetworkInterface;
+
+import java.util.Queue;
+import java.util.LinkedList;
+import de.upb.swtpra1819interface.parser.*;
+import de.upb.swtpra1819interface.messages.*;
+
+public class NetworkServer {
+	private Queue&lt;MessageWithClientId&gt; msgQueue;
+	private Parser parser;
+<span class="nc" id="L11">	private MultiServer server = null;</span>
+<span class="nc" id="L12">	private Thread thread = null;</span>
+
+	/**
+	 * @param port Port that should be opened
+	 */
+	public NetworkServer(short port) {
+<span class="nc" id="L18">		super();</span>
+<span class="nc" id="L19">		this.msgQueue = new LinkedList&lt;MessageWithClientId&gt;();</span>
+<span class="nc" id="L20">		this.parser = new Parser();</span>
+<span class="nc" id="L21">		server = new MultiServer(port, this);</span>
+<span class="nc" id="L22">		thread = new Thread(server);</span>
+<span class="nc" id="L23">		thread.start();</span>
+<span class="nc" id="L24">	}</span>
+
+	/**
+	 * @param msg      Message that was received
+	 * @param clientId Id of Sender
+	 * @throws ParsingException
+	 */
+	public synchronized void addToMsgQueue(String msg, long clientId) throws ParsingException {
+<span class="nc bnc" id="L32" title="All 4 branches missed.">		if (msg != null &amp;&amp; !&quot;&quot;.equals(msg)) {</span>
+<span class="nc" id="L33">			MessageWithClientId msg1 = new MessageWithClientId(parser.deserialize(msg), clientId);</span>
+<span class="nc" id="L34">			msgQueue.add(msg1);</span>
+		}
+<span class="nc" id="L36">	}</span>
+
+	/**
+	 * @param msg Message that should be transmitted to all clients
+	 */
+	public void sendMsg(Message msg) {
+<span class="nc" id="L42">		server.sendMsg(parser.serialize(msg));</span>
+<span class="nc" id="L43">	}</span>
+
+	/**
+	 * @param msg      Message that should be transmitted
+	 * @param clientId Receiver ID
+	 */
+	public void sendMsg(Message msg, long clientId) {
+<span class="nc" id="L50">		server.sendMsg(parser.serialize(msg), clientId);</span>
+<span class="nc" id="L51">	}</span>
+
+	/**
+	 * @return The next Message with its client id is returned from the message
+	 *         queue
+	 */
+	public MessageWithClientId getNextMsg() {
+<span class="nc" id="L58">		return msgQueue.poll();</span>
+	}
+
+	/**
+	 * @param clientId ID of the client that should be kicked
+	 * @return boolean value whether kick was successful
+	 */
+	public boolean kick(long clientId) {
+<span class="nc" id="L66">		return server.kick(clientId);</span>
+	}
+
+	/**
+	 * shuts the server down
+	 */
+	public void shutdown() {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">		if (thread != null) {</span>
+<span class="nc" id="L74">			server.shutdown();</span>
+			try {
+<span class="nc" id="L76">				thread.join();</span>
+<span class="nc" id="L77">			} catch (InterruptedException e) {</span>
+				// TODO Auto-generated catch block
+<span class="nc" id="L79">				e.printStackTrace();</span>
+			}
+		}
+<span class="nc" id="L82">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

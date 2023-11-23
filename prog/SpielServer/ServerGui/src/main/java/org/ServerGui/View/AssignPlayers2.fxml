@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="364.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutY="93.0" prefHeight="309.0" prefWidth="364.0">
+         <content>
+            <VBox fx:id="vBox_players" prefHeight="306.0" prefWidth="350.0" spacing="10.0" />
+         </content>
+      </ScrollPane>
+      <Text fx:id="text_warningMaxPlayersReached" fill="RED" layoutX="70.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Du kannst keine Spieler mehr hinzufügen!" wrappingWidth="223.998046875" />
+      <Button fx:id="button_loadPlayers" layoutX="14.0" layoutY="416.0" mnemonicParsing="false" text="Spieler laden" />
+      <Button fx:id="button_startGame" layoutX="268.0" layoutY="416.0" mnemonicParsing="false" text="Spiel starten" />
+      <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fügen Sie Spieler in der Reihenfolge hinzu, in der sie im Spiel Züge machen sollen." wrappingWidth="335.759765625" />
+      <Text layoutX="14.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Beobachter können Sie beliebig hinzufügen." wrappingWidth="335.759765625" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameHandler.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Handler</a> &gt; <span class="el_source">GameHandler.java</span></div><h1>GameHandler.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package org.GameLogic.Handler;</span>
+
+import java.lang.Error;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.GameLogic.Board.Bag;
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.Board.MapLogic;
+import org.GameLogic.Clock.Clockable;
+import org.GameLogic.Clock.GameClock;
+import org.GameLogic.Communication.Communication;
+import org.GameLogic.Communication.CommunicationHandlerCallback;
+import org.GameLogic.DataStructures.CycleList;
+import org.GameLogic.DataStructures.Player;
+import org.GameLogic.DataStructures.Spectator;
+import org.GameLogic.DataStructures.Tuple;
+import org.GameLogic.Exceptions.ErrorType;
+import org.GameLogic.Exceptions.NotAllowedException;
+import org.GameLogic.Exceptions.ParserException;
+import org.GameLogic.Util.GenerateResponse;
+
+import de.upb.swtpra1819interface.models.*;
+import de.upb.swtpra1819interface.messages.*;
+
+public class GameHandler implements Clockable, Communication {
+
+	/**
+	 * Configuration for this game
+	 */
+	private Configuration config;
+	/**
+	 * Bag instance to hold tiles
+	 */
+	private Bag bag;
+	/**
+	 * MapLogic instance to play tiles
+	 */
+	private MapLogic mapLogic;
+	/**
+	 * Gamestate
+	 */
+	private GameState gameState;
+	/**
+	 * Spectators of this game
+	 */
+
+	private List&lt;Spectator&gt; spectators;
+	/**
+	 * Players of this game
+	 */
+	private CycleList&lt;Player&gt; players;
+	/**
+	 * Stopwatch
+	 */
+	private GameClock gameClock;
+	/**
+	 * Callback to CommunicationHandler
+	 */
+	private CommunicationHandlerCallback chc;
+
+	/**
+	 * Constructs a game. The starting gameState will be &lt;i&gt;NOT_STARTED&lt;/i&gt;.
+	 * 
+	 * @param callback
+	 *            Callback to CommunicationHandler
+	 * @param config
+	 *            Configuration for this game
+	 */
+<span class="fc" id="L75">	public GameHandler(CommunicationHandlerCallback callback, Configuration config) {</span>
+		// callback
+<span class="fc" id="L77">		this.chc = callback;</span>
+
+		// set configuration
+<span class="fc" id="L80">		this.config = config;</span>
+
+		// set GameState to not_started
+<span class="fc" id="L83">		this.gameState = GameState.NOT_STARTED;</span>
+
+		// initialize player list
+<span class="fc" id="L86">		this.players = new CycleList&lt;Player&gt;(config.getMaxPlayerNumber());</span>
+
+		// initialize Stack
+<span class="fc" id="L89">		this.bag = new Bag(config.getColorShapeCount(), config.getTileCount(), config.getMaxHandTiles());</span>
+
+		// build gameClockhandler
+<span class="fc" id="L92">		this.gameClock = new GameClock(this, config.getTurnTime(), config.getTimeVisualization());</span>
+
+		// create MapLogic
+<span class="fc" id="L95">		this.mapLogic = new MapLogic(config.getColorShapeCount());</span>
+
+		// create Spectator list
+<span class="fc" id="L98">		this.spectators = new ArrayList&lt;Spectator&gt;();</span>
+<span class="fc" id="L99">	}</span>
+
+	/*
+	 * STRUCTURE : ADD/REMOVE CLIENTS
+	 */
+
+	/**
+	 * Search for a Player
+	 * 
+	 * @param client
+	 *            Client
+	 * @return Player assigned to the client or null if not existent
+	 */
+	private Player getPlayerByClient(Client client) {
+
+		// most of the times, it is the current or next player
+<span class="fc bfc" id="L115" title="All 4 branches covered.">		if (players.current() != null &amp;&amp; players.current().getClient().equals(client)) {</span>
+<span class="fc" id="L116">			return players.current();</span>
+<span class="fc bfc" id="L117" title="All 4 branches covered.">		} else if (players.peekNext() != null &amp;&amp; players.peekNext().getClient().equals(client)) {</span>
+<span class="fc" id="L118">			return players.peekNext();</span>
+		}
+
+		// it is another player
+<span class="fc bfc" id="L122" title="All 2 branches covered.">		for (Player player : players) {</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">			if (player.getClient().equals(client)) {</span>
+<span class="nc" id="L124">				return player;</span>
+			}
+		}
+<span class="fc" id="L127">		return null;</span>
+	}
+
+	/**
+	 * Search for a Spectator
+	 * 
+	 * @param client
+	 *            Client
+	 * @return Spectator assigned to the client or null if not existent
+	 */
+	private Spectator getSpectatorByClient(Client client) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">		for (Spectator spectator : spectators) {</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">			if (spectator.getClient().equals(client)) {</span>
+<span class="fc" id="L140">				return spectator;</span>
+			}
+		}
+<span class="fc" id="L143">		return null;</span>
+	}
+
+	@Override
+	public void requestJoin(Client client) throws NotAllowedException {
+
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">		if (client == null) {</span>
+<span class="nc" id="L150">			throw new NotAllowedException(&quot;Leerer Client&quot;);</span>
+		}
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">		if (client.getClientType() == ClientType.PLAYER) {</span>
+<span class="pc bpc" id="L154" title="1 of 4 branches missed.">			if (gameState == GameState.NOT_STARTED &amp;&amp; getPlayerByClient(client) == null) {</span>
+<span class="pc bpc" id="L155" title="1 of 4 branches missed.">				if (config.getMaxPlayerNumber() == 0 || config.getMaxPlayerNumber() &gt; players.size()) {</span>
+<span class="fc" id="L156">					players.add(new Player(client));</span>
+<span class="fc" id="L157">				} else {</span>
+<span class="fc" id="L158">					throw new NotAllowedException(&quot;Zu viele Spieler&quot;);</span>
+				}
+			} else {
+<span class="fc" id="L161">				throw new NotAllowedException(&quot;Spieler schon im Spiel&quot;);</span>
+			}
+		} else {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">			if (getSpectatorByClient(client) == null) {</span>
+<span class="fc" id="L165">				spectators.add(new Spectator(client));</span>
+<span class="fc" id="L166">			} else {</span>
+<span class="fc" id="L167">				throw new NotAllowedException(&quot;Beobachter schon im Spiel&quot;);</span>
+			}
+		}
+<span class="fc" id="L170">	}</span>
+
+	@Override
+	public void requestRemove(Client client) {
+
+<span class="fc bfc" id="L175" title="All 2 branches covered.">		if (client.getClientType() == ClientType.PLAYER) {</span>
+<span class="fc" id="L176">			Player player = getPlayerByClient(client);</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">			if (player != null) {</span>
+				// put players tiles back into the bag
+<span class="fc" id="L179">				bag.refill(new ArrayList&lt;Tile&gt;(player.getTiles()));</span>
+				// remove player from cycle list
+<span class="fc" id="L181">				players.remove(player);</span>
+<span class="pc bpc" id="L182" title="1 of 4 branches missed.">				if (gameState == GameState.IN_PROGRESS &amp;&amp; players.size() &lt;= 1) {</span>
+					// End game
+<span class="fc" id="L184">					gameState = GameState.ENDED;</span>
+					// Destroy Clock
+<span class="fc" id="L186">					gameClock.destroy();</span>
+					// Notify
+<span class="fc" id="L188">					chc.callbackGameFinish(true);</span>
+				}
+			}
+<span class="fc" id="L191">		} else {</span>
+<span class="fc" id="L192">			Spectator spec = getSpectatorByClient(client);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">			if (spec != null) {</span>
+<span class="fc" id="L194">				spectators.remove(spec);</span>
+			}
+		}
+
+<span class="fc" id="L198">	}</span>
+
+	/*
+	 * START / STOP / ABORT
+	 */
+
+	/**
+	 * Starts a game
+	 * 
+	 * @throws NotAllowedException
+	 *             If the player count is 0 or 1
+	 */
+	public void startGame() throws NotAllowedException {
+<span class="fc bfc" id="L211" title="All 2 branches covered.">		if (players.size() &lt;= 1) {</span>
+<span class="fc" id="L212">			throw new NotAllowedException(&quot;Mehrere Spieler nötig &quot;);</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">		} else if (gameState != GameState.NOT_STARTED) {</span>
+<span class="fc" id="L214">			throw new NotAllowedException(&quot;Spiel ist schon zuende &quot;);</span>
+		}
+
+<span class="fc" id="L217">		this.gameState = GameState.IN_PROGRESS;</span>
+
+		/*
+		 * Give starting tiles to each player
+		 */
+<span class="fc bfc" id="L222" title="All 2 branches covered.">		for (Player player : players) {</span>
+<span class="fc" id="L223">			List&lt;Tile&gt; startTiles = bag.takeStartTiles();</span>
+<span class="fc" id="L224">			player.addTiles(startTiles);</span>
+		}
+
+<span class="fc" id="L227">	}</span>
+
+	/**
+	 * Starts the clock
+	 */
+	public void startGameClock() {
+<span class="nc" id="L233">		gameClock.startTicking();</span>
+<span class="nc" id="L234">	}</span>
+
+	/**
+	 * End the game
+	 * 
+	 * @throws NotAllowedException
+	 *             If the game is already ended
+	 */
+	public void endGame() throws NotAllowedException {
+
+<span class="fc bfc" id="L244" title="All 2 branches covered.">		if (gameState == GameState.ENDED) {</span>
+<span class="fc" id="L245">			throw new NotAllowedException(&quot;Spiel ist schon zuende&quot;);</span>
+		}
+
+<span class="fc" id="L248">		gameState = GameState.ENDED;</span>
+
+<span class="fc" id="L250">		gameClock.destroy();</span>
+
+<span class="fc" id="L252">	}</span>
+
+	/**
+	 * Paused a game
+	 * 
+	 * @throws NotAllowedException
+	 *             If a gameState is not in &lt;i&gt;IN_PROGRESS&lt;/I&gt;.
+	 */
+	public void pauseGame() throws NotAllowedException {
+<span class="fc bfc" id="L261" title="All 2 branches covered.">		if (gameState != GameState.IN_PROGRESS) {</span>
+<span class="fc" id="L262">			throw new NotAllowedException(&quot;Spiel ist momentan nicht am laufen&quot;);</span>
+		}
+<span class="fc" id="L264">		gameState = GameState.PAUSED;</span>
+<span class="fc" id="L265">		gameClock.pauseTicking();</span>
+<span class="fc" id="L266">	}</span>
+
+	/**
+	 * Resume a game
+	 * 
+	 * @throws NotAllowedException
+	 *             If a gameState is not in &lt;i&gt;PAUSED&lt;/I&gt;.
+	 */
+	public void resumeGame() throws NotAllowedException {
+<span class="fc bfc" id="L275" title="All 2 branches covered.">		if (gameState != GameState.PAUSED) {</span>
+<span class="fc" id="L276">			throw new NotAllowedException(&quot;Spiel ist momentan nicht pausiert&quot;);</span>
+		}
+<span class="fc" id="L278">		gameState = GameState.IN_PROGRESS;</span>
+<span class="fc" id="L279">		gameClock.resumeTicking();</span>
+<span class="fc" id="L280">	}</span>
+
+	/*
+	 * PENALTIES
+	 */
+
+	/**
+	 * Handels wrong moves accordingly to the configuration
+	 */
+	private void checkWrongMove() {
+<span class="fc bfc" id="L290" title="All 2 branches covered.">		if (config.getWrongMove() == WrongMove.KICK) {</span>
+
+<span class="fc" id="L292">			chc.callbackPlayerKicked(players.current());</span>
+
+<span class="fc" id="L294">			requestRemove(players.current().getClient());</span>
+
+<span class="fc" id="L296">			gameClock.turnTimeOver();</span>
+
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">		} else if (config.getWrongMove() == WrongMove.POINT_LOSS) {</span>
+
+<span class="nc" id="L300">			players.current().modifyScore(config.getWrongMovePenalty() * -1);</span>
+<span class="nc" id="L301">			gameClock.turnTimeOver();</span>
+
+		}
+<span class="fc" id="L304">	}</span>
+
+	/*
+	 * Interface Methods
+	 */
+
+	@Override
+	public Winner requestWinner() throws NotAllowedException {
+<span class="fc bfc" id="L312" title="All 2 branches covered.">		if (gameState == GameState.ENDED) {</span>
+
+<span class="fc" id="L314">			Player bestPlayer = players.stream().max(new Comparator&lt;Player&gt;() {</span>
+				public int compare(Player p1, Player p2) {
+<span class="fc" id="L316">					return Integer.compare(p1.getScore(), p2.getScore());</span>
+				}
+<span class="fc" id="L318">			}).get();</span>
+
+<span class="fc" id="L320">			return GenerateResponse.constructWinner(bestPlayer, players);</span>
+
+		} else {
+<span class="fc" id="L323">			throw new NotAllowedException(&quot;Spiel noch nicht zuende&quot;);</span>
+		}
+
+	}
+
+	@Override
+	public Player requestCurrentPayer() {
+<span class="fc" id="L330">		return players.current();</span>
+	}
+
+	@Override
+	public void requestPlayTiles(Client client, List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate)
+			throws NotAllowedException, ParserException {
+
+<span class="fc bfc" id="L337" title="All 2 branches covered.">		if (!validateTilesOnPosition(tilesWithCoordinate)) {</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">			if (players.current().getClient().equals(client)) {</span>
+				// player on turn will get move valid false
+<span class="fc" id="L340">				throw new ParserException(ErrorType.ValidationError, &quot;Einer der Steine nicht bekannt&quot;);</span>
+			} else {
+<span class="nc" id="L342">				throw new ParserException(ErrorType.BadRequestError, &quot;Einer der Steine nicht bekannt&quot;);</span>
+			}
+		}
+
+<span class="fc" id="L346">		List&lt;Tile&gt; tiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tct : tilesWithCoordinate) {</span>
+<span class="fc" id="L348">			tiles.add(tct.getSecond());</span>
+		}
+<span class="fc bfc" id="L350" title="All 2 branches covered.">		if (gameState == GameState.NOT_STARTED) {</span>
+<span class="fc" id="L351">			throw new NotAllowedException(ErrorType.BadRequestError, &quot;Spiel hat noch nicht begonnen&quot;);</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">		} else if (!players.current().getClient().equals(client)) {</span>
+<span class="nc" id="L353">			throw new NotAllowedException(ErrorType.BadRequestError, &quot;Spieler ist nicht dran&quot;);</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">		} else if (tiles.isEmpty()) {</span>
+<span class="fc" id="L355">			checkWrongMove();</span>
+<span class="fc" id="L356">			throw new NotAllowedException(&quot;Spieler muss mehr als 0 Seine spielen&quot;);</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">		} else if (!players.current().hasTiles(tiles)) {</span>
+<span class="fc" id="L358">			checkWrongMove();</span>
+<span class="fc" id="L359">			throw new NotAllowedException(&quot;Spieler hat nicht alle Steine in seiner Hand&quot;);</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">		} else if (tiles.size() &gt; config.getMaxHandTiles()) {</span>
+<span class="fc" id="L361">			checkWrongMove();</span>
+<span class="fc" id="L362">			throw new NotAllowedException(</span>
+<span class="fc" id="L363">					&quot;Spieler kann nicht mehr Steine spielen, als in der Konfiguration vorgesehen&quot;);</span>
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">		} else if (!mapLogic.validateMove(tilesWithCoordinate)) {</span>
+<span class="nc" id="L365">			checkWrongMove();</span>
+<span class="nc" id="L366">			throw new NotAllowedException(&quot;Spielzug nicht valide&quot;);</span>
+		}
+		// modify score
+<span class="fc" id="L369">		players.current().modifyScore(mapLogic.doMove(tilesWithCoordinate));</span>
+
+		// remove tiles of a player
+<span class="fc" id="L372">		players.current().removeTiles(tiles);</span>
+
+		// player did move, spectators need visualization time
+<span class="fc" id="L375">		gameClock.turnTimeOver();</span>
+<span class="fc" id="L376">	}</span>
+
+	@Override
+	public Map&lt;Client, Integer&gt; requestScore() {
+		/*
+		 * Does this need the ability to send a NotAllowed ? If a game is not started,
+		 * all scores are 0, should be fine
+		 */
+
+<span class="fc" id="L385">		return new HashMap&lt;Client, Integer&gt;() {</span>
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+<span class="fc bfc" id="L392" title="All 2 branches covered.">				for (Player player : players) {</span>
+<span class="fc" id="L393">					put(player.getClient(), player.getScore());</span>
+				}
+			}
+		};
+	}
+
+	@Override
+	public long requestTurnTimeLeft() {
+<span class="nc" id="L401">		return gameClock.getTimeLeft();</span>
+	}
+
+	@Override
+	public long requestTotalTime() {
+<span class="nc" id="L406">		return gameClock.getTotalTime();</span>
+	}
+
+	@Override
+	public List&lt;Tile&gt; requestBag() {
+<span class="fc" id="L411">		return bag.getBag();</span>
+	}
+
+	@Override
+	public Map&lt;Client, Collection&lt;Tile&gt;&gt; requestPlayerHands() {
+<span class="fc" id="L416">		return new HashMap&lt;Client, Collection&lt;Tile&gt;&gt;() {</span>
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+<span class="fc bfc" id="L423" title="All 2 branches covered.">				for (Player player : players) {</span>
+<span class="fc" id="L424">					put(player.getClient(), new ArrayList&lt;Tile&gt;(player.getTiles()));</span>
+				}
+			}
+		};
+	}
+
+	@Override
+	public GameDataResponse requestGameData(Client client) {
+<span class="fc bfc" id="L432" title="All 2 branches covered.">		if (client.getClientType() == ClientType.PLAYER) {</span>
+<span class="fc" id="L433">			return GenerateResponse.constructGameDataResponse(mapLogic.getBoard(), players.current(),</span>
+<span class="fc" id="L434">					new ArrayList&lt;Tile&gt;(players.current().getTiles()), gameState);</span>
+		} else {
+<span class="fc" id="L436">			return GenerateResponse.constructGameDataResponse(mapLogic.getBoard(), players.current(),</span>
+<span class="fc" id="L437">					Collections.emptyList(), gameState);</span>
+		}
+
+	}
+
+	@Override
+	public List&lt;Tile&gt; requestTileSwap(Client client, List&lt;Tile&gt; toBeSwappedTiles)
+			throws NotAllowedException, ParserException {
+
+<span class="fc bfc" id="L446" title="All 2 branches covered.">		if (!validateTiles(toBeSwappedTiles)) {</span>
+
+<span class="pc bpc" id="L448" title="1 of 2 branches missed.">			if (players.current().getClient().equals(client)) {</span>
+				// player on turn will get swap valid false
+<span class="fc" id="L450">				throw new ParserException(ErrorType.ValidationError, &quot;Einer der Steine nicht bekannt&quot;);</span>
+			} else {
+<span class="nc" id="L452">				throw new ParserException(ErrorType.BadRequestError, &quot;Einer der Steine nicht bekannt&quot;);</span>
+			}
+
+<span class="fc bfc" id="L455" title="All 2 branches covered.">		} else if (gameState == GameState.NOT_STARTED) {</span>
+
+<span class="fc" id="L457">			throw new NotAllowedException(ErrorType.BadRequestError, &quot;Spiel hat noch nicht begonnen&quot;);</span>
+
+<span class="fc bfc" id="L459" title="All 2 branches covered.">		} else if (!players.current().getClient().equals(client)) {</span>
+
+<span class="fc" id="L461">			throw new NotAllowedException(ErrorType.BadRequestError, &quot;Spieler nicht am Zug&quot;);</span>
+
+<span class="fc bfc" id="L463" title="All 2 branches covered.">		} else if (toBeSwappedTiles.isEmpty()) {</span>
+
+<span class="fc" id="L465">			checkWrongMove();</span>
+<span class="fc" id="L466">			throw new NotAllowedException(&quot;Mehr als ein Stein muss getauscht werden&quot;);</span>
+
+<span class="fc bfc" id="L468" title="All 2 branches covered.">		} else if (!players.current().hasTiles(toBeSwappedTiles)) {</span>
+
+<span class="fc" id="L470">			checkWrongMove();</span>
+<span class="fc" id="L471">			throw new NotAllowedException(&quot;Ein Spieler kann nur Steine tauschen, die er hat&quot;);</span>
+
+<span class="fc bfc" id="L473" title="All 2 branches covered.">		} else if (toBeSwappedTiles.size() &gt; config.getMaxHandTiles()) {</span>
+
+<span class="fc" id="L475">			checkWrongMove();</span>
+<span class="fc" id="L476">			throw new NotAllowedException(&quot;Spieler kann nicht mehr Steine tauschen als möglich&quot;);</span>
+<span class="fc bfc" id="L477" title="All 2 branches covered.">		} else if (bag.getBagSize() &lt; toBeSwappedTiles.size()) {</span>
+
+<span class="fc" id="L479">			checkWrongMove();</span>
+<span class="fc" id="L480">			throw new NotAllowedException(&quot;Spieler will mehr Steine tauschen, als im Stapel sind&quot;);</span>
+		}
+
+		// Remove the tiles, place them into the stack and add the new tiles to the
+		// player
+
+<span class="fc" id="L486">		players.current().removeTiles(toBeSwappedTiles);</span>
+<span class="fc" id="L487">		ArrayList&lt;Tile&gt; newHandTiles = bag.swapTiles(toBeSwappedTiles);</span>
+<span class="fc" id="L488">		players.current().addTiles(newHandTiles);</span>
+
+<span class="fc" id="L490">		gameClock.turnTimeOver();</span>
+
+<span class="fc" id="L492">		return newHandTiles;</span>
+	}
+
+	@Override
+	public List&lt;Tile&gt; requestPlayerTiles(Client client) throws NotAllowedException {
+<span class="fc" id="L497">		Player player = getPlayerByClient(client);</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">		if (player != null) {</span>
+<span class="fc" id="L499">			return new ArrayList&lt;Tile&gt;(player.getTiles());</span>
+		} else {
+<span class="fc" id="L501">			throw new NotAllowedException(&quot;Spieler nicht im Spiel&quot;);</span>
+		}
+	}
+
+	@Override
+	public List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; requestUpdate() {
+<span class="nc" id="L507">		return mapLogic.getLastMove();</span>
+	}
+
+	/*
+	 * CLOCK
+	 */
+
+	@Override
+	public void visualisationTimeElapsed() {
+<span class="fc" id="L516">		players.next();</span>
+
+<span class="fc" id="L518">		int tilesDifference = config.getMaxHandTiles() - players.current().getTilesOnHandCount();</span>
+<span class="pc bpc" id="L519" title="1 of 2 branches missed.">		if (tilesDifference &gt; 0) {</span>
+
+<span class="fc" id="L521">			List&lt;Tile&gt; newTiles = bag.takeTiles(tilesDifference);</span>
+<span class="fc" id="L522">			players.current().addTiles(newTiles);</span>
+<span class="fc" id="L523">			chc.callbackPlayerTiles(players.current(), newTiles);</span>
+
+		}
+
+<span class="fc bfc" id="L527" title="All 2 branches covered.">		if (bag.isEmpty()) {</span>
+<span class="pc bpc" id="L528" title="1 of 2 branches missed.">			for (Player player : players) {</span>
+<span class="pc bpc" id="L529" title="1 of 2 branches missed.">				if (player.hasNoTiles()) {</span>
+					// winning player gets 6 points
+<span class="fc" id="L531">					player.modifyScore(6);</span>
+					// Game will be finished
+<span class="fc" id="L533">					gameState = GameState.ENDED;</span>
+					// Stop Clock
+<span class="fc" id="L535">					gameClock.destroy();</span>
+					// Send Winner to clients
+<span class="fc" id="L537">					chc.callbackGameFinish(true);</span>
+<span class="fc" id="L538">					return;</span>
+				}
+			}
+		}
+<span class="fc" id="L542">		chc.callbackNextPlayer(players.current());</span>
+<span class="fc" id="L543">	}</span>
+
+	@Override
+	public void turnTimeElapsed() {
+<span class="fc bfc" id="L547" title="All 2 branches covered.">		if (config.getSlowMove() == SlowMove.KICK) {</span>
+
+			// Kick player and tell clients
+<span class="fc" id="L550">			chc.callbackPlayerKicked(players.current());</span>
+<span class="fc" id="L551">			requestRemove(players.current().getClient());</span>
+
+<span class="fc" id="L553">		} else {</span>
+<span class="fc" id="L554">			players.current().modifyScore(config.getSlowMovePenalty() * -1);</span>
+		}
+
+<span class="fc" id="L557">	}</span>
+
+	/**
+	 * Check if tiles are valid tiles. That means, that the uniqueId, the color and
+	 * the shape must lie in between its intervals
+	 * 
+	 * @param tiles
+	 *            List of tiles
+	 * @return true if all tiles are valid
+	 */
+	private boolean validateTiles(List&lt;Tile&gt; tiles) {
+<span class="fc" id="L568">		int maxTileId = config.getColorShapeCount() * config.getColorShapeCount() * config.getTileCount();</span>
+
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">		if (tiles == null) {</span>
+<span class="nc" id="L571">			return false;</span>
+		}
+
+<span class="fc bfc" id="L574" title="All 2 branches covered.">		for (Tile tile : tiles) {</span>
+<span class="pc bpc" id="L575" title="3 of 8 branches missed.">			if (tile == null || tile.getUniqueId() &lt; 0 || tile.getUniqueId() &gt; maxTileId || tile.getColor() &lt; 0</span>
+<span class="pc bpc" id="L576" title="2 of 4 branches missed.">					|| tile.getColor() &gt; config.getColorShapeCount() || tile.getShape() &lt; 0</span>
+<span class="pc bpc" id="L577" title="1 of 2 branches missed.">					|| tile.getShape() &gt; config.getColorShapeCount()) {</span>
+<span class="fc" id="L578">				return false;</span>
+			}
+		}
+
+<span class="fc" id="L582">		return true;</span>
+	}
+
+	/**
+	 * Checks if tiles with their associated coordinate are valid. That means, that
+	 * the uniqueId, the color and the shape of a tile must lie in between its
+	 * intervals. Also the coordinate and tile can not be null.
+	 * 
+	 * 
+	 * @param tiles
+	 *            List of Tuples with Tile and Coordinate
+	 * @return true if all tiles with coordinates are valid
+	 */
+	private boolean validateTilesOnPosition(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles) {
+<span class="fc" id="L596">		int maxTileId = config.getColorShapeCount() * config.getColorShapeCount() * config.getTileCount();</span>
+
+<span class="pc bpc" id="L598" title="1 of 2 branches missed.">		if (tiles == null) {</span>
+<span class="nc" id="L599">			return false;</span>
+		}
+
+<span class="fc bfc" id="L602" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tileWithCoord : tiles) {</span>
+
+<span class="pc bpc" id="L604" title="1 of 2 branches missed.">			if (tileWithCoord == null) {</span>
+<span class="nc" id="L605">				return false;</span>
+			}
+
+<span class="fc" id="L608">			Tile tile = tileWithCoord.getSecond();</span>
+<span class="fc" id="L609">			Coordinate coord = tileWithCoord.getFirst();</span>
+
+<span class="pc bpc" id="L611" title="4 of 8 branches missed.">			if (coord == null || tile == null || tile.getUniqueId() &lt; 0 || tile.getUniqueId() &gt; maxTileId</span>
+<span class="pc bpc" id="L612" title="3 of 6 branches missed.">					|| tile.getColor() &lt; 0 || tile.getColor() &gt; config.getColorShapeCount() || tile.getShape() &lt; 0</span>
+<span class="fc bfc" id="L613" title="All 2 branches covered.">					|| tile.getShape() &gt; config.getColorShapeCount()) {</span>
+<span class="fc" id="L614">				return false;</span>
+			}
+
+		}
+
+<span class="fc" id="L619">		return true;</span>
+	}
+
+	/*
+	 * GETTER SETTER
+	 */
+
+	public Configuration getConfig() {
+<span class="nc" id="L627">		return config;</span>
+	}
+
+	public GameState getGameState() {
+<span class="fc" id="L631">		return gameState;</span>
+	}
+
+	public List&lt;Player&gt; getPlayers() {
+<span class="fc" id="L635">		return players.getData();</span>
+	}
+
+	public List&lt;Spectator&gt; getSpectators() {
+<span class="fc" id="L639">		return spectators;</span>
+	}
+
+	public boolean inTurn() {
+<span class="nc" id="L643">		return gameClock.isInTurnTime();</span>
+	}
+
+	public GameClock getGameClock() {
+<span class="nc" id="L647">		return gameClock;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,20 @@
+#spielfeld{
+	-fx-background-color: #f4f4f4;
+}
+
+.titledPane{
+	-fx-background-color: #6B7074;
+}
+
+#scrollbar_pane{
+	-fx-background-color: #C2C5C7;
+}
+
+.anchorPane{
+	-fx-background-color: #f4f4f4;
+	-fx-text-fill: #C2C5C7;
+}
+
+.topBar{
+	-fx-background-color: #6B7074;
+}

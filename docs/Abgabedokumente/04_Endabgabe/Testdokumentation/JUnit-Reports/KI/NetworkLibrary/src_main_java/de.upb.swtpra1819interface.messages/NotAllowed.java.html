@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>NotAllowed.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 06:34:28)</a> &gt; <a href="../../index.html" class="el_group">NetworkLibrary</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">de.upb.swtpra1819interface.messages</a> &gt; <span class="el_source">NotAllowed.java</span></div><h1>NotAllowed.java</h1><pre class="source lang-java linenums">package de.upb.swtpra1819interface.messages;
+
+import java.util.Objects;
+
+
+public class NotAllowed
+  extends Error
+{
+  public static final int uniqueID = 920;
+  
+  public NotAllowed(String message, int causeId)
+  {
+<span class="nc" id="L13">    super(920, message, causeId);</span>
+<span class="nc" id="L14">  }</span>
+  
+  public boolean equals(Object o)
+  {
+<span class="nc bnc" id="L18" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L19">      return true;</span>
+    }
+<span class="nc bnc" id="L21" title="All 2 branches missed.">    if (!(o instanceof NotAllowed)) {</span>
+<span class="nc" id="L22">      return false;</span>
+    }
+<span class="nc" id="L24">    NotAllowed that = (NotAllowed)o;</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">    return (Objects.equals(Integer.valueOf(getUniqueId()), Integer.valueOf(that.getUniqueId()))) &amp;&amp; </span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">      (Objects.equals(Integer.valueOf(getCauseId()), Integer.valueOf(that.getCauseId())));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 06:34:28)</div></body></html>

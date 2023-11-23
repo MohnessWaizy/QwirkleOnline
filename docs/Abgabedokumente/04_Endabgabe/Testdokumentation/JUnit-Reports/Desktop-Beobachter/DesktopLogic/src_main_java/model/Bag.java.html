@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Bag.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Bag.java</span></div><h1>Bag.java</h1><pre class="source lang-java linenums">package model;
+
+import java.util.ArrayList;
+import java.util.List;
+import de.upb.swtpra1819interface.models.Tile;
+
+public class Bag {
+	
+	private List&lt;Tile&gt; tiles;
+	private int numberOfTiles;
+	
+<span class="fc" id="L12">	public Bag() {</span>
+<span class="fc" id="L13">		this.tiles = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L14">		this.numberOfTiles = 0;</span>
+<span class="fc" id="L15">	}</span>
+	
+<span class="fc" id="L17">	public Bag(List&lt;Tile&gt; tiles, int numberOfTiles) {</span>
+<span class="fc" id="L18">		this.tiles = tiles;</span>
+<span class="fc" id="L19">		this.numberOfTiles = numberOfTiles;</span>
+<span class="fc" id="L20">	}</span>
+
+	public List&lt;Tile&gt; getTiles() {
+<span class="fc" id="L23">		return tiles;</span>
+	}
+
+	public void setTiles(List&lt;Tile&gt; tiles) {
+<span class="fc" id="L27">		this.tiles = tiles;</span>
+<span class="fc" id="L28">		this.setNumberOfTiles(this.tiles.size());</span>
+<span class="fc" id="L29">	}</span>
+
+	public int getNumberOfTiles() {
+<span class="fc" id="L32">		return numberOfTiles;</span>
+	}
+
+	public void setNumberOfTiles(int numberOfTiles) {
+<span class="fc" id="L36">		this.numberOfTiles = numberOfTiles;</span>
+<span class="fc" id="L37">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

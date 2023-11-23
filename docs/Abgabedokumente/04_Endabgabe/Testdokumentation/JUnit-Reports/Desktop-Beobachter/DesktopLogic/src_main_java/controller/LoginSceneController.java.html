@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>LoginSceneController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">LoginSceneController.java</span></div><h1>LoginSceneController.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.regex.Pattern;
+
+import org.NetworkInterface.NetClient;
+
+import com.google.common.net.InternetDomainName;
+
+import de.upb.swtpra1819interface.messages.ConnectRequest;
+import de.upb.swtpra1819interface.models.ClientType;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import model.LoginWrapper;
+import parser.LoginParser;
+
+/**
+ * &lt;p&gt;
+ * The &lt;i&gt;LoginSceneController&lt;/i&gt; is the controller for the login interface. It
+ * delegates the control of the login.
+ * &lt;/p&gt;
+ * 
+ * It inherits from AbstractSceneController.&lt;br&gt;
+ * And it implements the methods from the LoginSceneControllerInterface.
+ * 
+ */
+public class LoginSceneController extends AbstractSceneController implements LoginSceneControllerInterface {
+
+	@FXML
+	Button button_login;
+	@FXML
+	ComboBox&lt;String&gt; comboBox_Ip;
+	@FXML
+	TextField textField_port;
+	@FXML
+	TextField textField_name;
+	@FXML
+	Label label_error;
+
+<span class="nc" id="L52">	final int ipCount = 3;</span>
+	LoginParser lp;
+<span class="nc" id="L54">	NetClient netClient = null;</span>
+<span class="nc" id="L55">	boolean requestSend = false;</span>
+	String savePath;
+
+<span class="nc" id="L58">	private static final Pattern IPPATTERN = Pattern</span>
+<span class="nc" id="L59">			.compile(&quot;^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$&quot;);</span>
+
+	/**
+	 * Constructor from LoginSceneController
+	 * 
+	 */
+	public LoginSceneController() {
+<span class="nc" id="L66">		super();</span>
+<span class="nc" id="L67">		File saveFile = new File(System.getProperty(&quot;user.home&quot;) + &quot;\\AppData\\Local\\Qwirkle\\ipsave.txt&quot;);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (!saveFile.exists()) {</span>
+<span class="nc" id="L69">			saveFile.getParentFile().mkdir();</span>
+			try {
+<span class="nc" id="L71">				saveFile.createNewFile();</span>
+<span class="nc" id="L72">				savePath = saveFile.getPath();</span>
+<span class="nc" id="L73">			} catch (IOException e) {</span>
+<span class="nc" id="L74">				e.printStackTrace();</span>
+			}
+<span class="nc" id="L76">		} else {</span>
+<span class="nc" id="L77">			savePath = saveFile.getPath();</span>
+		}
+<span class="nc" id="L79">	}</span>
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L83">		button_login.setOnAction(action -&gt; {</span>
+<span class="nc" id="L84">			this.login();</span>
+<span class="nc" id="L85">		});</span>
+
+		// Login with enter key
+<span class="nc" id="L88">		comboBox_Ip.setOnKeyPressed(action -&gt; {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">			if (action.getCode() == KeyCode.ENTER) {</span>
+<span class="nc" id="L90">				login();</span>
+			}
+<span class="nc" id="L92">		});</span>
+
+<span class="nc" id="L94">		textField_port.setOnKeyPressed(action -&gt; {</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">			if (action.getCode() == KeyCode.ENTER) {</span>
+<span class="nc" id="L96">				login();</span>
+			}
+<span class="nc" id="L98">		});</span>
+
+<span class="nc" id="L100">		textField_name.setOnKeyPressed(action -&gt; {</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">			if (action.getCode() == KeyCode.ENTER) {</span>
+<span class="nc" id="L102">				login();</span>
+			}
+<span class="nc" id="L104">		});</span>
+
+<span class="nc" id="L106">		this.getSavedIps();</span>
+
+<span class="nc" id="L108">	}</span>
+
+	@Override
+	public void onSceneSwitch() {
+<span class="nc" id="L112">		this.netClient = null;</span>
+<span class="nc" id="L113">	}</span>
+
+	/**
+	 * Main Login function. Where the Inputfields gets checked.
+	 * 
+	 */
+	private void login() {
+
+<span class="nc" id="L121">		boolean loginAllowed = true;</span>
+
+		// validate IP
+<span class="nc bnc" id="L124" title="All 4 branches missed.">		if (comboBox_Ip.getValue() == null || !this.testIp(comboBox_Ip.getValue().toString())) {</span>
+<span class="nc" id="L125">			comboBox_Ip.setStyle(&quot;-fx-border-color: red;&quot;);</span>
+<span class="nc" id="L126">			loginAllowed = false;</span>
+<span class="nc" id="L127">		} else {</span>
+<span class="nc" id="L128">			comboBox_Ip.setStyle(&quot;-fx-border-color: none;&quot;);</span>
+
+		}
+
+		// validate port
+<span class="nc bnc" id="L133" title="All 2 branches missed.">		if (!this.testPort(textField_port.getText())) {</span>
+<span class="nc" id="L134">			textField_port.setStyle(&quot;-fx-border-color: red;&quot;);</span>
+<span class="nc" id="L135">			loginAllowed = false;</span>
+<span class="nc" id="L136">		} else {</span>
+<span class="nc" id="L137">			textField_port.setStyle(&quot;-fx-border-color: none;&quot;);</span>
+		}
+
+		// validate name
+<span class="nc bnc" id="L141" title="All 2 branches missed.">		if (!this.testName(textField_name.getText())) {</span>
+<span class="nc" id="L142">			textField_name.setStyle(&quot;-fx-border-color: red;&quot;);</span>
+<span class="nc" id="L143">			loginAllowed = false;</span>
+<span class="nc" id="L144">		} else {</span>
+<span class="nc" id="L145">			textField_name.setStyle(&quot;-fx-border-color: none;&quot;);</span>
+		}
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">		if (loginAllowed) {</span>
+
+			// For ipsave
+<span class="nc" id="L151">			this.addLastIp(comboBox_Ip.getValue().toString());</span>
+<span class="nc" id="L152">			this.saveIps();</span>
+
+			// Saves the given login informations
+<span class="nc" id="L155">			int port = Integer.parseInt(textField_port.getText());</span>
+<span class="nc" id="L156">			String ip = comboBox_Ip.getValue().toString();</span>
+
+			// Connection gets established
+<span class="nc bnc" id="L159" title="All 2 branches missed.">			if (this.netClient == null) {</span>
+<span class="nc" id="L160">				this.netClient = new NetClient(port, ip);</span>
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">				if (this.netClient.checkConnection()) {</span>
+<span class="nc" id="L163">					ConnectRequest request = new ConnectRequest(this.textField_name.getText(), ClientType.SPECTATOR);</span>
+<span class="nc" id="L164">					this.lp = new LoginParser(this.netClient, this, 1000);</span>
+
+<span class="nc bnc" id="L166" title="All 2 branches missed.">					if (!this.requestSend) {</span>
+<span class="nc" id="L167">						this.netClient.sendMsg(request);</span>
+<span class="nc" id="L168">						this.requestSend = true;</span>
+<span class="nc" id="L169">						this.label_error.setText(&quot;Anmelden...&quot;);</span>
+<span class="nc" id="L170">					} else {</span>
+<span class="nc" id="L171">						System.out.println(&quot;Request sent&quot;);</span>
+					}
+
+<span class="nc" id="L174">				} else {</span>
+<span class="nc" id="L175">					this.label_error.setText(</span>
+<span class="nc" id="L176">							&quot;Es konnte keine Verbindung mit den Angegebenen Daten erstellt werden.\nBitte andere Daten eingeben.&quot;);</span>
+<span class="nc" id="L177">					this.netClient = null;</span>
+				}
+			}
+
+		}
+<span class="nc" id="L182">	}</span>
+
+	/**
+	 * Checks the name if its valid.
+	 * 
+	 * 
+	 * @param inputAge
+	 *            The String of the name the user wanted to select
+	 * @return Valid -&gt; false&lt;br&gt;
+	 *         Invalid -&gt; true
+	 */
+	private boolean testName(String name) {
+<span class="nc bnc" id="L194" title="All 2 branches missed.">		if (name.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L195">			return false;</span>
+		} else {
+<span class="nc" id="L197">			return true;</span>
+		}
+	}
+
+	/**
+	 * Checks the Port if its valid.
+	 * 
+	 * 
+	 * @param inputAge
+	 *            The String of the port the user wanted to select
+	 * @return Valid -&gt; false&lt;br&gt;
+	 *         Invalid -&gt; true
+	 */
+	private boolean testPort(String inputAge) {
+		try {
+<span class="nc" id="L212">			Integer age = Integer.valueOf(inputAge);</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">			if (age &gt;= 0 &amp;&amp; age &lt;= 65535) {</span>
+<span class="nc" id="L214">				return true;</span>
+			} else {
+<span class="nc" id="L216">				return false;</span>
+			}
+
+<span class="nc" id="L219">		} catch (Exception e) {</span>
+<span class="nc" id="L220">			return false;</span>
+		}
+
+	}
+
+	/**
+	 * Checks if the given String is a valid IPv4 address
+	 * 
+	 * @param ip
+	 *            String of an IP
+	 * @return Valid -&gt; false&lt;br&gt;
+	 *         Invalid -&gt; true
+	 */
+	private boolean testIp(String ip) {
+
+<span class="nc bnc" id="L235" title="All 2 branches missed.">		if (ip.equals(&quot;&quot;)) {</span>
+
+<span class="nc" id="L237">			return false;</span>
+
+<span class="nc bnc" id="L239" title="All 2 branches missed.">		} else if (ip.equals(&quot;localhost&quot;)) {</span>
+<span class="nc" id="L240">			return true;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">		} else if (InternetDomainName.isValid(ip)) {</span>
+<span class="nc" id="L242">			return true;</span>
+		} else {
+<span class="nc" id="L244">			return IPPATTERN.matcher(ip).matches();</span>
+		}
+
+	}
+
+	/**
+	 * Adds the given value to the IP combobox.&lt;br&gt;
+	 * If the ComboBox has more than 3 options, the last option gets removed.
+	 * 
+	 * @param value
+	 *            String of an IP
+	 */
+	private void addLastIp(String value) {
+<span class="nc" id="L257">		ObservableList&lt;String&gt; items = comboBox_Ip.getItems();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">		if (!items.contains(value)) {</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">			if (items.size() == this.ipCount) {</span>
+<span class="nc" id="L260">				items.remove(this.ipCount - 1, this.ipCount);</span>
+			}
+<span class="nc" id="L262">			comboBox_Ip.getItems().add(0, value);</span>
+<span class="nc" id="L263">			comboBox_Ip.getSelectionModel().select(0);</span>
+		}
+<span class="nc" id="L265">	}</span>
+
+	/**
+	 * Gets the saved Ips from the txt File in the saves folder and adds them into
+	 * the Combobox
+	 * 
+	 */
+	private void getSavedIps() {
+<span class="nc" id="L273">		ObservableList&lt;String&gt; items = comboBox_Ip.getItems();</span>
+
+		try {
+
+<span class="nc" id="L277">			FileReader fr = new FileReader(savePath);</span>
+<span class="nc" id="L278">			BufferedReader br = new BufferedReader(fr);</span>
+
+			String read;
+<span class="nc bnc" id="L281" title="All 2 branches missed.">			while ((read = br.readLine()) != null) {</span>
+<span class="nc" id="L282">				items.add(read);</span>
+
+			}
+<span class="nc" id="L285">			fr.close();</span>
+<span class="nc" id="L286">			br.close();</span>
+
+<span class="nc" id="L288">			comboBox_Ip.setItems(items);</span>
+
+<span class="nc" id="L290">		} catch (Exception e) {</span>
+<span class="nc" id="L291">			System.out.println(&quot;ERROR: &quot; + e.toString());</span>
+		}
+
+<span class="nc" id="L294">	}</span>
+
+	/**
+	 * Saves the Values from the Combobox in the txt File located in the saves
+	 * folder
+	 * 
+	 */
+	private void saveIps() {
+<span class="nc" id="L302">		ObservableList&lt;String&gt; items = comboBox_Ip.getItems();</span>
+
+		try {
+<span class="nc" id="L305">			FileWriter fw = new FileWriter(savePath, false);</span>
+<span class="nc" id="L306">			BufferedWriter bw = new BufferedWriter(fw);</span>
+
+<span class="nc bnc" id="L308" title="All 2 branches missed.">			for (String string : items) {</span>
+<span class="nc" id="L309">				bw.write(string);</span>
+<span class="nc" id="L310">				bw.newLine();</span>
+			}
+
+<span class="nc" id="L313">			bw.close();</span>
+<span class="nc" id="L314">			fw.close();</span>
+
+<span class="nc" id="L316">		} catch (Exception e) {</span>
+<span class="nc" id="L317">			System.out.println(&quot;ERROR: &quot; + e.toString());</span>
+		}
+<span class="nc" id="L319">	}</span>
+
+	/**
+	 * Method used when the server sends a loginRequestValid message
+	 * 
+	 * Called by {@link LoginParser}
+	 * 
+	 */
+	@Override
+	public void loginRequestIsValid(int clientId) {
+
+<span class="nc" id="L330">		LoginWrapper loginWrapper = new LoginWrapper(this.netClient, clientId, this.textField_name.getText(),</span>
+<span class="nc" id="L331">				ClientType.SPECTATOR);</span>
+<span class="nc" id="L332">		this.lp.stopParser();</span>
+<span class="nc" id="L333">		this.requestSend = false;</span>
+<span class="nc" id="L334">		this.label_error.setText(&quot;&quot;);</span>
+
+<span class="nc" id="L336">		switchScene(SceneMapping.LOBBY, loginWrapper);</span>
+<span class="nc" id="L337">	}</span>
+
+	/**
+	 * Method used when the server sends a NotAllowed message when try to log in
+	 * 
+	 * Called by {@link LoginParser}
+	 */
+	@Override
+	public void loginRequestNotValid() {
+<span class="nc" id="L346">		this.netClient = null;</span>
+<span class="nc" id="L347">		this.requestSend = false;</span>
+
+<span class="nc" id="L349">		this.label_error.setText(&quot;Verbindung vom Server abgelehnt. \nVersuchen Sie es mit einem anderen Namen&quot;);</span>
+
+<span class="nc" id="L351">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

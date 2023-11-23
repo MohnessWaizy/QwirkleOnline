@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="200.0" maxWidth="100.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="label_gameName" text="Spielname: " />
+            <Label fx:id="label_countColor" text="Anzahl Farben: " />
+            <Label fx:id="label_countTiles" text="Anzahl Steine: " />
+            <Label fx:id="label_handTiles" text="Steine auf der Hand: " />
+            <Label fx:id="label_turnTime" text="Zeit für ein Zug: " />
+            <Label fx:id="label_visuTime" text="Visualisierungszeit: " />
+            <Label fx:id="label_wrongMove" text="Bestrafung für falschen Spielzug: " />
+            <Label fx:id="label_wrongMovePenalty" text="Punktabzug für falschen Spielzug: " />
+            <Label fx:id="label_slowMove" text="Bestrafung für langsamen Spielzug: " />
+            <Label fx:id="label_slowMovePenalty" text="Punktabzug für langsamen Spielzug: " />
+            <Label fx:id="label_maxPlayerAmount" text="Maximale Spieleranzahl: " />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,8 @@
+#chatFeld{
+	-fx-background-color: #f4f4f4;
+}
+#label_chat{
+	-fx-font-size: 30 px;
+	-fx-font-weight: BOLD;
+	-fx-text-fill: #46494C;
+}

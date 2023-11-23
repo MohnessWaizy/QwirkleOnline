@@ -1,0 +1,81 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LobbyController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">de.upb.cs.swtpra_04.qwirkle.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LobbyController (de.upb.cs.swtpra_04.qwirkle.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">LobbyController</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package de.upb.cs.swtpra_04.qwirkle.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import de.upb.swtpra1819interface.models.Game;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * Interface for LobbyActivity
+<i>9</i>&nbsp; */
+<i>10</i>&nbsp;public interface LobbyController extends Controller {
+<i>11</i>&nbsp;    /**
+<i>12</i>&nbsp;     * Updates game list with active games
+<i>13</i>&nbsp;     * Called when server message with newest updates arrives
+<i>14</i>&nbsp;     *
+<i>15</i>&nbsp;     * @param games List of all games active at the moment
+<i>16</i>&nbsp;     */
+<i>17</i>&nbsp;    void updateGameList(ArrayList&lt;Game&gt; games);
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * Starts game activity
+<i>21</i>&nbsp;     * Called when server message arrives
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param game the game that will be spectated
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    void acceptSpectatorJoinRequest(Game game);
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Starts game activity
+<i>29</i>&nbsp;     * Called when server message arrives
+<i>30</i>&nbsp;     *
+<i>31</i>&nbsp;     * @param game the game that will be joined
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    void acceptPlayerJoinRequest(Game game);
+<i>34</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-01-25 16:45</div>
+</div>
+</body>
+</html>

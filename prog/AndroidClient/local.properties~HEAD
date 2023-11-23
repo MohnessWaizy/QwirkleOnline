@@ -1,0 +1,9 @@
+## This file must *NOT* be checked into Version Control Systems,
+# as it contains information specific to your local configuration.
+#
+# Location of the SDK. This is only used by Gradle.
+# For customization when using a Version Control System, please read the
+# header note.
+#Sun Jan 13 16:56:50 CET 2019
+ndk.dir=D\:\\SDK\\ndk-bundle
+sdk.dir=D\:\\SDK

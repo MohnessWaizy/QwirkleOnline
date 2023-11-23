@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name" translatable="false">Qwirkle</string>
+    <string name="lobby_game_join">Join</string>
+    <string name="lobby_game_spectate">spec</string>
+    <string name="lobby_game_waitingForPlayers">Waiting for players</string>
+    <string name="lobby_game_running">Running</string>
+    <string name="lobby_game_finished">Finished</string>
+    <string name="lobby_game_paused">Paused</string>
+    <string name="send">Send</string>
+    <string name="action_settings">Settings</string>
+    <string name="chat">Chat</string>
+    <string name="hands">Hands</string>
+    <string name="game_ended">Game Ended!</string>
+    <string name="winner_score">winner: %1$s \npoints: %2$d \n</string>
+    <string name="new_game">New Game</string>
+    <string name="scores">%1$d</string>
+</resources>

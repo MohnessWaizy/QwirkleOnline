@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generiert durch Microsoft Visio, SVG Export Spielserver als Baustein.svg Page-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="5.38482in" height="3.89612in"
+		viewBox="0 0 387.707 280.52" xml:space="preserve" color-interpolation-filters="sRGB" class="st10">
+	<v:documentProperties v:langID="1031" v:metric="true" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="msvNoAutoConnect" v:val="VT0(1):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {visibility:visible}
+		.st2 {fill:#5b9bd5;fill-opacity:0.22;filter:url(#filter_2);stroke:#5b9bd5;stroke-opacity:0.22}
+		.st3 {fill:#5b9bd5;stroke:#c7c8c8;stroke-width:0.25}
+		.st4 {fill:#feffff;font-family:Calibri;font-size:0.833336em}
+		.st5 {fill:none;stroke:none;stroke-width:0.25}
+		.st6 {fill:#000000;font-family:Calibri;font-size:0.75em}
+		.st7 {marker-end:url(#mrkr2-59);marker-start:url(#mrkr2-57);stroke:#5b9bd5;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
+		.st8 {fill:#5b9bd5;fill-opacity:1;stroke:#5b9bd5;stroke-opacity:1;stroke-width:0.28409090909091}
+		.st9 {marker-end:url(#mrkr4-95);marker-start:url(#mrkr2-57);stroke:#5b9bd5;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
+		.st10 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Markers">
+		<g id="lend2">
+			<path d="M 1 1 L 0 0 L 1 -1 L 1 1 " style="stroke:none"/>
+		</g>
+		<marker id="mrkr2-57" class="st8" v:arrowType="2" v:arrowSize="2" v:setback="3.16" refX="3.16" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend2" transform="scale(3.52) "/>
+		</marker>
+		<marker id="mrkr2-59" class="st8" v:arrowType="2" v:arrowSize="2" v:setback="3.52" refX="-3.52" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend2" transform="scale(-3.52,-3.52) "/>
+		</marker>
+		<g id="lend4">
+			<path d="M 2 1 L 0 0 L 2 -1 L 2 1 " style="stroke:none"/>
+		</g>
+		<marker id="mrkr4-95" class="st8" v:arrowType="4" v:arrowSize="2" v:setback="7.04" refX="-7.04" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend4" transform="scale(-3.52,-3.52) "/>
+		</marker>
+	</defs>
+	<defs id="Filters">
+		<filter id="filter_2">
+			<feGaussianBlur stdDeviation="2"/>
+		</filter>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="msvThemeOrder" v:val="VT0(0):26"/>
+		</v:userDefs>
+		<title>Zeichenblatt-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Verbinder" v:index="0"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(42.5197,-47.3329)">
+			<title>Rechteck</title>
+			<desc>GUI</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="42.3638" cy="258.644" width="84.73" height="43.7528"/>
+			<g id="shadow1-2" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st3"/>
+			<text x="34.74" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>GUI</text>		</g>
+		<g id="shape2-7" v:mID="2" v:groupContext="shape" transform="translate(149.131,-107.753)">
+			<title>Rechteck.2</title>
+			<desc>Spielmanagement</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="42.3638" cy="258.644" width="84.73" height="43.7528"/>
+			<g id="shadow2-8" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st3"/>
+			<text x="5.62" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Spielmanagement</text>		</g>
+		<g id="shape3-13" v:mID="3" v:groupContext="shape" transform="translate(255.742,-107.753)">
+			<title>Rechteck.3</title>
+			<desc>Netzwerkinterface</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="42.3638" cy="258.644" width="84.73" height="43.7528"/>
+			<g id="shadow3-14" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st3"/>
+			<text x="4.72" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Netzwerkinterface</text>		</g>
+		<g id="shape5-19" v:mID="5" v:groupContext="shape" transform="translate(149.953,-47.3329)">
+			<title>Rechteck.5</title>
+			<desc>Lobby</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="41.9528" cy="258.644" width="83.91" height="43.7528"/>
+			<g id="shadow5-20" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st3"/>
+			<text x="29.7" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Lobby</text>		</g>
+		<g id="shape6-25" v:mID="6" v:groupContext="shape" transform="translate(148.819,-192.176)">
+			<title>Rechteck.6</title>
+			<desc>Game 1</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="41.9528" cy="258.644" width="83.91" height="43.7528"/>
+			<g id="shadow6-26" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st3"/>
+			<text x="26.26" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Game 1</text>		</g>
+		<g id="shape7-31" v:mID="7" v:groupContext="shape" transform="translate(255.118,-192.176)">
+			<title>Rechteck.7</title>
+			<desc>Game N</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="41.9528" cy="258.644" width="83.91" height="43.7528"/>
+			<g id="shadow7-32" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="83.9055" height="43.7528" class="st3"/>
+			<text x="25.56" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Game N</text>		</g>
+		<g id="shape8-37" v:mID="8" v:groupContext="shape" transform="translate(20.7794,-23.0978)">
+			<title>Rahmen</title>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<g id="shadow8-38" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<path d="M0 280.52 L345.46 280.52 L345.46 42.25 L0 42.25 L0 280.52 ZM8.5 272.02 L336.95 272.02 L336.95 50.75 L8.5
+							 50.75 L8.5 272.02 Z" class="st2"/>
+			</g>
+			<path d="M0 280.52 L345.46 280.52 L345.46 42.25 L0 42.25 L0 280.52 ZM8.5 272.02 L336.95 272.02 L336.95 50.75 L8.5 50.75
+						 L8.5 272.02 Z" class="st3"/>
+		</g>
+		<g id="shape10-42" v:mID="10" v:groupContext="shape" transform="translate(42.5197,-107.753)">
+			<title>Rechteck.10</title>
+			<desc>Konfiguration</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="42.3638" cy="258.644" width="84.73" height="43.7528"/>
+			<g id="shadow10-43" v:groupContext="shadow" v:shadowOffsetX="0.345598" v:shadowOffsetY="-1.97279" v:shadowType="1"
+					transform="matrix(1,0,0,1,0.345598,1.97279)" class="st1">
+				<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st2"/>
+			</g>
+			<rect x="0" y="236.768" width="84.7276" height="43.7528" class="st3"/>
+			<text x="14.62" y="261.64" class="st4" v:langID="1031"><v:paragraph v:horizAlign="1"/><v:tabList/>Konfiguration</text>		</g>
+		<g id="shape33-48" v:mID="33" v:groupContext="shape" transform="translate(30.7007,-230.063)">
+			<title>Tabelle.33</title>
+			<desc>Spielserver</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="66.6142" cy="269.582" width="133.23" height="21.8764"/>
+			<rect x="0" y="258.644" width="133.228" height="21.8764" class="st5"/>
+			<text x="4" y="272.28" class="st6" v:langID="1031"><v:paragraph/><v:tabList/>Spielserver</text>		</g>
+		<g id="shape34-51" v:mID="34" v:groupContext="shape" v:layerMember="0" transform="translate(149.953,-62.1227)">
+			<title>Dynamischer Verbinder</title>
+			<path d="M-3.16 273.43 L-3.52 273.43 L-19.19 273.43" class="st7"/>
+		</g>
+		<g id="shape35-60" v:mID="35" v:groupContext="shape" v:layerMember="0" transform="translate(77.7968,-91.0856)">
+			<title>Dynamischer Verbinder.35</title>
+			<path d="M7.09 277.36 L7.09 277 L7.09 267.37" class="st7"/>
+		</g>
+		<g id="shape36-67" v:mID="36" v:groupContext="shape" v:layerMember="0" transform="translate(198.67,-91.0856)">
+			<title>Dynamischer Verbinder.36</title>
+			<path d="M-7.03 277.36 L-7.04 277 L-7.14 267.37" class="st7"/>
+		</g>
+		<g id="shape38-74" v:mID="38" v:groupContext="shape" v:layerMember="0" transform="translate(184.046,-192.176)">
+			<title>Dynamischer Verbinder.38</title>
+			<path d="M6.78 283.68 L6.79 284.04 L7.39 317.67" class="st7"/>
+		</g>
+		<g id="shape39-81" v:mID="39" v:groupContext="shape" v:layerMember="0" transform="translate(297.071,-192.176)">
+			<title>Dynamischer Verbinder.39</title>
+			<path d="M0 283.68 L0 284.04 L0 300.55 L-105.58 300.55 L-105.58 317.67" class="st7"/>
+		</g>
+		<g id="shape40-88" v:mID="40" v:groupContext="shape" v:layerMember="0" transform="translate(233.858,-122.542)">
+			<title>Dynamischer Verbinder.40</title>
+			<path d="M3.16 273.43 L3.52 273.43 L14.84 273.43" class="st9"/>
+		</g>
+	</g>
+</svg>

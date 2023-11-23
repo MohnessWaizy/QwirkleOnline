@@ -1,0 +1,337 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HandsFragmentPlayer</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">de.upb.cs.swtpra_04.qwirkle.view</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HandsFragmentPlayer (de.upb.cs.swtpra_04.qwirkle.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HandsFragmentPlayer</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 39)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HandsFragmentPlayer$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">HandsFragmentPlayer$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 51)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package de.upb.cs.swtpra_04.qwirkle.view;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import android.annotation.SuppressLint;
+<i>4</i>&nbsp;import android.content.Context;
+<i>5</i>&nbsp;import android.os.Bundle;
+<i>6</i>&nbsp;import android.support.annotation.NonNull;
+<i>7</i>&nbsp;import android.support.annotation.Nullable;
+<i>8</i>&nbsp;import android.support.v4.app.Fragment;
+<i>9</i>&nbsp;import android.support.v7.widget.LinearLayoutManager;
+<i>10</i>&nbsp;import android.support.v7.widget.RecyclerView;
+<i>11</i>&nbsp;import android.view.LayoutInflater;
+<i>12</i>&nbsp;import android.view.View;
+<i>13</i>&nbsp;import android.view.ViewGroup;
+<i>14</i>&nbsp;import android.widget.Button;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;import java.util.ArrayList;
+<i>17</i>&nbsp;import java.util.List;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.R;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.model.game.GameData;
+<i>22</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.model.game.HandsAdapterPlayer;
+<i>23</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.model.game.Tile;
+<i>24</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.presenter.Presenter;
+<i>25</i>&nbsp;import de.upb.swtpra1819interface.models.Client;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;/**
+<i>28</i>&nbsp; * Provide UI Related Functions used for hands overview
+<i>29</i>&nbsp; */
+<i>30</i>&nbsp;@SuppressLint(&quot;ValidFragment&quot;)
+<b class="nc"><i>31</i>&nbsp;public class HandsFragmentPlayer extends Fragment implements</b>
+<i>32</i>&nbsp;        GameData.GameDataListener {
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    private OnHandsFragmentListener listener;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    Button button_swapTiles;
+<i>37</i>&nbsp;    Button button_clear;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    private RecyclerView recyclerView_hands;
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    private GameData gameData;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    private int playerCount;
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    private List&lt;Client&gt; clients;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    private Presenter presenter;
+<i>48</i>&nbsp;
+<b class="nc"><i>49</i>&nbsp;    private boolean isLayingTiles = false;</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @SuppressLint(&quot;ValidFragment&quot;)
+<b class="nc"><i>52</i>&nbsp;    public HandsFragmentPlayer(Presenter presenter) {</b>
+<b class="nc"><i>53</i>&nbsp;        this.presenter = presenter;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     * Create a new View from Layout and bind functions to UI Elements
+<i>58</i>&nbsp;     *
+<i>59</i>&nbsp;     * @param inflater           Layout inflater
+<i>60</i>&nbsp;     * @param container          Parent Viewgroup
+<i>61</i>&nbsp;     * @param savedInstanceState Saved State
+<i>62</i>&nbsp;     * @return View
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    @Nullable
+<i>65</i>&nbsp;    @Override
+<i>66</i>&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+<b class="nc"><i>67</i>&nbsp;        View view = inflater.inflate(R.layout.fragment_hands_player, container, false);</b>
+<i>68</i>&nbsp;
+<b class="nc"><i>69</i>&nbsp;        button_swapTiles = view.findViewById(R.id.button_swapTiles);</b>
+<b class="nc"><i>70</i>&nbsp;        button_swapTiles.setOnClickListener(new View.OnClickListener() {</b>
+<i>71</i>&nbsp;            @Override
+<i>72</i>&nbsp;            public void onClick(View view) {
+<b class="nc"><i>73</i>&nbsp;                if (!isLayingTiles) {</b>
+<b class="nc"><i>74</i>&nbsp;                    HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>75</i>&nbsp;                    presenter.tileSwapRequest(adapter.getSelectedTilesForMessage());</b>
+<b class="nc"><i>76</i>&nbsp;                }</b>
+<i>77</i>&nbsp;                else{
+<b class="nc"><i>78</i>&nbsp;                    listener.playTiles();</b>
+<i>79</i>&nbsp;                }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;            }
+<i>82</i>&nbsp;        });
+<i>83</i>&nbsp;
+<b class="nc"><i>84</i>&nbsp;        button_clear = view.findViewById(R.id.button_clear);</b>
+<b class="nc"><i>85</i>&nbsp;        button_clear.setOnClickListener(new View.OnClickListener() {</b>
+<i>86</i>&nbsp;            @Override
+<i>87</i>&nbsp;            public void onClick(View view) {
+<b class="nc"><i>88</i>&nbsp;                if (!isLayingTiles) {</b>
+<b class="nc"><i>89</i>&nbsp;                    HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>90</i>&nbsp;                    adapter.clearSelectedTiles();</b>
+<b class="nc"><i>91</i>&nbsp;                } else {</b>
+<b class="nc"><i>92</i>&nbsp;                    listener.clearTiles();</b>
+<i>93</i>&nbsp;                }
+<i>94</i>&nbsp;            }
+<i>95</i>&nbsp;        });
+<b class="nc"><i>96</i>&nbsp;        recyclerView_hands = view.findViewById(R.id.recyclerView_hands);</b>
+<b class="nc"><i>97</i>&nbsp;        recyclerView_hands.setHasFixedSize(true);</b>
+<i>98</i>&nbsp;
+<b class="nc"><i>99</i>&nbsp;        recyclerView_hands.setLayoutManager(new LinearLayoutManager(getContext()));</b>
+<i>100</i>&nbsp;
+<b class="nc"><i>101</i>&nbsp;        recyclerView_hands.setAdapter(new HandsAdapterPlayer(getContext(), new ArrayList&lt;&gt;(), presenter.getClientID(), new ArrayList&lt;&gt;(), this));</b>
+<b class="nc"><i>102</i>&nbsp;        return view;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    public void addLayedTilesToHand(List&lt;Tile&gt; tiles){
+<b class="nc"><i>106</i>&nbsp;        HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>107</i>&nbsp;        gameData.addPlayedTilesToHand(presenter.getClientID(), tiles);</b>
+<b class="nc"><i>108</i>&nbsp;        recyclerView_hands.getAdapter().notifyDataSetChanged();</b>
+<b class="nc"><i>109</i>&nbsp;        adapter.clearSelectedTiles();</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    public void removeTilesFromPlayerHand(){
+<b class="nc"><i>114</i>&nbsp;        HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>115</i>&nbsp;        gameData.removeTilesFromHand(presenter.getClientID(), adapter.getSelectedTiles());</b>
+<b class="nc"><i>116</i>&nbsp;        recyclerView_hands.getAdapter().notifyDataSetChanged();</b>
+<b class="nc"><i>117</i>&nbsp;        adapter.clearSelectedTiles();</b>
+<i>118</i>&nbsp;    }
+<i>119</i>&nbsp;
+<i>120</i>&nbsp;    /**
+<i>121</i>&nbsp;     * Updates Hands when joining an already running game.
+<i>122</i>&nbsp;     * Makes sure that GameActivitySpectator is already created so that Context is available.
+<i>123</i>&nbsp;     *
+<i>124</i>&nbsp;     * @param bundle saved state if fragment was already active before (not used here)
+<i>125</i>&nbsp;     */
+<i>126</i>&nbsp;    @Override
+<i>127</i>&nbsp;    public void onActivityCreated(Bundle bundle) {
+<b class="nc"><i>128</i>&nbsp;        super.onActivityCreated(bundle);</b>
+<b class="nc"><i>129</i>&nbsp;        if (gameData != null) {</b>
+<b class="nc"><i>130</i>&nbsp;            HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>131</i>&nbsp;            recyclerView_hands.swapAdapter(new HandsAdapterPlayer(getContext(), gameData.getPlayers(), presenter.getClientID(), adapter.getSelectedTiles(), this), false);</b>
+<i>132</i>&nbsp;        }
+<i>133</i>&nbsp;    }
+<i>134</i>&nbsp;
+<i>135</i>&nbsp;    /**
+<i>136</i>&nbsp;     * Attaches this fragment to the life cycle of the parent activity.
+<i>137</i>&nbsp;     * Android intern method.
+<i>138</i>&nbsp;     * Used here to make sure parent activity uses our interface.
+<i>139</i>&nbsp;     *
+<i>140</i>&nbsp;     * @param context   parent activity
+<i>141</i>&nbsp;     */
+<i>142</i>&nbsp;    @Override
+<i>143</i>&nbsp;    public void onAttach(Context context) {
+<b class="nc"><i>144</i>&nbsp;        super.onAttach(context);</b>
+<b class="nc"><i>145</i>&nbsp;        if (context instanceof OnHandsFragmentListener) {</b>
+<b class="nc"><i>146</i>&nbsp;            listener = (OnHandsFragmentListener) context;</b>
+<i>147</i>&nbsp;        } else {
+<b class="nc"><i>148</i>&nbsp;            throw new ClassCastException(context.toString()</b>
+<i>149</i>&nbsp;                    + &quot; must implement HandsFragmentPlayer.OnHandsFragmentPlayer&quot;);
+<i>150</i>&nbsp;        }
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    // this has to be called, before updatePlayerHands() is called
+<i>154</i>&nbsp;    public void setupOnJoin(GameData gameData) {
+<b class="nc"><i>155</i>&nbsp;        this.gameData = gameData;</b>
+<b class="nc"><i>156</i>&nbsp;        gameData.listenToGameData(this);</b>
+<i>157</i>&nbsp;    }
+<i>158</i>&nbsp;
+<i>159</i>&nbsp;    public void updatePlayerHands() {
+<b class="nc"><i>160</i>&nbsp;        HandsAdapterPlayer adapter = (HandsAdapterPlayer) recyclerView_hands.getAdapter();</b>
+<b class="nc"><i>161</i>&nbsp;        recyclerView_hands.swapAdapter(new HandsAdapterPlayer(getContext(), gameData.getPlayers(), presenter.getClientID(), adapter.getSelectedTiles(), this), false);</b>
+<i>162</i>&nbsp;    }
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;    public void onGameDataUpdate() {
+<b class="nc"><i>165</i>&nbsp;        updatePlayerHands();</b>
+<i>166</i>&nbsp;    }
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    /**
+<i>169</i>&nbsp;     * Tells the listener when the selected tiles list gets updated
+<i>170</i>&nbsp;     *
+<i>171</i>&nbsp;     * @param selectedTiles The selectedTiles
+<i>172</i>&nbsp;     */
+<i>173</i>&nbsp;    public void updateSelectedTiles(List selectedTiles){
+<b class="nc"><i>174</i>&nbsp;        listener.updateSelectedTiles(selectedTiles);</b>
+<i>175</i>&nbsp;    }
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    /**
+<i>178</i>&nbsp;     * Changes the text of the swap Button to the given text
+<i>179</i>&nbsp;     *
+<i>180</i>&nbsp;     * @param text The text the button should have
+<i>181</i>&nbsp;     */
+<i>182</i>&nbsp;    public void changeButtons(String text){
+<b class="nc"><i>183</i>&nbsp;        button_swapTiles.setText(text);</b>
+<i>184</i>&nbsp;    }
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    /**
+<i>187</i>&nbsp;     * Set if the board is actually laying tiles out
+<i>188</i>&nbsp;     *
+<i>189</i>&nbsp;     * @param isLayingTiles If the board is laying tiles
+<i>190</i>&nbsp;     */
+<i>191</i>&nbsp;    public void setIsLayingTiles(boolean isLayingTiles){
+<b class="nc"><i>192</i>&nbsp;        this.isLayingTiles = isLayingTiles;</b>
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    /**
+<i>196</i>&nbsp;     * Gets the isLayingTiles variable
+<i>197</i>&nbsp;     *
+<i>198</i>&nbsp;     * @return isLayingTiles
+<i>199</i>&nbsp;     */
+<i>200</i>&nbsp;    public boolean getIsLayingTiles(){
+<b class="nc"><i>201</i>&nbsp;        return this.isLayingTiles;</b>
+<i>202</i>&nbsp;    }
+<i>203</i>&nbsp;
+<i>204</i>&nbsp;    public interface OnHandsFragmentListener{
+<i>205</i>&nbsp;        public void updateSelectedTiles(List selectedTiles);
+<i>206</i>&nbsp;        public void clearTiles();
+<i>207</i>&nbsp;        public void playTiles();
+<i>208</i>&nbsp;    }
+<i>209</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-01-25 16:45</div>
+</div>
+</body>
+</html>

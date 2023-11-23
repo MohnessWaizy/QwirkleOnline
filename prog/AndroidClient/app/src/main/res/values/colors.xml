@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#be6d6d6d</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="Tile01">#9d85be</color>
+    <color name="Tile02">#cf3834</color>
+    <color name="Tile03">#e3d200</color>
+    <color name="Tile04">#72bf44</color>
+    <color name="Tile05">#f58220</color>
+    <color name="Tile06">#729fcf</color>
+    <color name="Tile07">#820f71</color>
+    <color name="Tile08">#efefef</color>
+    <color name="Tile09">#00fabd</color>
+    <color name="Tile10">#1c3687</color>
+    <color name="Tile11">#808080</color>
+    <color name="Tile12">#00864b</color>
+
+    <color name="newTileFrame">#FFFFF000</color>
+    <color name="marked">#000000</color>
+    <color name="pickedTile">#FFFF0999</color>
+    <color name="transparent">#00000000</color>
+</resources>

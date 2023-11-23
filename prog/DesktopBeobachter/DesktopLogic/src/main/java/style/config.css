@@ -1,0 +1,9 @@
+.VBox{
+    -fx-background-color: #F4F4F4;
+}
+.label{
+	-fx-text-fill: #6b7074;
+	-fx-background-color: #F4F4F4;
+	-fx-font-size: 15px;
+    -fx-font-weight: bold;
+}

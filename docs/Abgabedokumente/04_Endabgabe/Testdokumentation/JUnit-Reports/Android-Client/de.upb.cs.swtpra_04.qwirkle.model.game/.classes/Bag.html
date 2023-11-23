@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Bag</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">de.upb.cs.swtpra_04.qwirkle.model.game</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Bag (de.upb.cs.swtpra_04.qwirkle.model.game)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Bag</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (4/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    39,5%
+  </span>
+  <span class="absValue">
+    (15/ 38)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package de.upb.cs.swtpra_04.qwirkle.model.game;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;import java.util.List;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.view.BagFragment;
+<i>7</i>&nbsp;import de.upb.swtpra1819interface.models.Tile;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * Holds the data for the bag
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class Bag {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private BagFragment context;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    private int CSC; // colorShapeCount
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    private BagTile[][] tiles;
+<i>19</i>&nbsp;    private int totalInBag;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * Constructor
+<i>23</i>&nbsp;     *
+<i>24</i>&nbsp;     * @param context   parent context which displays this data
+<i>25</i>&nbsp;     * @param CSC       count of different colors and shapes
+<i>26</i>&nbsp;     * @param tileCount number of identical copies of each combination of color and shape
+<i>27</i>&nbsp;     */
+<b class="fc"><i>28</i>&nbsp;    public Bag(BagFragment context, int CSC, int tileCount) {</b>
+<b class="fc"><i>29</i>&nbsp;        this.context = context;</b>
+<b class="fc"><i>30</i>&nbsp;        this.CSC = CSC;</b>
+<i>31</i>&nbsp;
+<b class="fc"><i>32</i>&nbsp;        tiles = new BagTile[CSC][CSC];</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;        // create list with all possible tiles for the game
+<i>35</i>&nbsp;        // i % CSC = color, j / CSC = shape
+<b class="fc"><i>36</i>&nbsp;        for (int i = 0; i &lt; Math.pow(CSC, 2); i++) {</b>
+<b class="fc"><i>37</i>&nbsp;            int shape = i / CSC;</b>
+<b class="fc"><i>38</i>&nbsp;            int color = i % CSC;</b>
+<b class="fc"><i>39</i>&nbsp;            tiles[shape][color] = new BagTile(shape, color, tileCount);</b>
+<i>40</i>&nbsp;        }
+<i>41</i>&nbsp;
+<b class="fc"><i>42</i>&nbsp;        totalInBag = (int) Math.pow(CSC, 2);</b>
+<b class="fc"><i>43</i>&nbsp;    }</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * Updates the count of identical tiles in the bag
+<i>47</i>&nbsp;     *
+<i>48</i>&nbsp;     * @param newTileList List of all tiles currently in the bag
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    public void update(ArrayList&lt;Tile&gt; newTileList) {
+<b class="nc"><i>51</i>&nbsp;        for (BagTile[] inner : tiles) {</b>
+<b class="nc"><i>52</i>&nbsp;            for (BagTile bagtile : inner) {</b>
+<b class="nc"><i>53</i>&nbsp;                bagtile.setCountInBag(0);</b>
+<i>54</i>&nbsp;            }
+<i>55</i>&nbsp;        }
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;        for (Tile inttile : newTileList) {</b>
+<b class="nc"><i>58</i>&nbsp;            int shape = inttile.getShape();</b>
+<b class="nc"><i>59</i>&nbsp;            int color = inttile.getColor();</b>
+<b class="nc"><i>60</i>&nbsp;            int oldCount = tiles[shape][color].getCountInBag();</b>
+<i>61</i>&nbsp;
+<b class="nc"><i>62</i>&nbsp;            tiles[shape][color].setCountInBag(oldCount + 1);</b>
+<b class="nc"><i>63</i>&nbsp;        }</b>
+<b class="nc"><i>64</i>&nbsp;        totalInBag = newTileList.size();</b>
+<b class="nc"><i>65</i>&nbsp;    }</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public void setCountOfTile(int shape, int color, int newCount) {
+<b class="nc"><i>68</i>&nbsp;        BagTile bt = tiles[shape][color];</b>
+<b class="nc"><i>69</i>&nbsp;        bt.setCountInBag(newCount);</b>
+<b class="nc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * @return List representation of bag tiles
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public List&lt;BagTile&gt; getTiles() {
+<b class="nc"><i>76</i>&nbsp;        List&lt;BagTile&gt; res = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>77</i>&nbsp;        for (BagTile[] inner : tiles) {</b>
+<b class="nc"><i>78</i>&nbsp;            for (BagTile bagtile : inner) {</b>
+<b class="nc"><i>79</i>&nbsp;                res.add(bagtile);</b>
+<i>80</i>&nbsp;            }
+<i>81</i>&nbsp;        }
+<b class="nc"><i>82</i>&nbsp;        return res;</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    public int getCSC() {
+<b class="nc"><i>86</i>&nbsp;        return CSC;</b>
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    public void setCSC(int CSC) {
+<b class="fc"><i>90</i>&nbsp;        this.CSC = CSC;</b>
+<b class="fc"><i>91</i>&nbsp;    }</b>
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    public BagFragment getContext() {
+<b class="nc"><i>94</i>&nbsp;        return context;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    public void setContext(BagFragment context) {
+<b class="fc"><i>98</i>&nbsp;        this.context = context;</b>
+<b class="fc"><i>99</i>&nbsp;    }</b>
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;    public int getTotalInBag() {
+<b class="fc"><i>102</i>&nbsp;        return totalInBag;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    public void setTotalInBag(int totalInBag) {
+<b class="nc"><i>106</i>&nbsp;        this.totalInBag = totalInBag;</b>
+<b class="nc"><i>107</i>&nbsp;    }</b>
+<i>108</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-01-25 16:45</div>
+</div>
+</body>
+</html>

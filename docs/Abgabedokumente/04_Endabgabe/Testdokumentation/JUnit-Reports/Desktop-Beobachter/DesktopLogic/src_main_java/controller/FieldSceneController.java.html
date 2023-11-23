@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>FieldSceneController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">FieldSceneController.java</span></div><h1>FieldSceneController.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.NetworkInterface.NetClient;
+
+import de.upb.swtpra1819interface.messages.BagRequest;
+import de.upb.swtpra1819interface.messages.GameDataRequest;
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.messages.LeavingRequest;
+import de.upb.swtpra1819interface.messages.MessageSend;
+import de.upb.swtpra1819interface.messages.PlayerHandsRequest;
+import de.upb.swtpra1819interface.messages.ScoreRequest;
+import de.upb.swtpra1819interface.messages.TotalTimeRequest;
+import de.upb.swtpra1819interface.messages.TurnTimeLeftRequest;
+import de.upb.swtpra1819interface.messages.Winner;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.GameState;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.TileOnPosition;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import model.GameData;
+import model.GameWrapper;
+import model.ImageLoader;
+import parser.FieldParser;
+
+public class FieldSceneController extends AbstractSceneController implements FieldSceneControllerInterface {
+
+	@FXML
+	TextArea textArea_chat;
+	@FXML
+	TextArea textArea_chatText;
+	@FXML
+	Button button_sendChat;
+	@FXML
+	Button button_zoomIn;
+	@FXML
+	Button button_center;
+	@FXML
+	Button button_zoomOut;
+	@FXML
+	Button button_exitGame;
+	@FXML
+	Button button_bagHand;
+	@FXML
+	Button button_unPin;
+	@FXML
+	Label label_gameID;
+	@FXML
+	Label label_turnTime;
+	@FXML
+	Label label_playerOnTurn;
+	@FXML
+	Label label_numberTilesInBag;
+	@FXML
+	Canvas canvas_board;
+	@FXML
+	Canvas canvas_pause;
+	@FXML
+	Label label_totalTime;
+	@FXML
+	VBox vBox_playerPanels;
+	@FXML
+	HBox hBox_bag;
+	@FXML
+	ScrollPane scrollPane_playerPanels;
+	@FXML
+	ScrollPane scrollPane_bagHand;
+	@FXML
+	AnchorPane anchorPane_field;
+	@FXML
+	Label label_gameState;
+	// TODO: Clock resetten, Uhrzeiten zweistellig, Dennis
+
+	private GameData game;
+	private Client client;
+	private NetClient netClient;
+	private ArrayList&lt;PlayerPanel&gt; playerPanels;
+	private HashMap&lt;Integer, HBox&gt; hBoxHands;
+	private boolean bagSelected;
+	private boolean playerPinned;
+	private int pinnedPlayer;
+
+<span class="nc" id="L118">	private int turn = 0;</span>
+
+	private GraphicsContext gc;
+	private GraphicsContext gp;
+
+<span class="nc" id="L123">	private double lastx = 0;</span>
+<span class="nc" id="L124">	private double lasty = 0;</span>
+
+<span class="nc" id="L126">	private double tileOffsetX = 0;</span>
+<span class="nc" id="L127">	private double tileOffsetY = 0;</span>
+<span class="nc" id="L128">	private double tempTileOffsetX = 0;</span>
+<span class="nc" id="L129">	private double tempTileOffsetY = 0;</span>
+
+<span class="nc" id="L131">	private int gridSize = 80;</span>
+<span class="nc" id="L132">	private String gridColor = &quot;0xd6d6d6&quot;;</span>
+
+	private ImageLoader imgLoader;
+	private BufferedImage[][] tileImages;
+	private HashMap&lt;Integer, Integer&gt; playerTileMapping;
+	// private ArrayList&lt;TileOnPosition&gt; playedTiles;
+
+	private Timer turnTimeTimer;
+	private TimerTask turnTimeTimerTask;
+	private Timer totalTimeTimer;
+	private TimerTask totalTimeTimerTask;
+	private FieldParser fieldParser;
+
+	private long turnTime;
+	private long totalTime;
+	private boolean turnTimeTimerRunning;
+	private boolean totalTimeTimerRunning;
+	private boolean mappingEnabled;
+
+	public FieldSceneController(GameData game) {
+<span class="nc" id="L152">		super();</span>
+<span class="nc" id="L153">		imgLoader = new ImageLoader(&quot;tileimages/texture.zip&quot;);</span>
+<span class="nc" id="L154">		tileImages = imgLoader.getImages();</span>
+<span class="nc" id="L155">		this.game = game;</span>
+<span class="nc" id="L156">		bagSelected = true;</span>
+<span class="nc" id="L157">		playerPanels = new ArrayList&lt;PlayerPanel&gt;();</span>
+		// playedTiles = new ArrayList&lt;TileOnPosition&gt;();
+<span class="nc" id="L159">		playerTileMapping = new HashMap&lt;Integer, Integer&gt;();</span>
+<span class="nc" id="L160">		hBoxHands = new HashMap&lt;Integer, HBox&gt;();</span>
+<span class="nc" id="L161">		pinnedPlayer = -1;</span>
+<span class="nc" id="L162">	}</span>
+
+	@Override
+	public &lt;T&gt; void onSceneSwitch(T message) {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">		if (message instanceof GameWrapper) {</span>
+<span class="nc" id="L167">			GameWrapper gameWrapper = (GameWrapper) message;</span>
+<span class="nc" id="L168">			game.setGame(gameWrapper.getGame());</span>
+<span class="nc" id="L169">			client = gameWrapper.getClient();</span>
+<span class="nc" id="L170">			netClient = gameWrapper.getNetClient();</span>
+<span class="nc" id="L171">			label_gameID.setText(Integer.toString(gameWrapper.getGame().getGameId()));</span>
+<span class="nc" id="L172">			fieldParser = new FieldParser(this, netClient, 1);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">			if (gameWrapper.getGame().getGameState() == GameState.IN_PROGRESS) {</span>
+<span class="nc" id="L174">				ScoreRequest scoreRequest = new ScoreRequest();</span>
+<span class="nc" id="L175">				this.netClient.sendMsg(scoreRequest);</span>
+<span class="nc" id="L176">				mappingEnabled = false;</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">			} else if (gameWrapper.getGame().getGameState() == GameState.PAUSED) {</span>
+<span class="nc" id="L178">				drawPauseCanvas();</span>
+<span class="nc" id="L179">				ScoreRequest scoreRequest = new ScoreRequest();</span>
+<span class="nc" id="L180">				this.netClient.sendMsg(scoreRequest);</span>
+<span class="nc" id="L181">				mappingEnabled = false;</span>
+<span class="nc" id="L182">			} else {</span>
+<span class="nc" id="L183">				GameDataRequest gameDataRequest = new GameDataRequest();</span>
+<span class="nc" id="L184">				this.netClient.sendMsg(gameDataRequest);</span>
+			}
+<span class="nc" id="L186">			redrawCanvas();</span>
+<span class="nc" id="L187">		} else {</span>
+<span class="nc" id="L188">			switchScene(SceneMapping.LOBBY);</span>
+		}
+<span class="nc" id="L190">	}</span>
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+<span class="nc" id="L195">		gc = canvas_board.getGraphicsContext2D();</span>
+<span class="nc" id="L196">		gp = canvas_pause.getGraphicsContext2D();</span>
+<span class="nc" id="L197">		gc.translate(canvas_board.getWidth() / 2, canvas_board.getHeight() / 2);</span>
+
+<span class="nc" id="L199">		anchorPane_field.setOnMousePressed(action -&gt; {</span>
+<span class="nc" id="L200">			this.lastx = action.getSceneX();</span>
+<span class="nc" id="L201">			this.lasty = action.getSceneY();</span>
+<span class="nc" id="L202">		});</span>
+
+<span class="nc" id="L204">		anchorPane_field.heightProperty().addListener(new ChangeListener&lt;Number&gt;() {</span>
+
+			@Override
+			public void changed(ObservableValue&lt;? extends Number&gt; observable, Number oldValue, Number newValue) {
+<span class="nc" id="L208">				canvas_pause.setHeight((double) newValue);</span>
+
+<span class="nc" id="L210">				gc.translate(0, -canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L211">				canvas_board.setHeight((double) newValue);</span>
+<span class="nc" id="L212">				gc.translate(0, canvas_board.getHeight() / 2);</span>
+
+<span class="nc" id="L214">				centerField();</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">				if (game.getGameState() == GameState.PAUSED) {</span>
+<span class="nc" id="L216">					clearPauseCanvas();</span>
+<span class="nc" id="L217">					drawPauseCanvas();</span>
+				}
+<span class="nc" id="L219">			}</span>
+		});
+<span class="nc" id="L221">		anchorPane_field.widthProperty().addListener(new ChangeListener&lt;Number&gt;() {</span>
+
+			@Override
+			public void changed(ObservableValue&lt;? extends Number&gt; observable, Number oldValue, Number newValue) {
+<span class="nc" id="L225">				gc.translate(-canvas_board.getWidth() / 2, 0);</span>
+<span class="nc" id="L226">				canvas_pause.setWidth((double) newValue);</span>
+<span class="nc" id="L227">				canvas_board.setWidth((double) newValue);</span>
+<span class="nc" id="L228">				gc.translate(canvas_board.getWidth() / 2, 0);</span>
+<span class="nc" id="L229">				centerField();</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">				if (game.getGameState() == GameState.PAUSED) {</span>
+<span class="nc" id="L231">					clearPauseCanvas();</span>
+<span class="nc" id="L232">					drawPauseCanvas();</span>
+				}
+<span class="nc" id="L234">			}</span>
+		});
+
+<span class="nc" id="L237">		anchorPane_field.setOnMouseReleased(action -&gt; {</span>
+<span class="nc" id="L238">			tileOffsetX += tempTileOffsetX;</span>
+<span class="nc" id="L239">			tileOffsetY += tempTileOffsetY;</span>
+<span class="nc" id="L240">			tempTileOffsetX = 0;</span>
+<span class="nc" id="L241">			tempTileOffsetY = 0;</span>
+<span class="nc" id="L242">		});</span>
+
+<span class="nc" id="L244">		anchorPane_field.setOnMouseDragged(action -&gt; {</span>
+<span class="nc" id="L245">			tempTileOffsetX = this.lastx - action.getSceneX();</span>
+<span class="nc" id="L246">			tempTileOffsetY = this.lasty - action.getSceneY();</span>
+<span class="nc" id="L247">			redrawCanvas();</span>
+<span class="nc" id="L248">		});</span>
+
+<span class="nc" id="L250">		button_sendChat.setOnAction(action -&gt; {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">			if (textArea_chatText.getText().length() != 0) {</span>
+<span class="nc" id="L252">				netClient.sendMsg(new MessageSend(textArea_chatText.getText()));</span>
+<span class="nc" id="L253">				textArea_chatText.setText(&quot;&quot;);</span>
+			}
+<span class="nc" id="L255">		});</span>
+
+<span class="nc" id="L257">		button_center.setOnAction(action -&gt; {</span>
+<span class="nc" id="L258">			centerField();</span>
+<span class="nc" id="L259">		});</span>
+
+<span class="nc" id="L261">		button_unPin.setOnAction(action -&gt; {</span>
+<span class="nc" id="L262">			playerPinned = false;</span>
+<span class="nc" id="L263">			pinnedPlayer = -1;</span>
+<span class="nc" id="L264">			updateCurrentPlayer();</span>
+<span class="nc" id="L265">			button_unPin.setDisable(true);</span>
+<span class="nc" id="L266">			button_unPin.setVisible(false);</span>
+<span class="nc" id="L267">			scrollPane_bagHand.setContent(hBoxHands.get(game.getCurrentPlayer().getClientId()));</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">			for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">				if (panel.getPlayerID() == pinnedPlayer) {</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">					if (panel.getPlayerID() == game.getCurrentPlayer().getClientId()) {</span>
+<span class="nc" id="L271">						panel.setStyle(&quot;-fx-background-color: #6290c3;&quot;);</span>
+<span class="nc" id="L272">					} else {</span>
+<span class="nc" id="L273">						panel.setStyle(&quot;-fx-background-color: grey;&quot;);</span>
+					}
+				}
+			}
+<span class="nc" id="L277">		});</span>
+
+<span class="nc" id="L279">		button_zoomIn.setOnAction(action -&gt; {</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">			if (gridSize &lt; 200) {</span>
+<span class="nc" id="L281">				resize(10);</span>
+			}
+<span class="nc" id="L283">		});</span>
+
+<span class="nc" id="L285">		button_zoomOut.setOnAction(action -&gt; {</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">			if (gridSize &gt; 10) {</span>
+<span class="nc" id="L287">				resize(-10);</span>
+			}
+<span class="nc" id="L289">		});</span>
+
+<span class="nc" id="L291">		button_exitGame.setOnAction(action -&gt; {</span>
+<span class="nc" id="L292">			showExitDialog();</span>
+<span class="nc" id="L293">		});</span>
+
+<span class="nc" id="L295">		button_bagHand.setOnMouseReleased(action -&gt; {</span>
+<span class="nc" id="L296">			this.switchBagHand();</span>
+<span class="nc" id="L297">		});</span>
+
+<span class="nc" id="L299">	}</span>
+
+	/**
+	 * Shows the Dialog Alert window to confirm the quit game action
+	 */
+	private void showExitDialog() {
+<span class="nc" id="L305">		Alert alert = new Alert(AlertType.CONFIRMATION);</span>
+<span class="nc" id="L306">		alert.setTitle(&quot;Exit Game&quot;);</span>
+<span class="nc" id="L307">		alert.setHeaderText(&quot;Are you sure you want to exit the current Game?&quot;);</span>
+<span class="nc" id="L308">		Platform.runLater(new Runnable() {</span>
+
+			@Override
+			public void run() {
+<span class="nc" id="L312">				Optional&lt;ButtonType&gt; option = alert.showAndWait();</span>
+
+<span class="nc bnc" id="L314" title="All 2 branches missed.">				if (option.get() == ButtonType.OK) {</span>
+<span class="nc" id="L315">					exit();</span>
+				}
+
+<span class="nc" id="L318">			}</span>
+		});
+<span class="nc" id="L320">	}</span>
+
+	/**
+	 * Updates the chat
+	 * 
+	 * @param client
+	 * @param message
+	 */
+
+	public void updateChat(Client client, String message) {
+<span class="nc" id="L330">		textArea_chat.setText(textArea_chat.getText() + &quot;\n&quot; + client.getClientName() + &quot;: &quot; + message);</span>
+<span class="nc" id="L331">		textArea_chat.setScrollTop(Double.MAX_VALUE);</span>
+<span class="nc" id="L332">	}</span>
+
+	/**
+	 * Resets the scene for the next game
+	 */
+	public void resetScene() {
+<span class="nc" id="L338">		fieldParser.stopParser();</span>
+<span class="nc" id="L339">		game = new GameData();</span>
+<span class="nc" id="L340">		client = new Client(-1, null, null);</span>
+<span class="nc" id="L341">		playerPanels = new ArrayList&lt;PlayerPanel&gt;();</span>
+<span class="nc" id="L342">		bagSelected = true;</span>
+<span class="nc" id="L343">		gridSize = 80;</span>
+<span class="nc" id="L344">		playerTileMapping = new HashMap&lt;Integer, Integer&gt;();</span>
+<span class="nc" id="L345">		totalTimeTimer.cancel();</span>
+<span class="nc" id="L346">		turnTimeTimer.cancel();</span>
+<span class="nc" id="L347">		totalTimeTimer = null;</span>
+<span class="nc" id="L348">		totalTimeTimerTask = null;</span>
+<span class="nc" id="L349">		totalTime = 0;</span>
+<span class="nc" id="L350">		netClient = null;</span>
+<span class="nc" id="L351">		hBoxHands = new HashMap&lt;Integer, HBox&gt;();</span>
+<span class="nc" id="L352">		playerPinned = false;</span>
+<span class="nc" id="L353">		pinnedPlayer = -1;</span>
+<span class="nc" id="L354">		playerTileMapping = new HashMap&lt;Integer, Integer&gt;();</span>
+		// playedTiles = new ArrayList&lt;TileOnPosition&gt;();
+<span class="nc" id="L356">		clearFieldCanvas();</span>
+<span class="nc" id="L357">		clearPauseCanvas();</span>
+<span class="nc" id="L358">		turnTimeTimerRunning = false;</span>
+<span class="nc" id="L359">		totalTimeTimerRunning = false;</span>
+<span class="nc" id="L360">		textArea_chat.setText(&quot;&quot;);</span>
+<span class="nc" id="L361">		textArea_chatText.setText(&quot;&quot;);</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">		if (!bagSelected) {</span>
+<span class="nc" id="L363">			switchBagHand();</span>
+		}
+<span class="nc" id="L365">		button_unPin.setVisible(false);</span>
+<span class="nc" id="L366">		button_unPin.setDisable(true);</span>
+<span class="nc" id="L367">		label_gameID.setText(&quot;&quot;);</span>
+<span class="nc" id="L368">		label_turnTime.setText(&quot;Zeit für aktuellen Zug: &quot;);</span>
+<span class="nc" id="L369">		label_playerOnTurn.setText(&quot;Spieler am Zug: &quot;);</span>
+<span class="nc" id="L370">		label_totalTime.setText(&quot;Spieldauer: &quot;);</span>
+<span class="nc" id="L371">		vBox_playerPanels.getChildren().clear();</span>
+<span class="nc" id="L372">		hBox_bag.getChildren().clear();</span>
+<span class="nc" id="L373">		scrollPane_bagHand.setContent(hBox_bag);</span>
+<span class="nc" id="L374">		label_gameState.setText(&quot;Spielstatus: &quot;);</span>
+<span class="nc" id="L375">	}</span>
+
+	/**
+	 * Updates the Mapping for the Player-Tile Mapping on Update Response
+	 * 
+	 * @param tiles Liste of last layed tiles
+	 * @param id    Player Id of the current player
+	 */
+	private void updateMapping(List&lt;TileOnPosition&gt; tiles, int id) {
+<span class="nc bnc" id="L384" title="All 2 branches missed.">		if (mappingEnabled) {</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">			for (TileOnPosition tile : tiles) {</span>
+<span class="nc" id="L386">				this.playerTileMapping.put(tile.getTile().getUniqueId(), id);</span>
+			}
+		}
+<span class="nc" id="L389">	}</span>
+
+	/**
+	 * Mapps the layed tiles to the given PlayerId and marks them on the field
+	 * 
+	 * @param id Id of the player which tiles should be marked
+	 */
+	private void mapPlayerTiles(int id) {
+<span class="nc bnc" id="L397" title="All 6 branches missed.">		if (mappingEnabled &amp;&amp; !game.getBoard().isEmpty() &amp;&amp; !playerTileMapping.isEmpty()) {</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">			for (TileOnPosition tile : game.getBoard()) {</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">				if (this.playerTileMapping.get(tile.getTile().getUniqueId()) == id) {</span>
+<span class="nc" id="L400">					markTile(tile.getCoordX(), tile.getCoordY());</span>
+				}
+			}
+		}
+<span class="nc" id="L404">	}</span>
+
+	/**
+	 * Redraws the Field
+	 * 
+	 */
+	private void redrawCanvas() {
+<span class="nc" id="L411">		resetCanvas();</span>
+<span class="nc" id="L412">		drawTiles();</span>
+
+<span class="nc bnc" id="L414" title="All 4 branches missed.">		if (game != null &amp;&amp; game.getCurrentPlayer() != null) {</span>
+<span class="nc bnc" id="L415" title="All 2 branches missed.">			if (!playerPinned) {</span>
+<span class="nc" id="L416">				mapPlayerTiles(game.getCurrentPlayer().getClientId());</span>
+<span class="nc" id="L417">			} else {</span>
+<span class="nc" id="L418">				mapPlayerTiles(pinnedPlayer);</span>
+			}
+		}
+
+<span class="nc" id="L422">	}</span>
+
+	/**
+	 * Draws the tiles on the Field
+	 * 
+	 */
+	private void drawTiles() {
+		// TODO Nur layout wenn tile sichtbar
+<span class="nc bnc" id="L430" title="All 2 branches missed.">		if (game.getBoard() != null) {</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">			for (TileOnPosition tile : game.getBoard()) {</span>
+<span class="nc" id="L432">				int x = tile.getCoordX();</span>
+<span class="nc" id="L433">				int y = tile.getCoordY();</span>
+<span class="nc" id="L434">				int colorId = tile.getTile().getColor();</span>
+<span class="nc" id="L435">				int shapeId = tile.getTile().getShape();</span>
+<span class="nc" id="L436">				layoutTile(x, y, colorId, shapeId);</span>
+			}
+		}
+
+<span class="nc" id="L440">	}</span>
+
+	/**
+	 * Zooms the board with given zoom
+	 * 
+	 * @param zoom The zoom
+	 */
+	private void resize(int zoom) {
+
+<span class="nc" id="L449">		gridSize += zoom;</span>
+
+<span class="nc" id="L451">		redrawCanvas();</span>
+<span class="nc" id="L452">	}</span>
+
+	/**
+	 * Center the position of the zoom
+	 */
+	private void centerField() {
+<span class="nc" id="L458">		tileOffsetX = 0;</span>
+<span class="nc" id="L459">		tileOffsetY = 0;</span>
+<span class="nc" id="L460">		redrawCanvas();</span>
+
+<span class="nc" id="L462">	}</span>
+
+	/**
+	 * Draws the grid on the Field
+	 * 
+	 * @param color The color in which the grid should be drawn
+	 */
+	private void drawGrid(String color) {
+
+<span class="nc" id="L471">		gc.setStroke(Paint.valueOf(color));</span>
+
+<span class="nc" id="L473">		double offsetX = tileOffsetX + tempTileOffsetX;</span>
+<span class="nc" id="L474">		double offsetY = tileOffsetY + tempTileOffsetY;</span>
+
+<span class="nc" id="L476">		offsetX = offsetX % gridSize;</span>
+<span class="nc" id="L477">		offsetY = offsetY % gridSize;</span>
+
+<span class="nc" id="L479">		double anzahlLinesX = canvas_board.getWidth() / 2 - gridSize / 2;</span>
+<span class="nc" id="L480">		double anzahlLinesY = canvas_board.getHeight() / 2 - gridSize / 2;</span>
+
+<span class="nc" id="L482">		anzahlLinesX = anzahlLinesX / gridSize;</span>
+<span class="nc" id="L483">		anzahlLinesY = anzahlLinesY / gridSize;</span>
+
+<span class="nc bnc" id="L485" title="All 2 branches missed.">		for (int i = 0; i &lt; anzahlLinesX + 1; i++) {</span>
+<span class="nc" id="L486">			gc.strokeLine((i * gridSize) + gridSize / 2 - offsetX, -canvas_board.getHeight() / 2,</span>
+<span class="nc" id="L487">					(i * gridSize) + gridSize / 2 - offsetX, canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L488">			gc.strokeLine(-(i * gridSize) - gridSize / 2 - offsetX, -canvas_board.getHeight() / 2,</span>
+<span class="nc" id="L489">					-(i * gridSize) - gridSize / 2 - offsetX, canvas_board.getHeight() / 2);</span>
+		}
+<span class="nc bnc" id="L491" title="All 2 branches missed.">		for (int i = 0; i &lt; anzahlLinesY + 1; i++) {</span>
+<span class="nc" id="L492">			gc.strokeLine(-canvas_board.getWidth() / 2, (i * gridSize) + gridSize / 2 - offsetY,</span>
+<span class="nc" id="L493">					canvas_board.getWidth() / 2, (i * gridSize) + gridSize / 2 - offsetY);</span>
+<span class="nc" id="L494">			gc.strokeLine(-canvas_board.getWidth() / 2, -(i * gridSize) - gridSize / 2 - offsetY,</span>
+<span class="nc" id="L495">					canvas_board.getWidth() / 2, -(i * gridSize) - gridSize / 2 - offsetY);</span>
+		}
+
+<span class="nc" id="L498">	}</span>
+
+	/**
+	 * Draws pause Screen
+	 * 
+	 */
+	private void drawPauseCanvas() {
+
+<span class="nc" id="L506">		double canvasTeiler = canvas_pause.getWidth() / 8;</span>
+
+<span class="nc" id="L508">		gp.fillRect((3 * canvasTeiler) - canvasTeiler / 2, canvas_pause.getHeight() / 4, canvasTeiler,</span>
+<span class="nc" id="L509">				canvas_pause.getHeight() / 2);</span>
+<span class="nc" id="L510">		gp.fillRect((5 * canvasTeiler) - canvasTeiler / 2, canvas_pause.getHeight() / 4, canvasTeiler,</span>
+<span class="nc" id="L511">				canvas_pause.getHeight() / 2);</span>
+<span class="nc" id="L512">		gp.setFill(Color.rgb(0, 0, 0, 0.5));</span>
+<span class="nc" id="L513">		gp.fillRect(0, 0, canvas_pause.getWidth(), canvas_pause.getHeight());</span>
+<span class="nc" id="L514">		gp.setFill(Color.BLACK);</span>
+<span class="nc" id="L515">	}</span>
+
+	/**
+	 * Clears Pause Screen
+	 *
+	 */
+	private void clearPauseCanvas() {
+<span class="nc" id="L522">		gp.clearRect(0, 0, canvas_pause.getWidth(), canvas_pause.getHeight());</span>
+<span class="nc" id="L523">	}</span>
+
+	/**
+	 * Clears the field canvas
+	 */
+	private void clearFieldCanvas() {
+<span class="nc" id="L529">		gc.translate(-canvas_board.getWidth() / 2, -canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L530">		gc.clearRect(0, 0, canvas_board.getWidth(), canvas_board.getHeight());</span>
+<span class="nc" id="L531">		gc.translate(canvas_board.getWidth() / 2, canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L532">	}</span>
+
+	/**
+	 * Resets the board canvas
+	 */
+	private void resetCanvas() {
+<span class="nc" id="L538">		gc.translate(-canvas_board.getWidth() / 2, -canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L539">		gc.clearRect(0, 0, canvas_board.getWidth(), canvas_board.getHeight());</span>
+<span class="nc" id="L540">		gc.translate(canvas_board.getWidth() / 2, canvas_board.getHeight() / 2);</span>
+<span class="nc" id="L541">		drawGrid(gridColor);</span>
+
+<span class="nc" id="L543">	}</span>
+
+	/**
+	 * Shows the current player and if no other player is pinned, also his hand
+	 */
+
+	public void updateCurrentPlayer(Client client) {
+<span class="nc" id="L550">		game.setPreviousPlayer(game.getCurrentPlayer());</span>
+<span class="nc" id="L551">		game.setCurrentPlayer(client);</span>
+<span class="nc" id="L552">		updateCurrentPlayer();</span>
+<span class="nc" id="L553">	}</span>
+
+	public void updateCurrentPlayer() {
+<span class="nc" id="L556">		netClient.sendMsg(new PlayerHandsRequest());</span>
+<span class="nc" id="L557">		netClient.sendMsg(new BagRequest());</span>
+<span class="nc" id="L558">		netClient.sendMsg(new ScoreRequest());</span>
+
+		// If the previous player is not pinned, dye him grey again
+<span class="nc" id="L561">		Client previousPlayer = game.getPreviousPlayer();</span>
+<span class="nc bnc" id="L562" title="All 2 branches missed.">		if (previousPlayer.getClientId() &gt;= 0) {</span>
+<span class="nc bnc" id="L563" title="All 2 branches missed.">			for (PlayerPanel playerPanel : playerPanels) {</span>
+<span class="nc bnc" id="L564" title="All 2 branches missed.">				if (playerPanel.getPlayerID() == previousPlayer.getClientId()) {</span>
+<span class="nc bnc" id="L565" title="All 2 branches missed.">					if (pinnedPlayer != playerPanel.getPlayerID()) {</span>
+<span class="nc" id="L566">						playerPanel.setStyle(&quot;-fx-background-color: grey;&quot;);</span>
+					}
+				}
+			}
+		}
+		// If the new current player is not pinned, dye him blue
+<span class="nc" id="L572">		Client currentPlayer = game.getCurrentPlayer();</span>
+<span class="nc bnc" id="L573" title="All 2 branches missed.">		for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">			if (panel.getPlayerID() == currentPlayer.getClientId()) {</span>
+<span class="nc bnc" id="L575" title="All 2 branches missed.">				if (pinnedPlayer != panel.getPlayerID()) {</span>
+<span class="nc" id="L576">					panel.setStyle(&quot;-fx-background-color: #6290c3;&quot;);</span>
+				}
+			}
+		}
+<span class="nc" id="L580">		label_playerOnTurn.setText(&quot;Spieler am Zug: &quot; + currentPlayer.getClientName());</span>
+<span class="nc" id="L581">		updateTurnTime(game.getConfig().getTurnTime());</span>
+<span class="nc" id="L582">		updatePlayerHand(currentPlayer);</span>
+<span class="nc bnc" id="L583" title="All 4 branches missed.">		if (!bagSelected &amp;&amp; !playerPinned) {</span>
+<span class="nc" id="L584">			scrollPane_bagHand.setContent(hBoxHands.get(currentPlayer.getClientId()));</span>
+		}
+<span class="nc" id="L586">	}</span>
+
+	/**
+	 * Generates the PlayerPanels
+	 */
+
+	private void generatePlayerPanels() {
+<span class="nc bnc" id="L593" title="All 2 branches missed.">		for (Client clientInThisGame : game.getClients()) {</span>
+<span class="nc" id="L594">			final PlayerPanel playerPanel = new PlayerPanel(clientInThisGame.getClientId(),</span>
+<span class="nc" id="L595">					clientInThisGame.getClientName());</span>
+<span class="nc" id="L596">			HBox hBox = new HBox();</span>
+<span class="nc" id="L597">			hBoxHands.put(clientInThisGame.getClientId(), hBox);</span>
+<span class="nc" id="L598">			playerPanel.setOnMouseClicked(action -&gt; {</span>
+<span class="nc" id="L599">				playerPinned = true;</span>
+<span class="nc bnc" id="L600" title="All 2 branches missed.">				if (bagSelected) {</span>
+<span class="nc" id="L601">					switchBagHand();</span>
+				}
+<span class="nc" id="L603">				playerPinned = true;</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">				if (pinnedPlayer &gt;= 0) {</span>
+<span class="nc bnc" id="L605" title="All 2 branches missed.">					for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L606" title="All 2 branches missed.">						if (panel.getPlayerID() == pinnedPlayer) {</span>
+<span class="nc bnc" id="L607" title="All 2 branches missed.">							if (panel.getPlayerID() == game.getCurrentPlayer().getClientId()) {</span>
+<span class="nc" id="L608">								panel.setStyle(&quot;-fx-background-color: #6290c3;&quot;);</span>
+<span class="nc" id="L609">							} else {</span>
+<span class="nc" id="L610">								panel.setStyle(&quot;-fx-background-color: grey;&quot;);</span>
+							}
+						}
+					}
+				}
+<span class="nc" id="L615">				pinnedPlayer = clientInThisGame.getClientId();</span>
+<span class="nc" id="L616">				button_unPin.setDisable(false);</span>
+<span class="nc" id="L617">				button_unPin.setVisible(true);</span>
+<span class="nc" id="L618">				updatePlayerHand(clientInThisGame);</span>
+<span class="nc" id="L619">				scrollPane_bagHand.setContent(hBox);</span>
+<span class="nc" id="L620">				playerPinned = true;</span>
+<span class="nc" id="L621">				redrawCanvas();</span>
+<span class="nc" id="L622">				playerPanel.setStyle(&quot;-fx-background-color: #2d1e2f;&quot;);</span>
+<span class="nc" id="L623">			});</span>
+<span class="nc" id="L624">			vBox_playerPanels.getChildren().add(playerPanel);</span>
+<span class="nc" id="L625">			playerPanels.add(playerPanel);</span>
+		}
+<span class="nc" id="L627">	}</span>
+
+	/**
+	 * Exits the game
+	 */
+
+	private void exit() {
+<span class="nc" id="L634">		netClient.sendMsg(new LeavingRequest());</span>
+<span class="nc" id="L635">		resetScene();</span>
+<span class="nc" id="L636">		switchScene(SceneMapping.LOBBY, true);</span>
+<span class="nc" id="L637">	}</span>
+
+	private void layoutTile(int x, int y, int colorId, int shapeId) {
+
+<span class="nc" id="L641">		Image img = SwingFXUtils.toFXImage(this.tileImages[colorId][shapeId], null);</span>
+<span class="nc" id="L642">		gc.drawImage(img, x * (gridSize) - gridSize / 2 + 1 - tileOffsetX - tempTileOffsetX,</span>
+<span class="nc" id="L643">				y * (gridSize) - gridSize / 2 + 1 - tileOffsetY - tempTileOffsetY, this.gridSize - 1,</span>
+<span class="nc" id="L644">				this.gridSize - 1);</span>
+
+<span class="nc" id="L646">	}</span>
+
+	/**
+	 * Draws a border to a Tile, that lays on the position (x/y)
+	 * 
+	 * @param x X Position of the tile
+	 * @param y Y Position of the tile
+	 */
+	private void markTile(int x, int y) {
+
+<span class="nc" id="L656">		gc.setStroke(Paint.valueOf(&quot;0x000000&quot;));</span>
+<span class="nc" id="L657">		gc.setLineWidth(3);</span>
+<span class="nc" id="L658">		gc.strokeRect(x * (gridSize) - gridSize / 2 + 1 - tileOffsetX - tempTileOffsetX,</span>
+<span class="nc" id="L659">				y * (gridSize) - gridSize / 2 + 1 - tileOffsetY - tempTileOffsetY, this.gridSize - 1,</span>
+<span class="nc" id="L660">				this.gridSize - 1);</span>
+<span class="nc" id="L661">		gc.setLineWidth(1);</span>
+<span class="nc" id="L662">	}</span>
+
+	/**
+	 * Switches between hands of player and bag in scrollPane_bagHand
+	 */
+
+	private void switchBagHand() {
+<span class="nc bnc" id="L669" title="All 2 branches missed.">		if (this.bagSelected) {</span>
+			// Change the button's icon
+<span class="nc" id="L671">			button_bagHand.getStyleClass().remove(1);</span>
+<span class="nc" id="L672">			button_bagHand.getStyleClass().add(&quot;button_bagIcon&quot;);</span>
+<span class="nc" id="L673">			label_numberTilesInBag.setVisible(false);</span>
+
+<span class="nc" id="L675">			bagSelected = false;</span>
+<span class="nc" id="L676">			scrollPane_bagHand.setContent(hBoxHands.get(game.getCurrentPlayer().getClientId()));</span>
+<span class="nc" id="L677">		} else {</span>
+			// Change the button's icon
+<span class="nc" id="L679">			button_bagHand.getStyleClass().remove(1);</span>
+<span class="nc" id="L680">			button_bagHand.getStyleClass().add(&quot;button_handIcon&quot;);</span>
+
+<span class="nc" id="L682">			bagSelected = true;</span>
+<span class="nc" id="L683">			label_numberTilesInBag.setVisible(true);</span>
+<span class="nc" id="L684">			label_numberTilesInBag.setText(&quot;Steine: &quot; + Integer.toString(game.getBag().getNumberOfTiles()));</span>
+<span class="nc" id="L685">			scrollPane_bagHand.setContent(hBox_bag);</span>
+			// Dye the pinned player...
+<span class="nc bnc" id="L687" title="All 2 branches missed.">			for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L688" title="All 2 branches missed.">				if (panel.getPlayerID() == pinnedPlayer) {</span>
+<span class="nc bnc" id="L689" title="All 2 branches missed.">					if (pinnedPlayer == game.getCurrentPlayer().getClientId()) {</span>
+						// ... blue, if he is the current player
+<span class="nc" id="L691">						panel.setStyle(&quot;-fx-background-color: #6290c3;&quot;);</span>
+<span class="nc" id="L692">					} else {</span>
+						// ... grey, if he is not
+<span class="nc" id="L694">						panel.setStyle(&quot;-fx-background-color: grey;&quot;);</span>
+					}
+				}
+			}
+<span class="nc" id="L698">			playerPinned = false;</span>
+<span class="nc" id="L699">			pinnedPlayer = -1;</span>
+<span class="nc" id="L700">			button_unPin.setDisable(true);</span>
+<span class="nc" id="L701">			button_unPin.setVisible(false);</span>
+		}
+<span class="nc" id="L703">	}</span>
+
+	/**
+	 * Deletes a player from the panels and the clients list
+	 * 
+	 * @param client
+	 */
+
+	public void playerLeft(Client client) {
+<span class="nc" id="L712">		ArrayList&lt;Client&gt; clients = game.getClients();</span>
+		// Check, if you got kicked
+<span class="nc bnc" id="L714" title="All 2 branches missed.">		if (client.getClientId() == this.client.getClientId()) {</span>
+<span class="nc" id="L715">			exit();</span>
+<span class="nc" id="L716">		} else {</span>
+<span class="nc" id="L717">			PlayerPanel panelForRemove = null;</span>
+<span class="nc bnc" id="L718" title="All 2 branches missed.">			for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L719" title="All 2 branches missed.">				if (panel.getPlayerID() == client.getClientId()) {</span>
+
+<span class="nc" id="L721">					panelForRemove = panel;</span>
+<span class="nc" id="L722">					Client clientForRemove = null;</span>
+<span class="nc bnc" id="L723" title="All 2 branches missed.">					for (Client clientInClients : clients) {</span>
+<span class="nc bnc" id="L724" title="All 2 branches missed.">						if (clientInClients.getClientId() == client.getClientId()) {</span>
+<span class="nc" id="L725">							clientForRemove = clientInClients;</span>
+						}
+					}
+<span class="nc" id="L728">					clients.remove(clientForRemove);</span>
+				}
+			}
+<span class="nc" id="L731">			vBox_playerPanels.getChildren().remove(panelForRemove);</span>
+<span class="nc" id="L732">			playerPanels.remove(panelForRemove);</span>
+		}
+<span class="nc" id="L734">		game.setClients(clients);</span>
+<span class="nc" id="L735">	}</span>
+
+	/**
+	 * Updates the turn time
+	 * 
+	 * @param time
+	 */
+
+	public void updateTurnTime(long time) {
+		// TODO: HH:MM:SS
+<span class="nc bnc" id="L745" title="All 2 branches missed.">		if (turnTimeTimerRunning) {</span>
+<span class="nc" id="L746">			turnTimeTimerTask.cancel();</span>
+		}
+<span class="nc" id="L748">		turnTime = time / 1000;</span>
+<span class="nc" id="L749">		turnTimeTimer = new Timer();</span>
+<span class="nc" id="L750">		turnTimeTimerRunning = true;</span>
+<span class="nc" id="L751">		turnTimeTimerTask = new TimerTask() {</span>
+			public void run() {
+<span class="nc bnc" id="L753" title="All 2 branches missed.">				if (turnTime == 0) {</span>
+<span class="nc" id="L754">					turnTimeTimerTask.cancel();</span>
+<span class="nc" id="L755">					turnTimeTimerRunning = false;</span>
+				}
+<span class="nc" id="L757">				final long hours = turnTime / 3600;</span>
+<span class="nc" id="L758">				long turnTimeSave = turnTime - hours * 3600;</span>
+<span class="nc" id="L759">				final long minutes = turnTimeSave / 60;</span>
+<span class="nc" id="L760">				turnTimeSave = turnTimeSave - minutes * 60;</span>
+<span class="nc" id="L761">				final long seconds = turnTimeSave;</span>
+
+<span class="nc" id="L763">				Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L764">					label_turnTime.setText((&quot;Zeit für aktuellen Zug: &quot; + Long.toString(hours) + &quot;:&quot;</span>
+<span class="nc" id="L765">							+ Long.toString(minutes) + &quot;:&quot; + Long.toString(seconds)));</span>
+<span class="nc" id="L766">				});</span>
+<span class="nc bnc" id="L767" title="All 2 branches missed.">				if (game.getGameState() != GameState.IN_PROGRESS) {</span>
+<span class="nc" id="L768">					turnTimeTimer.cancel();</span>
+<span class="nc" id="L769">					turnTimeTimerRunning = false;</span>
+<span class="nc" id="L770">				} else {</span>
+<span class="nc" id="L771">					turnTime--;</span>
+				}
+<span class="nc" id="L773">			}</span>
+		};
+<span class="nc" id="L775">		turnTimeTimer.schedule(turnTimeTimerTask, 0, 1000);</span>
+<span class="nc" id="L776">	}</span>
+
+	/**
+	 * Updates the total time
+	 * 
+	 * @param time
+	 */
+
+	public void updateTotalTime(long time) {
+		// TODO: HH:MM:SS
+<span class="nc bnc" id="L786" title="All 2 branches missed.">		if (totalTimeTimerRunning) {</span>
+<span class="nc" id="L787">			totalTimeTimerTask.cancel();</span>
+		}
+<span class="nc" id="L789">		totalTime = time / 1000;</span>
+<span class="nc" id="L790">		totalTimeTimer = new Timer();</span>
+<span class="nc" id="L791">		totalTimeTimerRunning = true;</span>
+<span class="nc" id="L792">		totalTimeTimerTask = new TimerTask() {</span>
+			public void run() {
+<span class="nc" id="L794">				final long hours = totalTime / 3600;</span>
+<span class="nc" id="L795">				long totalTimeSave = totalTime - hours * 3600;</span>
+<span class="nc" id="L796">				final long minutes = totalTimeSave / 60;</span>
+<span class="nc" id="L797">				totalTimeSave = totalTimeSave - minutes * 60;</span>
+<span class="nc" id="L798">				final long seconds = totalTimeSave;</span>
+
+<span class="nc" id="L800">				Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L801">					label_totalTime.setText((&quot;Spieldauer: &quot; + Long.toString(hours) + &quot;:&quot; + Long.toString(minutes) + &quot;:&quot;</span>
+<span class="nc" id="L802">							+ Long.toString(seconds)));</span>
+<span class="nc" id="L803">				});</span>
+<span class="nc bnc" id="L804" title="All 2 branches missed.">				if (game.getGameState() != GameState.IN_PROGRESS) {</span>
+<span class="nc" id="L805">					totalTimeTimer.cancel();</span>
+<span class="nc" id="L806">					totalTimeTimerRunning = false;</span>
+<span class="nc" id="L807">				} else {</span>
+<span class="nc" id="L808">					totalTime++;</span>
+				}
+<span class="nc" id="L810">			}</span>
+		};
+<span class="nc" id="L812">		totalTimeTimer.schedule(totalTimeTimerTask, 0, 1000);</span>
+<span class="nc" id="L813">	}</span>
+
+	/**
+	 * Updates the tiles in the bag's HBox
+	 * 
+	 * @param collection
+	 */
+
+	public void updateBag(Collection&lt;Tile&gt; bag) {
+<span class="nc" id="L822">		game.getBag().setTiles((List&lt;Tile&gt;) bag);</span>
+<span class="nc" id="L823">		this.updateNumberTilesInBag(bag.size());</span>
+<span class="nc" id="L824">		hBox_bag.getChildren().clear();</span>
+		ImageView imageViewTile;
+		Image imageTile;
+<span class="nc bnc" id="L827" title="All 2 branches missed.">		for (Tile tile : bag) {</span>
+<span class="nc" id="L828">			imageViewTile = new ImageView();</span>
+<span class="nc" id="L829">			imageViewTile.setFitHeight(100);</span>
+<span class="nc" id="L830">			imageViewTile.setFitWidth(100);</span>
+<span class="nc" id="L831">			imageTile = SwingFXUtils.toFXImage(this.tileImages[tile.getColor()][tile.getShape()], null);</span>
+<span class="nc" id="L832">			imageViewTile.setImage(imageTile);</span>
+<span class="nc" id="L833">			hBox_bag.getChildren().add(imageViewTile);</span>
+<span class="nc" id="L834">			hBox_bag.setMargin(imageViewTile, new Insets(10, 10, 10, 10));</span>
+		}
+<span class="nc" id="L836">	}</span>
+
+	/**
+	 * Shows the winner
+	 */
+
+	public void showWinner(Winner winner) {
+<span class="nc" id="L843">		game.setWinner(winner);</span>
+<span class="nc" id="L844">		this.updateScores(winner.getLeaderboard());</span>
+<span class="nc" id="L845">		netClient.sendMsg(new PlayerHandsRequest());</span>
+<span class="nc" id="L846">		netClient.sendMsg(new BagRequest());</span>
+<span class="nc" id="L847">		label_gameState.setText(label_gameState.getText() + &quot; (Sieger: &quot; + winner.getClient().getClientName() + &quot; mit &quot;</span>
+<span class="nc" id="L848">				+ winner.getScore() + &quot; Punkten)&quot;);</span>
+<span class="nc" id="L849">	}</span>
+
+	/**
+	 * Update tiles on the field
+	 * 
+	 * @param tileOnPositionList
+	 */
+
+	public void updateTilesOnField(List&lt;TileOnPosition&gt; tileOnPositionList) {
+<span class="nc" id="L858">		game.addBoardTiles(tileOnPositionList);</span>
+<span class="nc" id="L859">		this.updateMapping(tileOnPositionList, game.getCurrentPlayer().getClientId());</span>
+<span class="nc" id="L860">		redrawCanvas();</span>
+<span class="nc" id="L861">	}</span>
+
+	/**
+	 * Update update number tiles in the bag
+	 * 
+	 * @param numberTilesInBag
+	 */
+
+	public void updateNumberTilesInBag(int numberTilesInBag) {
+<span class="nc" id="L870">		game.getBag().setNumberOfTiles(numberTilesInBag);</span>
+<span class="nc" id="L871">		label_numberTilesInBag.setText(&quot;Steine: &quot; + Integer.toString(numberTilesInBag));</span>
+		;
+<span class="nc" id="L873">	}</span>
+
+	/**
+	 * Update scores of all players
+	 */
+
+	public void updateScores(Map&lt;Client, Integer&gt; scores) {
+<span class="nc bnc" id="L880" title="All 4 branches missed.">		if (playerPanels == null || playerPanels.isEmpty()) {</span>
+<span class="nc" id="L881">			game.setClients(new ArrayList&lt;&gt;(scores.keySet()));</span>
+<span class="nc" id="L882">			GameDataRequest gameDataRequest = new GameDataRequest();</span>
+<span class="nc" id="L883">			this.netClient.sendMsg(gameDataRequest);</span>
+<span class="nc" id="L884">		} else {</span>
+<span class="nc" id="L885">			game.setScores((HashMap&lt;Client, Integer&gt;) scores);</span>
+<span class="nc bnc" id="L886" title="All 2 branches missed.">			for (Entry&lt;Client, Integer&gt; entry : scores.entrySet()) {</span>
+<span class="nc bnc" id="L887" title="All 2 branches missed.">				for (PlayerPanel panel : playerPanels) {</span>
+<span class="nc bnc" id="L888" title="All 2 branches missed.">					if (panel.getPlayerID() == entry.getKey().getClientId()) {</span>
+<span class="nc" id="L889">						panel.updatePlayerScore(entry.getValue());</span>
+					}
+				}
+			}
+		}
+<span class="nc" id="L894">	}</span>
+
+	/**
+	 * Updates the tiles in the player's HBox
+	 * 
+	 * @param client
+	 */
+
+	public void updatePlayerHand(Map&lt;Client, ArrayList&lt;Tile&gt;&gt; hands) {
+<span class="nc" id="L903">		game.setHands((HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt;) hands);</span>
+<span class="nc" id="L904">		updatePlayerHand(game.getCurrentPlayer());</span>
+<span class="nc" id="L905">	}</span>
+
+	public void updatePlayerHand(Client client) {
+<span class="nc" id="L908">		ArrayList&lt;Tile&gt; tilesOnHand = game.getHands().get(client.getClientId());</span>
+		ImageView imageViewTile;
+		Image imageTile;
+<span class="nc" id="L911">		HBox hBox = hBoxHands.get(client.getClientId());</span>
+<span class="nc" id="L912">		hBox.getChildren().clear();</span>
+<span class="nc bnc" id="L913" title="All 2 branches missed.">		if (tilesOnHand != null) {</span>
+<span class="nc bnc" id="L914" title="All 2 branches missed.">			for (Tile tile : tilesOnHand) {</span>
+<span class="nc" id="L915">				imageViewTile = new ImageView();</span>
+<span class="nc" id="L916">				imageViewTile.setFitHeight(100);</span>
+<span class="nc" id="L917">				imageViewTile.setFitWidth(100);</span>
+<span class="nc" id="L918">				imageTile = SwingFXUtils.toFXImage(this.tileImages[tile.getColor()][tile.getShape()], null);</span>
+<span class="nc" id="L919">				imageViewTile.setImage(imageTile);</span>
+<span class="nc" id="L920">				hBox.getChildren().add(imageViewTile);</span>
+<span class="nc" id="L921">				hBox.setMargin(imageViewTile, new Insets(10, 10, 10, 10));</span>
+			}
+		}
+
+<span class="nc" id="L925">	}</span>
+
+	public void updateGameData(GameDataResponse gameData) {
+<span class="nc" id="L928">		game.importGameData(gameData);</span>
+<span class="nc bnc" id="L929" title="All 5 branches missed.">		switch (gameData.getGameState()) {</span>
+		case PAUSED:
+<span class="nc" id="L931">			label_gameState.setText(&quot;Spielstatus: Das Spiel wurde pausiert&quot;);</span>
+<span class="nc" id="L932">			this.generatePlayerPanels();</span>
+<span class="nc" id="L933">			updateCurrentPlayer(gameData.getCurrentClient());</span>
+<span class="nc" id="L934">			netClient.sendMsg(new BagRequest());</span>
+<span class="nc" id="L935">			netClient.sendMsg(new ScoreRequest());</span>
+<span class="nc" id="L936">			netClient.sendMsg(new PlayerHandsRequest());</span>
+<span class="nc" id="L937">			netClient.sendMsg(new TotalTimeRequest());</span>
+<span class="nc" id="L938">			netClient.sendMsg(new TurnTimeLeftRequest());</span>
+<span class="nc" id="L939">			break;</span>
+		case IN_PROGRESS:
+<span class="nc" id="L941">			label_gameState.setText(&quot;Spielstatus: Das Spiel läuft&quot;);</span>
+<span class="nc" id="L942">			this.generatePlayerPanels();</span>
+<span class="nc" id="L943">			updateCurrentPlayer(gameData.getCurrentClient());</span>
+<span class="nc" id="L944">			netClient.sendMsg(new BagRequest());</span>
+<span class="nc" id="L945">			netClient.sendMsg(new ScoreRequest());</span>
+<span class="nc" id="L946">			netClient.sendMsg(new PlayerHandsRequest());</span>
+<span class="nc" id="L947">			netClient.sendMsg(new TotalTimeRequest());</span>
+<span class="nc" id="L948">			netClient.sendMsg(new TurnTimeLeftRequest());</span>
+<span class="nc" id="L949">			break;</span>
+		case NOT_STARTED:
+<span class="nc" id="L951">			label_gameState.setText(&quot;Spielstatus: Das Spiel wurde noch nicht gestartet&quot;);</span>
+<span class="nc" id="L952">			break;</span>
+		case ENDED:
+<span class="nc" id="L954">			label_gameState.setText(&quot;Spielstatus: Das Spiel ist beendet&quot;);</span>
+<span class="nc" id="L955">			this.generatePlayerPanels();</span>
+<span class="nc" id="L956">			netClient.sendMsg(new BagRequest());</span>
+<span class="nc" id="L957">			netClient.sendMsg(new ScoreRequest());</span>
+<span class="nc" id="L958">			netClient.sendMsg(new PlayerHandsRequest());</span>
+<span class="nc" id="L959">			netClient.sendMsg(new TotalTimeRequest());</span>
+<span class="nc" id="L960">			netClient.sendMsg(new TurnTimeLeftRequest());</span>
+<span class="nc" id="L961">			clearPauseCanvas();</span>
+			break;
+		}
+<span class="nc" id="L964">		redrawCanvas();</span>
+<span class="nc" id="L965">	}</span>
+
+	/**
+	 * Pauses the game
+	 */
+
+	public void pauseGame() {
+<span class="nc" id="L972">		game.setGameState(GameState.PAUSED);</span>
+<span class="nc" id="L973">		drawPauseCanvas();</span>
+<span class="nc" id="L974">		turnTimeTimer.cancel();</span>
+<span class="nc" id="L975">		totalTimeTimer.cancel();</span>
+<span class="nc" id="L976">		turnTimeTimerRunning = false;</span>
+<span class="nc" id="L977">		totalTimeTimerRunning = false;</span>
+<span class="nc" id="L978">		label_gameState.setText(&quot;Spielstatus: Das Spiel wurde pausiert&quot;);</span>
+<span class="nc" id="L979">	}</span>
+
+	/**
+	 * Resumes the game
+	 */
+
+	public void resumeGame() {
+<span class="nc" id="L986">		game.setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L987">		clearPauseCanvas();</span>
+<span class="nc" id="L988">		updateTotalTime(totalTime * 1000);</span>
+<span class="nc" id="L989">		updateTurnTime(turnTime * 1000);</span>
+<span class="nc" id="L990">		label_gameState.setText(&quot;Spielstatus: Das Spiel läuft&quot;);</span>
+<span class="nc" id="L991">	}</span>
+
+	/**
+	 * Starts the game
+	 * 
+	 * @param configuration
+	 * @param collection
+	 */
+
+	public void startGame(Collection&lt;Client&gt; collection, Configuration configuration) {
+<span class="nc" id="L1001">		game.setClients((ArrayList&lt;Client&gt;) collection);</span>
+<span class="nc" id="L1002">		game.setConfig(configuration);</span>
+<span class="nc" id="L1003">		game.setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L1004">		generatePlayerPanels();</span>
+<span class="nc" id="L1005">		updateTotalTime(0);</span>
+<span class="nc" id="L1006">		label_gameState.setText(&quot;Spielstatus: Das Spiel läuft&quot;);</span>
+<span class="nc" id="L1007">	}</span>
+
+	public void abortGame() {
+<span class="nc" id="L1010">		game.setGameState(GameState.ENDED);</span>
+<span class="nc" id="L1011">		clearPauseCanvas();</span>
+<span class="nc" id="L1012">		turnTimeTimer.cancel();</span>
+<span class="nc" id="L1013">		totalTimeTimer.cancel();</span>
+<span class="nc" id="L1014">		label_gameState.setText(&quot;Spielstatus: Das Spiel wurde abgebrochen&quot;);</span>
+<span class="nc" id="L1015">		fieldParser.stopParser();</span>
+<span class="nc" id="L1016">	}</span>
+
+	/**
+	 * Ends the game
+	 */
+
+	public void endGame() {
+<span class="nc" id="L1023">		game.setGameState(GameState.ENDED);</span>
+<span class="nc" id="L1024">		clearPauseCanvas();</span>
+<span class="nc" id="L1025">		turnTimeTimer.cancel();</span>
+<span class="nc" id="L1026">		totalTimeTimer.cancel();</span>
+<span class="nc" id="L1027">		label_gameState.setText(&quot;Spielstatus: Das Spiel ist beendet&quot;);</span>
+<span class="nc" id="L1028">		fieldParser.stopParser();</span>
+<span class="nc" id="L1029">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

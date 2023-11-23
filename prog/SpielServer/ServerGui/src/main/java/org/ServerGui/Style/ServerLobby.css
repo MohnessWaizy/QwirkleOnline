@@ -1,0 +1,127 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.root{
+	-fx-font-family: "tahoma";
+}
+
+#button_join{
+	-fx-background-radius: 0;
+	-fx-background-color: #C2C5C7;	
+}
+
+#button_join:hover{
+	-fx-background-color: #8C9195;
+}
+
+
+.button:hover{
+	-fx-background-color: #8C9195;
+}
+.dialogBackground{
+	-fx-background-color: #c2c5c7;
+	-fx-font-size: 20;
+}
+
+.bottomBar{
+	-fx-background-color: #6B7074;
+}
+
+.topBar{
+	-fx-background-color: #6B7074;
+}
+
+.button{
+	-fx-font-size: 16;
+	-fx-background-color:#C2C5C7;
+	-fx-text-fill: #6b7074;
+}
+.anchorPane{
+	-fx-background-color: #f4f4f4;
+	-fx-text-fill: #C2C5C7;
+}
+
+.label{
+	-fx-text-fill: 	#f1ffff;
+}
+
+#scrollbar_pane{
+	-fx-background-color: #C2C5C7;
+}
+
+.titledPane{
+	-fx-background-color: #6B7074;
+}
+
+#label_lobbyLogo{
+	-fx-font-size: 60px;
+	-fx-text-fill: #5990C3;
+}
+
+#pane_topLobby {
+	-fx-background-color: #F4F4F4;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:180px;
+    -fx-background-color: #F4F4F4;
+}
+
+.tab{
+    -fx-background-insets: 0 10 0 10,0,0;
+    -fx-background-radius: 0;
+}
+.tab-pane .tab {
+    -fx-background-color: #5990C3;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #C2C5C7;
+    -fx-focus-color: transparent;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    /*-fx-text-fill: #828282;*/
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label { 
+    -fx-alignment: CENTER;
+    /*-fx-text-fill: #96b946;*/
+}
+
+#vbox_started {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_ended {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_notStarted {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_tournament {
+	-fx-background-color: #C2C5C7;
+}
+
+#lable_infoGamepanel {
+	-fx-font-size: 25px;
+	-fx-font-family: "Times New Roman";
+	
+}
+#label_gameID{
+	-fx-font-size: 15px;
+	-fx-font-weight: BOLD;
+}
+
+#spielfeld{
+	-fx-background-color: 	#f4f4f4;
+}
+
+

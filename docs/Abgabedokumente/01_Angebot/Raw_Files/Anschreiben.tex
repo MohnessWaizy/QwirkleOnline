@@ -1,0 +1,131 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Professional Formal Letter
+% LaTeX Template
+% Version 2.0 (12/2/17)
+%
+% This template originates from:
+% http://www.LaTeXTemplates.com
+%
+% Authors:
+% Brian Moses
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt, a4paper]{letter} % Set the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
+\input{structure.tex} % Include the file that specifies the document structure
+
+\longindentation=0pt % Un-commenting this line will push the closing "Sincerely," and date to the left of the page
+
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\ofoot{ahoiSoftware $\cdot$ Warburger Straße $\cdot$ 33100 Paderborn}
+\ifoot{\pagemark}
+
+%\footsepline
+%----------------------------------------------------------------------------------------
+%	YOUR INFORMATION
+%----------------------------------------------------------------------------------------
+
+\Who{ahoiSoftware} % Your name
+
+\Title{} % Your title, leave blank for no title
+
+\authordetails{
+	{\normalfont Ansprechpartner:}\\ % Your department/institution
+	{\normalfont Teamleiter: Steffen Sassalla}\\
+	{\normalfont E-Mail: sassalla@mail.upb.de}\\ % Your address
+	{\normalfont Product Owner: Lukas Gehring}\\
+	{\normalfont E-Mail: lgehring@mail.upb.de}\\ % Your city, zip code, country, etc}
+	{}\\
+	\\
+}
+
+%----------------------------------------------------------------------------------------
+%	HEADER CONTENTS
+%----------------------------------------------------------------------------------------
+
+\logo{logo.png} % Logo filename, your logo should have square dimensions (i.e. roughly the same width and height), if it does not, you will need to adjust spacing within the HEADER STRUCTURE block in structure.tex (read the comments carefully!)
+
+\headerlineone{} % Top header line, leave blank if you only want the bottom line
+
+\headerlinetwo{} % Bottom header line
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+
+%----------------------------------------------------------------------------------------
+%	TO ADDRESS
+%----------------------------------------------------------------------------------------
+\begin{letter}{
+
+	\ \\
+	Universität Paderborn\\
+	Institut für Informatik\\
+	Herr Prof. Dr. Eric Bodden\\
+	Warburgerstr. 100\\
+	33098 Paderborn
+}
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT
+%----------------------------------------------------------------------------------------
+
+\opening{}
+\begin{flushright}
+29.10.2018
+\end{flushright}
+\ \\\textbf{Angebot für die Entwicklung eines netzwerkfähigen Qwirkle-Spiels}
+
+\ \\Sehr geehrter Herr Professor Bodden,
+\ \\
+\ \\vielen Dank für Ihre Anfrage vom 09.10.2018. Wir möchten Ihnen hiermit folgendes Angebot unterbreiten: 
+
+\ \\Wir entwickeln für Sie eine Client-Server-Anwendung für das Spiel Qwirkle, mit der Sie in der Lage sind, Spiele nach Ihren Wünschen auszurichten, diese zu beobachten oder aktiv an ihnen teilzunehmen. Nutzen können Sie das Programm als Beobachter unter Mac OS X, Ubuntu und Windows sowie als Teilnehmer unter Android (Version 5.0.1 und höher).
+
+\ \\Für die Planung und Entwicklung des Produkts rechnen wir mit 2310 Personenstunden, womit wir bei einem Stundenlohn von 80€ auf einen Endpreis von 184.800€ kommen. In den Erläuterungen der einzelnen Phasen finden Sie eine genauere Aufschlüsselung der geplanten Ressourcenverteilung.
+
+\ \\Selbstverständlich stehen wir Ihnen bei Unklarheiten oder Rückfragen über die oben genannten Kontaktmöglichkeiten zur Verfügung.
+
+\ \\Mit freundlichen Grüßen
+
+\ \\
+\ \\
+\ \\Teamleiter \hfill Product Owner
+\ \\Steffen Sassalla \hfill Lukas Gehring
+
+\ \\\textbf{Anlagen}
+%\closing{Mit freundlichen Grüßen}
+
+%----------------------------------------------------------------------------------------
+%	OPTIONAL FOOTNOTE
+%----------------------------------------------------------------------------------------
+
+%Uncomment the 4 lines below to print a footnote with custom text
+%\def\thefootnote{}
+%\def\footnoterule{\hrule}
+%\footnotetext{\hspace*{\fill}{\footnotesize\em {\normalfont ahoiSoftware $\cdot$ Warburger Straße 100 $\cdot$ 33100 Paderborn}}}
+%\def\thefootnote{\arabic{footnote}}
+
+%----------------------------------------------------------------------------------------
+
+\end{letter}
+\newpage
+%Sprint-Diagramm
+\includepdf[pages=-, angle=90]{Projektplan.pdf} 
+
+\newpage
+%Sprint-Erläuterung
+\includepdf[pages=-]{erlaeuterung.pdf} 
+
+\end{document}

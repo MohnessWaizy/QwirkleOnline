@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CycleList.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.DataStructures</a> &gt; <span class="el_source">CycleList.java</span></div><h1>CycleList.java</h1><pre class="source lang-java linenums">package org.GameLogic.DataStructures;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+/**
+ * A list that has the ability to cycle through players indefinitely. Implements
+ * List, because we want to use streams and comparable's.
+ */
+
+public class CycleList&lt;E&gt; implements List&lt;E&gt; {
+
+	// current element
+	private int current;
+	// data backed by arrayList
+	private ArrayList&lt;E&gt; data;
+
+	/**
+	 * Constructs a new CycleList. The current Element is the first Element added.
+	 * 
+	 * @param capacity
+	 *            - Number of elements in this List
+	 */
+<span class="fc" id="L27">	public CycleList(int capacity) {</span>
+<span class="fc" id="L28">		current = 0;</span>
+
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">		if (capacity == 0) {</span>
+<span class="nc" id="L31">			capacity = 12;</span>
+		}
+
+<span class="fc" id="L34">		data = new ArrayList&lt;E&gt;(capacity);</span>
+<span class="fc" id="L35">	}</span>
+
+	/**
+	 * 
+	 * @return Current Element
+	 */
+	public E current() {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		if (data.size() &gt; 0) {</span>
+<span class="fc" id="L43">			return data.get(current);</span>
+		} else {
+<span class="fc" id="L45">			return null;</span>
+		}
+	}
+
+	/**
+	 * Calculates the next element and sets the current to the next element. Also
+	 * checks if the last element is the current and if so, starts at the beginning
+	 * again.
+	 * 
+	 * @return Next Element
+	 */
+	public E next() {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		if (data.size() &gt; 0) {</span>
+<span class="fc" id="L58">			current = (current + 1) % (data.size());</span>
+<span class="fc" id="L59">			return data.get(current);</span>
+		} else {
+<span class="fc" id="L61">			return null;</span>
+		}
+
+	}
+
+	/**
+	 * Only peeks the next element instead of cycling.
+	 * 
+	 * @return Next Element
+	 */
+	public E peekNext() {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">		if (data.size() &gt; 0) {</span>
+<span class="fc" id="L73">			return data.get((current + 1) % (data.size()));</span>
+		} else {
+<span class="fc" id="L75">			return null;</span>
+		}
+
+	}
+
+	@Override
+	public boolean remove(Object o) {
+<span class="fc" id="L82">		int index = data.indexOf(o);</span>
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		if (index == -1) {</span>
+<span class="fc" id="L85">			return false;</span>
+		} else {
+<span class="fc" id="L87">			this.remove(index);</span>
+<span class="fc" id="L88">			return true;</span>
+		}
+
+	}
+
+	@Override
+	public E remove(int index) {
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		if (index &gt;= this.size()) {</span>
+<span class="fc" id="L97">			return null;</span>
+		}
+
+<span class="fc" id="L100">		E element = data.remove(index);</span>
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">		if (this.size() == 0) {</span>
+<span class="fc" id="L103">			return element;</span>
+		}
+
+<span class="fc bfc" id="L106" title="All 2 branches covered.">		if (current == index) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">			if (index == 0) {</span>
+<span class="fc" id="L108">				current = this.size() - 1;</span>
+<span class="fc" id="L109">			} else {</span>
+<span class="fc" id="L110">				current -= 1;</span>
+			}
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		} else if (current &gt; index) {</span>
+<span class="fc" id="L113">			current -= 1;</span>
+		}
+
+		/*
+		 * When the current player is removed we also go one back, so that next method
+		 * does not skip the player after the removed player
+		 */
+
+<span class="fc" id="L121">		return element;</span>
+	}
+
+	/**
+	 * Removes the current element.
+	 * 
+	 * @return Current element
+	 */
+	public E removeCurrent() {
+<span class="fc" id="L130">		return remove(current);</span>
+	}
+
+	@Override
+	public boolean add(E e) {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">		if (data.size() == 0) {</span>
+<span class="fc" id="L136">			current = 0;</span>
+		}
+<span class="fc" id="L138">		return data.add(e);</span>
+	}
+
+	@Override
+	public void add(int index, E element) {
+<span class="fc" id="L143">		data.add(index, element);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">		if (current &gt;= index) {</span>
+<span class="fc" id="L145">			current += 1;</span>
+		}
+<span class="fc" id="L147">	}</span>
+
+	/**
+	 * Calling this method does not preserve the current cycle
+	 * 
+	 * @see java.util.List#addAll(java.util.Collection)
+	 */
+
+	@Override
+	public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L157">		return data.addAll(c);</span>
+	}
+
+	/**
+	 * Calling this method does not preserve the current cycle
+	 * 
+	 * @see java.util.List#addAll(int, java.util.Collection)
+	 */
+
+	@Override
+	public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L168">		return data.addAll(index, c);</span>
+	}
+
+	public void clear() {
+<span class="nc" id="L172">		data.clear();</span>
+<span class="nc" id="L173">		current = 0;</span>
+<span class="nc" id="L174">	}</span>
+
+	@Override
+	public boolean contains(Object o) {
+<span class="nc" id="L178">		return data.contains(o);</span>
+	}
+
+	@Override
+	public boolean containsAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L183">		return data.containsAll(c);</span>
+	}
+
+	@Override
+	public E get(int index) {
+<span class="nc" id="L188">		return data.get(index);</span>
+	}
+
+	@Override
+	public int indexOf(Object o) {
+<span class="nc" id="L193">		return data.indexOf(o);</span>
+	}
+
+	@Override
+	public boolean isEmpty() {
+<span class="nc" id="L198">		return data.isEmpty();</span>
+	}
+
+	@Override
+	public Iterator&lt;E&gt; iterator() {
+<span class="fc" id="L203">		return data.iterator();</span>
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+<span class="nc" id="L208">		return data.lastIndexOf(o);</span>
+	}
+
+	@Override
+	public ListIterator&lt;E&gt; listIterator() {
+<span class="nc" id="L213">		return data.listIterator();</span>
+	}
+
+	@Override
+	public ListIterator&lt;E&gt; listIterator(int index) {
+<span class="nc" id="L218">		return data.listIterator(index);</span>
+	}
+
+	/*
+	 * Calling this method does not preserve the current cycle
+	 * 
+	 * @see java.util.List#removeAll(java.util.Collection)
+	 */
+	@Override
+	public boolean removeAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L228">		return data.remove(c);</span>
+	}
+
+	/*
+	 * Calling this method does not preserve the current cycle
+	 * 
+	 * @see java.util.List#retainAll(java.util.Collection)
+	 */
+	@Override
+	public boolean retainAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L238">		return data.retainAll(c);</span>
+	}
+
+	/*
+	 * Calling this method does not preserve the current cycle
+	 * 
+	 * @see java.util.List#set(int, java.lang.Object)
+	 */
+
+	@Override
+	public E set(int index, E element) {
+<span class="nc" id="L249">		return data.set(index, element);</span>
+	}
+
+	@Override
+	public int size() {
+<span class="fc" id="L254">		return data.size();</span>
+	}
+
+	@Override
+	public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+<span class="nc" id="L259">		return data.subList(fromIndex, toIndex);</span>
+	}
+
+	@Override
+	public Object[] toArray() {
+<span class="nc" id="L264">		return data.toArray();</span>
+	}
+
+	@Override
+	public &lt;T&gt; T[] toArray(T[] a) {
+<span class="nc" id="L269">		return data.toArray(a);</span>
+	}
+
+	public ArrayList&lt;E&gt; getData() {
+<span class="fc" id="L273">		return this.data;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

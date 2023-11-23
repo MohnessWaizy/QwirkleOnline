@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.DataStructures</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package org.GameLogic.DataStructures;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Tile;
+
+/**
+ * A class for a player that contains additionally the players score and tiles.
+ */
+public class Player extends Participant {
+
+	/**
+	 * Score of a player
+	 */
+	private int score;
+	/**
+	 * Ever tile is unique, so we can use a set here to fasten things up
+	 */
+	private Set&lt;Tile&gt; tiles;
+
+	/**
+	 * Construct a player with an association to a client instance
+	 * 
+	 * @param client
+	 */
+	public Player(Client client) {
+<span class="fc" id="L29">		super(client);</span>
+
+<span class="fc" id="L31">		this.score = 0;</span>
+<span class="fc" id="L32">		this.tiles = new LinkedHashSet&lt;Tile&gt;(12);</span>
+<span class="fc" id="L33">	}</span>
+
+	/**
+	 * Modify a score of a this player
+	 * 
+	 * @param by
+	 *            Negative or positive integer
+	 */
+	public void modifyScore(int by) {
+<span class="fc" id="L42">		score = score + by;</span>
+<span class="fc" id="L43">	}</span>
+
+	/**
+	 * Add tiles to the hand of this player
+	 * 
+	 * @param toBeAddedTiles
+	 * @return True if successful
+	 */
+	public boolean addTiles(List&lt;Tile&gt; toBeAddedTiles) {
+<span class="fc" id="L52">		return tiles.addAll(toBeAddedTiles);</span>
+	}
+
+	/**
+	 * Remove tiles from the hand of this player
+	 * 
+	 * @param toBeRemovedTiles
+	 * @return True if successful
+	 */
+	public boolean removeTiles(List&lt;Tile&gt; toBeRemovedTiles) {
+<span class="fc" id="L62">		return tiles.removeAll(toBeRemovedTiles);</span>
+	}
+
+	/**
+	 * 
+	 * @return True if player has no more tiles on his hand
+	 */
+	public boolean hasNoTiles() {
+<span class="fc" id="L70">		return tiles.isEmpty();</span>
+	}
+
+	/**
+	 * Checks if the player has all the tiles he wants to put on the board
+	 * 
+	 * @param toBePlayedTiles
+	 *            List of tiles to be checked
+	 * @return True if a player has these tiles
+	 */
+	public boolean hasTiles(List&lt;Tile&gt; toBePlayedTiles) {
+		// Every tile in toBePlayedTiles needs one match in tiles
+<span class="fc bfc" id="L82" title="All 2 branches covered.">		for (Tile tile : toBePlayedTiles) {</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">			if (!tiles.contains(tile)) {</span>
+<span class="fc" id="L84">				return false;</span>
+			}
+		}
+<span class="fc" id="L87">		return true;</span>
+	}
+
+	/**
+	 * 
+	 * @return Current count of tiles this player has
+	 */
+	public int getTilesOnHandCount() {
+<span class="fc" id="L95">		return tiles.size();</span>
+	}
+
+	/*
+	 * Getters
+	 */
+
+	public int getScore() {
+<span class="fc" id="L103">		return score;</span>
+	}
+
+	public Set&lt;Tile&gt; getTiles() {
+<span class="fc" id="L107">		return tiles;</span>
+	}
+
+	/*
+	 * Object stuff
+	 */
+
+	@Override
+	public String toString() {
+<span class="nc" id="L116">		return &quot;Player [id=&quot; + getId() + &quot;, name=&quot; + getName() + &quot;]&quot;;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L122">			return true;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L124">			return false;</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L126">			return false;</span>
+<span class="fc" id="L127">		Player other = (Player) obj;</span>
+<span class="fc" id="L128">		return other.client.equals(this.client);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lobby_game_join">Beitreten</string>
+    <string name="lobby_game_waitingForPlayers">Warte auf Spieler</string>
+    <string name="lobby_game_running">Läuft</string>
+    <string name="lobby_game_paused">Pausiert</string>
+    <string name="lobby_game_finished">Beendet</string>
+    <string name="send">Senden</string>
+
+    <string name="action_settings">Einstellungen</string>
+    <string name="chat">Chat</string>
+    <string name="hands">Karten</string>
+    <string name="game_ended">Spiel beendet!</string>
+    <string name="winner_score">Gewinner: %1$s \nPunkte: %2$d \n</string>
+    <string name="new_game">Neues Spiel</string>
+    <string name="scores">%1$d </string>
+</resources>

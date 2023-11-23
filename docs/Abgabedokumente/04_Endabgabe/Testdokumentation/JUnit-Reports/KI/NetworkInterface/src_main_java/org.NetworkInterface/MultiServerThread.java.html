@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MultiServerThread.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 06:34:28)</a> &gt; <a href="../../index.html" class="el_group">NetworkInterface</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.NetworkInterface</a> &gt; <span class="el_source">MultiServerThread.java</span></div><h1>MultiServerThread.java</h1><pre class="source lang-java linenums">package org.NetworkInterface;
+
+import java.net.*;
+
+import de.upb.swtpra1819interface.messages.ParsingError;
+import de.upb.swtpra1819interface.parser.Parser;
+import de.upb.swtpra1819interface.parser.ParsingException;
+
+import java.io.*;
+
+public class MultiServerThread extends Thread {
+<span class="nc" id="L12">	private Socket socket = null;</span>
+<span class="nc" id="L13">	private NetworkServer server = null;</span>
+<span class="nc" id="L14">	private int clientId = 0;</span>
+<span class="nc" id="L15">	private volatile String msg = &quot;&quot;;</span>
+	private Parser parser;
+
+<span class="nc" id="L18">	private volatile Closed.closed isClosed = Closed.closed.FALSE;</span>
+
+	/**
+	 * @param socket   The socket that should be managed
+	 * @param server   The Server that runs the thread
+	 * @param clientId The id of the client that is connected
+	 */
+	public MultiServerThread(Socket socket, NetworkServer server, int clientId) {
+<span class="nc" id="L26">		super(&quot;MultiServer Thread&quot;);</span>
+<span class="nc" id="L27">		parser = new Parser();</span>
+<span class="nc" id="L28">		this.socket = socket;</span>
+<span class="nc" id="L29">		this.server = server;</span>
+<span class="nc" id="L30">		this.clientId = clientId;</span>
+<span class="nc" id="L31">	}</span>
+
+	/**
+	 * @return closed status of the thread
+	 */
+	public synchronized Closed.closed getIsClosed() {
+<span class="nc" id="L37">		return isClosed;</span>
+	}
+
+	/**
+	 * @param isClosed new close status
+	 */
+	public synchronized void setIsClosed(Closed.closed isClosed) {
+<span class="nc" id="L44">		this.isClosed = isClosed;</span>
+<span class="nc" id="L45">	}</span>
+
+	/**
+	 * @param msg Message that should be transmitted
+	 */
+	public synchronized void sendMessage(String msg) {
+<span class="nc" id="L51">		this.msg = msg;</span>
+<span class="nc" id="L52">	}</span>
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
+	@Override
+	public void run() {
+
+		try {
+<span class="nc" id="L63">			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);</span>
+<span class="nc" id="L64">			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));</span>
+
+			String inputLine;
+<span class="nc" id="L67">			out.println(&quot;&quot;);</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">			while ((inputLine = in.readLine()) != null &amp;&amp; isClosed == Closed.closed.FALSE) {</span>
+				// do something with input and return something to client!
+<span class="nc bnc" id="L70" title="All 2 branches missed.">				if (!inputLine.equals(&quot;&quot;)) {</span>
+					try {
+<span class="nc" id="L72">						server.addToMsgQueue(inputLine, clientId);</span>
+<span class="nc" id="L73">					} catch (ParsingException e) {</span>
+<span class="nc" id="L74">						out.println(parser</span>
+<span class="nc" id="L75">								.serialize(new ParsingError(&quot;Die letzte Nachricht konnte nicht gelesen werden.&quot;, 0)));</span>
+					}
+				}
+
+<span class="nc" id="L79">				out.println(msg);</span>
+<span class="nc" id="L80">				out.flush();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">				if (!this.msg.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L82">					this.msg = &quot;&quot;;</span>
+				}
+			}
+<span class="nc" id="L85">			isClosed = Closed.closed.WAITFORJOIN;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">			while (isClosed != Closed.closed.TRUE) {</span>
+			}
+<span class="nc" id="L88">			out.close();</span>
+<span class="nc" id="L89">			in.close();</span>
+<span class="nc" id="L90">			socket.close();</span>
+
+<span class="nc" id="L92">		} catch (SocketTimeoutException e) {</span>
+			// handle Timeout
+			// do the same as shutdown
+<span class="nc" id="L95">			isClosed = Closed.closed.WAITFORJOIN;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">			while (isClosed != Closed.closed.TRUE) {</span>
+			}
+
+<span class="nc" id="L99">		} catch (IOException e) {</span>
+<span class="nc" id="L100">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L102">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 06:34:28)</div></body></html>

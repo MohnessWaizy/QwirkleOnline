@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Map.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Board</a> &gt; <span class="el_source">Map.java</span></div><h1>Map.java</h1><pre class="source lang-java linenums">package org.GameLogic.Board;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.GameLogic.DataStructures.Tuple;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
+
+import de.upb.swtpra1819interface.models.Tile;
+
+/**
+ * Data structure storing all tiles on given coordinates. Uses a HashBasedTable
+ * provided by Guava.
+ */
+public class Map {
+
+	/**
+	 * To minimize the effect of the Hashtable updating its inner data structure, we
+	 * just expect the tiles to stay in the range between -128 to 127 in x and y
+	 * coordinates. This means that the Hashtable will update itself(resize) when
+	 * one side(left,right,down,up) surpasses 128 tiles. We can save 2^16 tiles
+	 * without resizing the map in the best case.
+	 */
+	public static final int EXPECTED = 256;
+	/**
+	 * Data structure for saving the tile with their coordinates
+	 */
+	private Table&lt;Integer, Integer, Tile&gt; board;
+
+	/**
+	 * Creates an empty Map
+	 */
+<span class="fc" id="L36">	public Map() {</span>
+<span class="fc" id="L37">		board = HashBasedTable.create(EXPECTED, EXPECTED);</span>
+<span class="fc" id="L38">	}</span>
+
+	/**
+	 * Adds a tile to the board
+	 * 
+	 * @param coordTile
+	 *            Tuple containing coordinate and tile
+	 * @return True if successful
+	 */
+	public boolean addTile(Tuple&lt;Coordinate, Tile&gt; coordTile) {
+<span class="fc" id="L48">		return addTile(coordTile.getFirst(), coordTile.getSecond());</span>
+	}
+
+	/**
+	 * Adds a tile to the board
+	 * 
+	 * @param coord
+	 *            Coordinate
+	 * @param tile
+	 *            Tile
+	 * @return True if successful
+	 */
+	public boolean addTile(Coordinate coord, Tile tile) {
+<span class="fc bfc" id="L61" title="All 4 branches covered.">		if (tile != null &amp;&amp; !isTileOn(coord)) {</span>
+<span class="fc" id="L62">			board.put(coord.getX(), coord.getY(), tile);</span>
+<span class="fc" id="L63">			return true;</span>
+		}
+<span class="fc" id="L65">		return false;</span>
+	}
+
+	/**
+	 * Adds a list of tiles. If one coordinate is blocked, then the process of
+	 * adding these tiles will be revoked.
+	 * 
+	 * @param coordTile
+	 *            Tuple containing coordinate and tile
+	 * @return True if successful
+	 */
+	public boolean addTiles(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; coordTile) {
+
+<span class="fc" id="L78">		boolean succsessfull = true;</span>
+<span class="fc" id="L79">		int length = coordTile.size();</span>
+<span class="fc" id="L80">		int i = 0;</span>
+
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">		for (; i &lt; length &amp;&amp; succsessfull; i++) {</span>
+<span class="fc" id="L83">			succsessfull = addTile(coordTile.get(i));</span>
+		}
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		if (!succsessfull) {</span>
+			/*
+			 * Only remove the tiles prior to the tile that is already on the board. Without
+			 * this, the method will also remove a tile that was placed before succsessfully
+			 */
+<span class="fc" id="L91">			removeTiles(coordTile.subList(0, i - 1));</span>
+<span class="fc" id="L92">			return false;</span>
+		}
+
+<span class="fc" id="L95">		return true;</span>
+	}
+
+	/**
+	 * Remove a tile
+	 * 
+	 * @param coord
+	 *            coordinate
+	 * @param tile
+	 *            Tile
+	 * @return True if successfully removed
+	 */
+	public boolean removeTile(Coordinate coord, Tile tile) {
+<span class="fc" id="L108">		Tile tileFromBoard = getTile(coord);</span>
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">		if (tileFromBoard != null &amp;&amp; tileFromBoard.equals(tile)) {</span>
+<span class="fc" id="L110">			board.remove(coord.getX(), coord.getY());</span>
+<span class="fc" id="L111">			return true;</span>
+		}
+<span class="fc" id="L113">		return false;</span>
+	}
+
+	/**
+	 * Remove a tile
+	 * 
+	 * @param coordTile
+	 *            Tuple containing coordinate and tile
+	 * @return True if successfully removed
+	 */
+	public boolean removeTile(Tuple&lt;Coordinate, Tile&gt; coordTile) {
+<span class="fc" id="L124">		return removeTile(coordTile.getFirst(), coordTile.getSecond());</span>
+	}
+
+	/**
+	 * 
+	 * @param coordTile
+	 *            Tuple containing coordinate and tile
+	 * @return True if successfully removed
+	 */
+	public boolean removeTiles(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; coordTile) {
+<span class="fc" id="L134">		boolean succsessfull = true;</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; remove : coordTile) {</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">			succsessfull = succsessfull &amp;&amp; removeTile(remove);</span>
+		}
+<span class="fc" id="L138">		return succsessfull;</span>
+	}
+
+	/**
+	 * Gets a tile at a desired coordinate.
+	 * 
+	 * @param coord
+	 *            Coordinate
+	 * @return Tile on coordinate and null if coordinate is not present in the map
+	 */
+	public Tile getTile(Coordinate coord) {
+<span class="fc" id="L149">		return board.get(coord.getX(), coord.getY());</span>
+	}
+
+	/**
+	 * Determines if a tile is on a given coordinate
+	 * 
+	 * @param coord
+	 *            Coordinate
+	 * @return True if a tile is on a coordinate
+	 */
+	public boolean isTileOn(Coordinate coord) {
+<span class="fc" id="L160">		return board.contains(coord.getX(), coord.getY());</span>
+	}
+
+	/**
+	 * 
+	 * @return Amount of tiles played
+	 */
+	public int getTilesPlayed() {
+<span class="fc" id="L168">		return board.size();</span>
+	}
+
+	// TODO : HashMap ändern, sodass diese nicht immer neu erstellt werden muss,
+	// sonder nur immer gelöscht/hinzugefügt werden muss
+
+	/**
+	 * This method does not return a reference to the actual data structure used
+	 * here.
+	 * 
+	 * @return A hash map based board
+	 */
+	public HashMap&lt;Coordinate, Tile&gt; getBoard() {
+<span class="fc" id="L181">		HashMap&lt;Coordinate, Tile&gt; map = new HashMap&lt;Coordinate, Tile&gt;();</span>
+
+<span class="fc bfc" id="L183" title="All 2 branches covered.">		for (Cell&lt;Integer, Integer, Tile&gt; cell : board.cellSet()) {</span>
+<span class="fc" id="L184">			map.put(Coordinate.of(cell.getRowKey(), cell.getColumnKey()), cell.getValue());</span>
+		}
+
+<span class="fc" id="L187">		return map;</span>
+
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

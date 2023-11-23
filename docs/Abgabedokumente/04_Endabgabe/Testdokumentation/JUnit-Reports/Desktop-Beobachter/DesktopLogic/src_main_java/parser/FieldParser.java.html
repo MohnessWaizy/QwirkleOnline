@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>FieldParser.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">parser</a> &gt; <span class="el_source">FieldParser.java</span></div><h1>FieldParser.java</h1><pre class="source lang-java linenums">package parser;
+
+import java.util.List;
+
+import org.NetworkInterface.NetClient;
+
+import controller.FieldSceneController;
+import de.upb.swtpra1819interface.messages.BagResponse;
+import de.upb.swtpra1819interface.messages.CurrentPlayer;
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.messages.LeavingPlayer;
+import de.upb.swtpra1819interface.messages.Message;
+import de.upb.swtpra1819interface.messages.MessageSignal;
+import de.upb.swtpra1819interface.messages.PlayerHandsResponse;
+import de.upb.swtpra1819interface.messages.ScoreResponse;
+import de.upb.swtpra1819interface.messages.StartGame;
+import de.upb.swtpra1819interface.messages.TotalTimeResponse;
+import de.upb.swtpra1819interface.messages.TurnTimeLeftResponse;
+import de.upb.swtpra1819interface.messages.Update;
+import de.upb.swtpra1819interface.messages.Winner;
+import de.upb.swtpra1819interface.models.TileOnPosition;
+
+
+public class FieldParser extends InterfaceParser {
+
+	private FieldSceneController fieldController;
+	private NetClient client;
+
+<span class="nc" id="L29">	public FieldParser(FieldSceneController controller, NetClient client, long cycle) {</span>
+<span class="nc" id="L30">		fieldController = controller;</span>
+<span class="nc" id="L31">		this.client = client;</span>
+<span class="nc" id="L32">		setClient(client);</span>
+<span class="nc" id="L33">		initClock(cycle);</span>
+<span class="nc" id="L34">		startQueueWorker();</span>
+<span class="nc" id="L35">	}</span>
+
+	@Override
+	public void parseMessage(Message msg) {
+<span class="nc bnc" id="L39" title="All 17 branches missed.">		switch (msg.getUniqueId()) {</span>
+		case 307:
+<span class="nc" id="L41">			MessageSignal messageSignal = (MessageSignal) msg;</span>
+<span class="nc" id="L42">			fieldController.updateChat(messageSignal.getClient(), messageSignal.getMessage());</span>
+<span class="nc" id="L43">			break;</span>
+		case 400:
+<span class="nc" id="L45">			StartGame startGame = (StartGame) msg;</span>
+<span class="nc" id="L46">			fieldController.startGame(startGame.getClients(), startGame.getConfig());</span>
+<span class="nc" id="L47">			break;</span>
+		case 401:
+<span class="nc" id="L49">			fieldController.endGame();</span>
+<span class="nc" id="L50">			break;</span>
+		case 402:
+<span class="nc" id="L52">			fieldController.abortGame();</span>
+<span class="nc" id="L53">			break;</span>
+		case 403:
+<span class="nc" id="L55">			fieldController.pauseGame();</span>
+<span class="nc" id="L56">			break;</span>
+		case 404:
+<span class="nc" id="L58">			fieldController.resumeGame();</span>
+<span class="nc" id="L59">			break;</span>
+		case 406:
+<span class="nc" id="L61">			LeavingPlayer leavingPlayer = (LeavingPlayer) msg;</span>
+<span class="nc" id="L62">			fieldController.playerLeft(leavingPlayer.getClient());</span>
+<span class="nc" id="L63">			break;</span>
+		case 407:
+<span class="nc" id="L65">			Winner winner = (Winner) msg;</span>
+<span class="nc" id="L66">			fieldController.showWinner(winner);</span>
+<span class="nc" id="L67">			break;</span>
+		case 409:
+<span class="nc" id="L69">			CurrentPlayer currentPlayer = (CurrentPlayer) msg;</span>
+<span class="nc" id="L70">			fieldController.updateCurrentPlayer(currentPlayer.getClient());</span>
+<span class="nc" id="L71">			break;</span>
+		case 416:
+<span class="nc" id="L73">			Update update = (Update) msg;</span>
+<span class="nc" id="L74">			fieldController.updateTilesOnField((List&lt;TileOnPosition&gt;) update.getUpdates());</span>
+<span class="nc" id="L75">			fieldController.updateNumberTilesInBag(update.getNumberTilesInBag());</span>
+<span class="nc" id="L76">			break;</span>
+		case 418:
+<span class="nc" id="L78">			ScoreResponse scoreResponse = (ScoreResponse) msg;</span>
+<span class="nc" id="L79">			fieldController.updateScores(scoreResponse.getScores());</span>
+<span class="nc" id="L80">			break;</span>
+		case 420:
+<span class="nc" id="L82">			TurnTimeLeftResponse turnTimeLeftResponse = (TurnTimeLeftResponse) msg;</span>
+<span class="nc" id="L83">			fieldController.updateTurnTime(turnTimeLeftResponse.getTime());</span>
+<span class="nc" id="L84">			break;</span>
+		case 422:
+<span class="nc" id="L86">			TotalTimeResponse totalTimeResponse = (TotalTimeResponse) msg;</span>
+<span class="nc" id="L87">			fieldController.updateTotalTime(totalTimeResponse.getTime());</span>
+<span class="nc" id="L88">			break;</span>
+		case 424:
+<span class="nc" id="L90">			BagResponse bagResponse = (BagResponse) msg;</span>
+<span class="nc" id="L91">			fieldController.updateBag(bagResponse.getBag());</span>
+<span class="nc" id="L92">			break;</span>
+		case 426:
+<span class="nc" id="L94">			PlayerHandsResponse playerHandsResponse = (PlayerHandsResponse) msg;</span>
+<span class="nc" id="L95">			fieldController.updatePlayerHand(playerHandsResponse.getHands());</span>
+<span class="nc" id="L96">			break;</span>
+		case 499:
+<span class="nc" id="L98">			GameDataResponse gameDataResponse = (GameDataResponse) msg;</span>
+<span class="nc" id="L99">			fieldController.updateGameData(gameDataResponse);</span>
+<span class="nc" id="L100">			break;</span>
+		default:
+			break;
+		}
+<span class="nc" id="L104">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

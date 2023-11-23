@@ -1,0 +1,52 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.root{
+	-fx-font-family: "tahoma";
+}
+
+.button{
+	-fx-font-size: 20;
+	-fx-background-color: #C2C5C7;
+}
+
+#button_join{
+	-fx-background-radius: 0;
+	-fx-background-color: #C2C5C7;	
+}
+
+#button_join:hover{
+	-fx-background-color: #8C9195;
+}
+
+.button:hover{
+	-fx-background-color: #8C9195;
+}
+
+/*login window & dialog window */
+.dialogBackground{
+	-fx-background-color: #c2c5c7;
+	-fx-font-size: 20;
+}
+
+/*login window & field window */
+.bottomBar{
+	-fx-background-color: #6B7074;
+}
+
+.button{
+	-fx-font-size: 16;
+	-fx-background-color:#C2C5C7;
+	-fx-text-fill: #6b7074;
+}
+/*all label */
+.label{
+	-fx-text-fill: 	#f1ffff;
+}
+
+
+
+
+
+
+
+
+

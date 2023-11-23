@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>BagTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic</a> &gt; <span class="el_source">BagTest.java</span></div><h1>BagTest.java</h1><pre class="source lang-java linenums">package org.GameLogic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.GameLogic.Board.Bag;
+import org.junit.Test;
+
+import de.upb.swtpra1819interface.models.Tile;
+import junit.framework.TestCase;
+
+<span class="fc" id="L12">public class BagTest extends TestCase {</span>
+
+	@Test
+	public void testBagCreation() {
+
+<span class="fc" id="L17">		Bag bag = new Bag(6, 6, 6);</span>
+
+<span class="fc" id="L19">		assertEquals(bag.getBagSize(), 6 * 6 * 6);</span>
+<span class="fc" id="L20">		assertTrue(&quot;Take tiles&quot;, bag.canSwapTileAmount(6 * 6 * 6));</span>
+<span class="fc" id="L21">		assertFalse(&quot;Take tiles&quot;, bag.canSwapTileAmount(6 * 6 * 6 + 1));</span>
+
+<span class="fc" id="L23">	}</span>
+
+	@Test
+	public void testBagTilesTaken() {
+<span class="fc" id="L27">		Bag bag = new Bag(6, 6, 6);</span>
+
+<span class="fc" id="L29">		List&lt;Tile&gt; takenTiles = new ArrayList&lt;Tile&gt;();</span>
+
+<span class="fc bfc" id="L31" title="All 2 branches covered.">		for (int i = 0; i &lt; 4; i++) {</span>
+<span class="fc" id="L32">			takenTiles.addAll(bag.takeStartTiles());</span>
+		}
+		// assert that takenTiles and the bag have no intersection
+<span class="fc" id="L35">		assertFalse(&quot;No Intersection&quot;, bag.getBag().removeAll(takenTiles));</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		assertTrue(&quot;Right amount taken&quot;, bag.getBagSize() == (6 * 6 * 6) - (6 * 4));</span>
+
+<span class="fc" id="L38">		List&lt;Tile&gt; takeTurnTiles = bag.takeTiles(16);</span>
+
+		// Swap test
+<span class="fc" id="L41">		List&lt;Tile&gt; swapTiles = bag.swapTiles(takeTurnTiles);</span>
+<span class="fc" id="L42">		assertEquals(takeTurnTiles.size(), swapTiles.size());</span>
+		
+		// Take all tiles
+<span class="fc" id="L45">		List&lt;Tile&gt; rest = bag.takeTiles(6 * 6 * 6);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">		assertTrue(&quot;Rest tiles are less than inital tiles&quot;, rest.size() &lt; 6 * 6 * 6);</span>
+<span class="pc bpc" id="L47" title="2 of 4 branches missed.">		assertTrue(&quot;Bag is empty&quot;, bag.takeTiles(1).size() == 0 &amp;&amp; bag.isEmpty());</span>
+		
+<span class="fc" id="L49">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

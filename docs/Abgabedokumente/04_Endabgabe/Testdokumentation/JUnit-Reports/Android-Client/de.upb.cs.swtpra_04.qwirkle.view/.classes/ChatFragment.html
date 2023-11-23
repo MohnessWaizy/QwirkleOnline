@@ -1,0 +1,288 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ChatFragment</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">de.upb.cs.swtpra_04.qwirkle.view</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ChatFragment (de.upb.cs.swtpra_04.qwirkle.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatFragment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 30)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ChatFragment$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ChatFragment$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 37)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package de.upb.cs.swtpra_04.qwirkle.view;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import android.content.Context;
+<i>4</i>&nbsp;import android.os.Bundle;
+<i>5</i>&nbsp;import android.support.annotation.NonNull;
+<i>6</i>&nbsp;import android.support.annotation.Nullable;
+<i>7</i>&nbsp;import android.support.v4.app.Fragment;
+<i>8</i>&nbsp;import android.view.LayoutInflater;
+<i>9</i>&nbsp;import android.view.View;
+<i>10</i>&nbsp;import android.view.ViewGroup;
+<i>11</i>&nbsp;import android.view.inputmethod.InputMethodManager;
+<i>12</i>&nbsp;import android.widget.Button;
+<i>13</i>&nbsp;import android.widget.EditText;
+<i>14</i>&nbsp;import android.widget.LinearLayout;
+<i>15</i>&nbsp;import android.widget.ScrollView;
+<i>16</i>&nbsp;import android.widget.TextView;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;import de.upb.cs.swtpra_04.qwirkle.R;
+<i>19</i>&nbsp;import de.upb.swtpra1819interface.models.Client;
+<i>20</i>&nbsp;import de.upb.swtpra1819interface.models.ClientType;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;/**
+<i>23</i>&nbsp; * Provide UI Related Functions used for the in-game chat
+<i>24</i>&nbsp; */
+<b class="nc"><i>25</i>&nbsp;public class ChatFragment extends Fragment {</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    private EditText editText_message;
+<i>28</i>&nbsp;    private LinearLayout linearLayout_messages;
+<i>29</i>&nbsp;    private ScrollView scrollView_messageScroll;
+<i>30</i>&nbsp;    private Button button_send;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    private OnChatFragmentListener listener;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * Create a new View from Layout and bind functions to UI Elements
+<i>36</i>&nbsp;     *
+<i>37</i>&nbsp;     * @param inflater           Layout inflater
+<i>38</i>&nbsp;     * @param container          Parent View
+<i>39</i>&nbsp;     * @param savedInstanceState State
+<i>40</i>&nbsp;     * @return View
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    @Nullable
+<i>43</i>&nbsp;    @Override
+<i>44</i>&nbsp;    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;        // Create View from Layout
+<b class="nc"><i>47</i>&nbsp;        View view = inflater.inflate(R.layout.fragment_chat, container, false);</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;        // Find Elements
+<b class="nc"><i>50</i>&nbsp;        editText_message = view.findViewById(R.id.textView_message);</b>
+<b class="nc"><i>51</i>&nbsp;        button_send = view.findViewById(R.id.button_send);</b>
+<b class="nc"><i>52</i>&nbsp;        linearLayout_messages = view.findViewById(R.id.linearLayout_messages);</b>
+<b class="nc"><i>53</i>&nbsp;        scrollView_messageScroll = (ScrollView) linearLayout_messages.getParent();</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;        // get InputMethodManager
+<b class="nc"><i>56</i>&nbsp;        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(</b>
+<i>57</i>&nbsp;                Context.INPUT_METHOD_SERVICE
+<i>58</i>&nbsp;        );
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;        // handle &quot;Send&quot;-Button Click
+<b class="nc"><i>61</i>&nbsp;        button_send.setOnClickListener(new View.OnClickListener() {</b>
+<i>62</i>&nbsp;            @Override
+<i>63</i>&nbsp;            public void onClick(View v) {
+<i>64</i>&nbsp;
+<b class="nc"><i>65</i>&nbsp;                String msg = editText_message.getText().toString();</b>
+<b class="nc"><i>66</i>&nbsp;                listener.onClickSend(msg);</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;                // Clear Input
+<b class="nc"><i>69</i>&nbsp;                editText_message.setText(&quot;&quot;);</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;                // Hide Keyboard
+<b class="nc"><i>72</i>&nbsp;                imm.hideSoftInputFromWindow(editText_message.getWindowToken(), 0);</b>
+<i>73</i>&nbsp;            }
+<i>74</i>&nbsp;        });
+<i>75</i>&nbsp;
+<b class="nc"><i>76</i>&nbsp;        return view;</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * Updates chat with a new message.
+<i>81</i>&nbsp;     *
+<i>82</i>&nbsp;     * @param client    client who sent the message
+<i>83</i>&nbsp;     * @param msg       new Message to be displayed
+<i>84</i>&nbsp;     */
+<i>85</i>&nbsp;    public void updateChat(Client client, String msg){
+<b class="nc"><i>86</i>&nbsp;        if (getActivity() == null){</b>
+<i>87</i>&nbsp;            return;
+<i>88</i>&nbsp;        }
+<i>89</i>&nbsp;
+<b class="nc"><i>90</i>&nbsp;        getActivity().runOnUiThread(() -&gt; {</b>
+<b class="nc"><i>91</i>&nbsp;            if(!isVisible()){</b>
+<i>92</i>&nbsp;                return;
+<i>93</i>&nbsp;            }
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;            // prevent Empty messages
+<b class="nc"><i>96</i>&nbsp;            if (!msg.equals(&quot;&quot;)) {</b>
+<i>97</i>&nbsp;
+<b class="nc"><i>98</i>&nbsp;                View v = getLayoutInflater().from(getContext()).inflate(R.layout.scrollitem_chat_message, linearLayout_messages, false);</b>
+<b class="nc"><i>99</i>&nbsp;                TextView usernameView = v.findViewById(R.id.textView_chatSender);</b>
+<b class="nc"><i>100</i>&nbsp;                TextView messageView = v.findViewById(R.id.textView_message);</b>
+<i>101</i>&nbsp;
+<b class="nc"><i>102</i>&nbsp;                usernameView.setText(client.getClientName());</b>
+<i>103</i>&nbsp;
+<b class="nc"><i>104</i>&nbsp;                if(client.getClientType() == ClientType.PLAYER) {</b>
+<b class="nc"><i>105</i>&nbsp;                    usernameView.setTextColor(0xFF000000);</b>
+<b class="nc"><i>106</i>&nbsp;                }else if(client.getClientType() == ClientType.SPECTATOR) {</b>
+<b class="nc"><i>107</i>&nbsp;                    usernameView.setTextColor(0xFF333333);</b>
+<i>108</i>&nbsp;                }
+<b class="nc"><i>109</i>&nbsp;                messageView.setText(msg);</b>
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;                // Attach view to Chat log
+<b class="nc"><i>112</i>&nbsp;                linearLayout_messages.addView(v);</b>
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;                // Scroll Chat to Bottom
+<b class="nc"><i>115</i>&nbsp;                scrollView_messageScroll.post(new Runnable() {</b>
+<i>116</i>&nbsp;                    @Override
+<i>117</i>&nbsp;                    public void run() {
+<b class="nc"><i>118</i>&nbsp;                        scrollView_messageScroll.fullScroll(View.FOCUS_DOWN);</b>
+<i>119</i>&nbsp;                    }
+<i>120</i>&nbsp;                });
+<i>121</i>&nbsp;            }
+<i>122</i>&nbsp;        });
+<i>123</i>&nbsp;    }
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    /**
+<i>127</i>&nbsp;     * Defines a method in parent for notifying it about a new chat message to send to server
+<i>128</i>&nbsp;     */
+<i>129</i>&nbsp;    public interface OnChatFragmentListener {
+<i>130</i>&nbsp;        public void onClickSend(String msg);
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    /**
+<i>134</i>&nbsp;     * Attaches this fragment to the life cycle of the parent activity.
+<i>135</i>&nbsp;     * Android intern method.
+<i>136</i>&nbsp;     * Used here to make sure parent activity uses our interface.
+<i>137</i>&nbsp;     *
+<i>138</i>&nbsp;     * @param context   parent activity
+<i>139</i>&nbsp;     */
+<i>140</i>&nbsp;    @Override
+<i>141</i>&nbsp;    public void onAttach(Context context) {
+<b class="nc"><i>142</i>&nbsp;        super.onAttach(context);</b>
+<b class="nc"><i>143</i>&nbsp;        if (context instanceof OnChatFragmentListener) {</b>
+<b class="nc"><i>144</i>&nbsp;            listener = (OnChatFragmentListener) context;</b>
+<i>145</i>&nbsp;        } else {
+<b class="nc"><i>146</i>&nbsp;            throw new ClassCastException(context.toString()</b>
+<i>147</i>&nbsp;                    + &quot; must implement ChatFragment.OnChatFragmentListener&quot;);
+<i>148</i>&nbsp;        }
+<i>149</i>&nbsp;    }
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;    /**
+<i>152</i>&nbsp;     * Detaches this fragment from parent activity
+<i>153</i>&nbsp;     */
+<i>154</i>&nbsp;    @Override
+<i>155</i>&nbsp;    public void onDetach() {
+<b class="nc"><i>156</i>&nbsp;        super.onDetach();</b>
+<b class="nc"><i>157</i>&nbsp;        listener = null;</b>
+<i>158</i>&nbsp;    }
+<i>159</i>&nbsp;}
+<i>160</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2019-01-25 16:45</div>
+</div>
+</body>
+</html>

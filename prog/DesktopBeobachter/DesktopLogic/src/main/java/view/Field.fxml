@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane layoutX="167.0" layoutY="187.0" minHeight="0.0" minWidth="0.0" prefHeight="562.0" prefWidth="1400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <AnchorPane fx:id="anchorPane_field" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="883.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas fx:id="canvas_board" height="335.0" width="1180.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Canvas fx:id="canvas_pause" height="335.0" width="1180.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <VBox layoutX="853.0" layoutY="21.0" spacing="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                     <children>
+                        <Button fx:id="button_zoomIn" layoutX="854.0" layoutY="21.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_zoomInIcon" AnchorPane.rightAnchor="0.0" />
+                        <Button fx:id="button_center" layoutX="854.0" layoutY="51.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_centerIcon" AnchorPane.rightAnchor="0.0" />
+                        <Button fx:id="button_zoomOut" layoutX="854.0" layoutY="81.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_zoomOutIcon" AnchorPane.rightAnchor="0.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </center>
+         <right>
+            <AnchorPane fx:id="test" prefHeight="371.0" prefWidth="320.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ScrollPane fx:id="scrollPane_playerPanels" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                     <content>
+                        <VBox id="scrollbar_pane" fx:id="vBox_playerPanels" prefWidth="300.0" spacing="5.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+         </right>
+         <top>
+            <AnchorPane prefHeight="45.0" prefWidth="200.0" styleClass="topBar" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox fillHeight="false" prefHeight="45.0" prefWidth="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Pane prefHeight="45.0" prefWidth="119.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="45.0" spacing="10.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="4.0" text="SpielID:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="5.0" />
+                                    <Label fx:id="label_gameID" layoutX="112.0" layoutY="4.0" AnchorPane.topAnchor="5.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </Pane>
+                        <Pane maxWidth="1200.0" prefHeight="45.0" prefWidth="850.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="45.0" spacing="10.0">
+                                 <children>
+                                    <Label fx:id="label_totalTime" layoutX="24.0" layoutY="4.0" text="Spieldauer:" AnchorPane.topAnchor="5.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </HBox>
+                              <Label fx:id="label_turnTime" layoutX="174.0" layoutY="14.0" prefHeight="17.0" prefWidth="204.0" text="Zeit für aktuellen Zug:" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <Label fx:id="label_playerOnTurn" layoutX="515.0" prefHeight="45.0" prefWidth="344.0" text="Spieler am Zug:" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="515.0" AnchorPane.rightAnchor="541.0" AnchorPane.topAnchor="0.0" />
+                  <Label fx:id="label_gameState" layoutX="919.0" prefHeight="45.0" prefWidth="391.0" text="Spielstatus: " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="919.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="0.0" />
+                  <HBox spacing="20.0" AnchorPane.rightAnchor="5.0">
+                     <children>
+                        <Button fx:id="button_exitGame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="button_leaveGameIcon" AnchorPane.rightAnchor="5.0">
+                           <HBox.margin>
+                              <Insets bottom="2.0" right="10.0" top="2.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </top>
+         <bottom>
+            <TitledPane animated="false" minHeight="0.0" minWidth="0.0" prefWidth="1400.0" text="Spielsteine-Ansicht und Chat" BorderPane.alignment="CENTER">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="1400.0" styleClass="bottomBar">
+                     <children>
+                        <VBox prefHeight="126.0" prefWidth="98.0" spacing="15.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                        <Label fx:id="label_numberTilesInBag" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="3.0" />
+                        <Button id="button_pin" fx:id="button_unPin" disable="true" mnemonicParsing="false" text="Entpinnen" visible="false" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" />
+                        <Button fx:id="button_bagHand" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="button_handIcon" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" />
+                        <ScrollPane fx:id="scrollPane_bagHand" minWidth="1077.0" prefHeight="126.0" prefWidth="1077.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <HBox fx:id="hBox_bag" />
+                           </content>
+                        </ScrollPane>
+                        <VBox spacing="10.0" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                        <TextArea fx:id="textArea_chat" editable="false" layoutX="1209.0" layoutY="17.0" prefHeight="70.0" prefWidth="305.0" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TextArea fx:id="textArea_chatText" layoutX="1256.0" layoutY="91.0" prefHeight="30.0" prefWidth="270.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="35.0" />
+                        <Button fx:id="button_sendChat" layoutX="1490.0" layoutY="105.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_playIcon" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="0.0">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

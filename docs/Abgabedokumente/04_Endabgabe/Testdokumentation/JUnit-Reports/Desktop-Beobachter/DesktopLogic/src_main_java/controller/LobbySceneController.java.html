@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>LobbySceneController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">LobbySceneController.java</span></div><h1>LobbySceneController.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import org.NetworkInterface.NetClient;
+import de.upb.swtpra1819interface.messages.GameListRequest;
+import de.upb.swtpra1819interface.messages.SpectatorJoinRequest;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.Game;
+import de.upb.swtpra1819interface.models.GameState;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.VBox;
+import model.GameWrapper;
+import model.Lobby;
+import model.LoginWrapper;
+import model.Tuple;
+import parser.LobbyParser;
+
+/**
+ * &lt;p&gt;
+ * The &lt;i&gt;LobbySceneController&lt;/i&gt; is the controller for the lobby interface. It
+ * delegates the show the game that are able to join or spectate.
+ * &lt;/p&gt;
+ * 
+ */
+public class LobbySceneController extends AbstractSceneController implements LobbySceneControllerInterface {
+
+	/**
+	 * FXML Button to logout from lobby
+	 */
+	@FXML
+	Button button_lobbyLogout;
+
+	/**
+	 * FXML Tab to switch to started games
+	 */
+	@FXML
+	Tab tab_started;
+
+	/**
+	 * FXML Tab to switch to not started games
+	 */
+	@FXML
+	Tab tab_notStarted;
+
+	/**
+	 * FXML Tab to switch to ended games
+	 */
+	@FXML
+	Tab tab_ended;
+
+	/**
+	 * FXML Tab to switch to tournaments
+	 */
+	@FXML
+	Tab tab_tournament;
+
+	/**
+	 * FXML VBox to hold GamePanelStartedGame instances
+	 */
+	@FXML
+	VBox vbox_started;
+
+	/**
+	 * FXML VBox to hold GamePanelNotStartedGame instances
+	 */
+	@FXML
+	VBox vbox_notStarted;
+
+	/**
+	 * FXML VBox to hold GamePanelEndedGame instances
+	 */
+	@FXML
+	VBox vbox_ended;
+
+	/**
+	 * FXML VBox to hold GamePanelTournament instances
+	 */
+	@FXML
+	VBox vbox_tournament;
+
+	/**
+	 * ArrayList holds all GamePanelStartedGame instances
+	 */
+<span class="nc" id="L91">	ArrayList&lt;GamePanelStartedGame&gt; arrayListStartedTab = new ArrayList&lt;&gt;();</span>
+
+	/**
+	 * ArrayList holds all GamePanelNotStartedGame instances
+	 */
+<span class="nc" id="L96">	ArrayList&lt;GamePanelNotStartedGame&gt; arrayListNotStartedTab = new ArrayList&lt;&gt;();</span>
+
+	/**
+	 * ArrayList holds all GamePanelEndedGame instances
+	 */
+<span class="nc" id="L101">	ArrayList&lt;GamePanelEndedGame&gt; arrayListEndedTab = new ArrayList&lt;&gt;();</span>
+
+	/**
+	 * ArrayList holds all GamePanelTournament instances
+	 */
+<span class="nc" id="L106">	ArrayList&lt;GamePanelTournament&gt; arrayListTournamentTab = new ArrayList&lt;&gt;();</span>
+
+	/**
+	 * ArrayList holds all game id's of started games
+	 */
+<span class="nc" id="L111">	ArrayList&lt;Integer&gt; idStartedGame = new ArrayList&lt;Integer&gt;();</span>
+
+	/**
+	 * ArrayList holds all game id's of not started games
+	 */
+<span class="nc" id="L116">	ArrayList&lt;Integer&gt; idNotStartedGame = new ArrayList&lt;Integer&gt;();</span>
+
+	/**
+	 * ArrayList holds all game id's of ended games
+	 */
+<span class="nc" id="L121">	ArrayList&lt;Integer&gt; idEndedGame = new ArrayList&lt;Integer&gt;();</span>
+
+	/**
+	 * ArrayList holds all game id's of tournaments
+	 */
+<span class="nc" id="L126">	ArrayList&lt;Integer&gt; idTournament = new ArrayList&lt;Integer&gt;();</span>
+
+	/**
+	 * Parser to parse messages that are sent form the server
+	 */
+	private LobbyParser parser;
+
+	/**
+	 * Client of NetworkInterface
+	 */
+	private NetClient netClient;
+
+	/**
+	 * Client for intern purpose
+	 */
+	private Client client;
+
+	/**
+	 * Boolean to make sure games can be updated
+	 */
+<span class="nc" id="L146">	public boolean gameUpdatePossible = true;</span>
+
+	/**
+	 * Constructor
+	 */
+	public LobbySceneController() {
+<span class="nc" id="L152">		super();</span>
+<span class="nc" id="L153">	}</span>
+
+	/*
+	 * @see controller.AbstractSceneController#onSceneSwitch(java.lang.Object)
+	 * 
+	 * initializing netClient, client and parser with values passes by
+	 * LoginSceneController
+	 * 
+	 * parser is set to parse every 5 seconds messages from server
+	 */
+	@Override
+	public &lt;T&gt; void onSceneSwitch(T message) {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		if (message instanceof LoginWrapper) {</span>
+<span class="nc" id="L166">			LoginWrapper lw = (LoginWrapper) message;</span>
+<span class="nc" id="L167">			this.netClient = lw.getNetworkClient();</span>
+<span class="nc" id="L168">			this.client = lw.getInterfaceClient();</span>
+<span class="nc" id="L169">			this.parser = new LobbyParser(this, this.netClient, 5000);</span>
+<span class="nc" id="L170">			sendNewRequest();</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">		} else if (message instanceof Boolean) {</span>
+<span class="nc" id="L172">			this.parser = new LobbyParser(this, this.netClient, 5000);</span>
+<span class="nc" id="L173">			sendNewRequest();</span>
+<span class="nc" id="L174">		} else {</span>
+<span class="nc" id="L175">			this.logout();</span>
+		}
+<span class="nc" id="L177">	}</span>
+
+	/**
+	 * Sends new GameListRequest
+	 */
+	public void sendNewRequest() {
+<span class="nc" id="L183">		GameListRequest msg = new GameListRequest();</span>
+<span class="nc" id="L184">		this.netClient.sendMsg(msg);</span>
+<span class="nc" id="L185">	}</span>
+
+	/*
+	 * @see controller.AbstractSceneController#onSceneSwitch()
+	 */
+	@Override
+	public void onSceneSwitch() {
+<span class="nc bnc" id="L192" title="All 2 branches missed.">		if (netClient != null) {</span>
+<span class="nc" id="L193">			this.parser = new LobbyParser(this, this.netClient, 5000);</span>
+		}
+<span class="nc" id="L195">	}</span>
+
+	/*
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL,
+	 * java.util.ResourceBundle)
+	 */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L203">		button_lobbyLogout.setOnAction(action -&gt; {</span>
+<span class="nc" id="L204">			this.logout();</span>
+<span class="nc" id="L205">		});</span>
+<span class="nc" id="L206">	}</span>
+
+	/**
+	 * Logout form lobby get to login
+	 */
+	private void logout() {
+<span class="nc" id="L212">		parser.stopParser();</span>
+<span class="nc" id="L213">		parser.disconnect();</span>
+<span class="nc" id="L214">		switchScene(SceneMapping.LOG_IN);</span>
+<span class="nc" id="L215">	}</span>
+
+	/**
+	 * @param gameID for game client joins Search corresponding panel and send it's
+	 *               game instance with client and netClient in new GameWrapper
+	 */
+	public void joinGame(int gameID) {
+<span class="nc" id="L222">		parser.stopParser();</span>
+<span class="nc" id="L223">		Node panel = null;</span>
+<span class="nc" id="L224">		Game game = new Game(0, null, null, false, null, null);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">		if (searchGameIDStarted(gameID) != null) {</span>
+<span class="nc" id="L226">			panel = searchGameIDStarted(gameID);</span>
+<span class="nc" id="L227">			panel = (GamePanelStartedGame) panel;</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">		} else if (searchGameIDNotStarted(gameID) != null) {</span>
+<span class="nc" id="L229">			panel = searchGameIDNotStarted(gameID);</span>
+<span class="nc" id="L230">			panel = (GamePanelNotStartedGame) panel;</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">		} else if (searchGameIDEnded(gameID) != null) {</span>
+<span class="nc" id="L232">			panel = searchGameIDEnded(gameID);</span>
+<span class="nc" id="L233">			panel = (GamePanelEndedGame) panel;</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">		} else if (searchGameIDTournament(gameID) != null) {</span>
+<span class="nc" id="L235">			panel = searchGameIDTournament(gameID);</span>
+<span class="nc" id="L236">			panel = (GamePanelTournament) panel;</span>
+		}
+<span class="nc bnc" id="L238" title="All 2 branches missed.">		if (panel != null) {</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">			if (panel instanceof GamePanelStartedGame) {</span>
+<span class="nc" id="L240">				game = ((GamePanelStartedGame) panel).getGame();</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">			} else if (panel instanceof GamePanelNotStartedGame) {</span>
+<span class="nc" id="L242">				game = ((GamePanelNotStartedGame) panel).getGame();</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">			} else if (panel instanceof GamePanelEndedGame) {</span>
+<span class="nc" id="L244">				game = ((GamePanelEndedGame) panel).getGame();</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">			} else if (panel instanceof GamePanelTournament) {</span>
+<span class="nc" id="L246">				game = ((GamePanelTournament) panel).getGame();</span>
+			}
+<span class="nc" id="L248">			GameWrapper data = new GameWrapper(this.client, this.netClient, game);</span>
+<span class="nc" id="L249">			switchScene(SceneMapping.FIELD, data);</span>
+		}
+<span class="nc" id="L251">	}</span>
+
+	/**
+	 * @param gameID Send SpectatorJoinRequest to the server with the game id
+	 */
+	public void joinGameRequest(int gameID) {
+<span class="nc" id="L257">		parser.getClient().sendMsg(new SpectatorJoinRequest(gameID));</span>
+<span class="nc" id="L258">	}</span>
+
+	/**
+	 * @param game GamePanelStartedGame
+	 */
+	public void addStartedGame(Game game) {
+<span class="nc" id="L264">		GamePanelStartedGame panel = new GamePanelStartedGame(game, this);</span>
+<span class="nc" id="L265">		vbox_started.getChildren().add(panel);</span>
+<span class="nc" id="L266">		arrayListStartedTab.add(panel);</span>
+<span class="nc" id="L267">	}</span>
+
+	/**
+	 * @param game Adds GamePanelNotStartedGame
+	 */
+	public void addNotStartedGame(Game game) {
+<span class="nc" id="L273">		GamePanelNotStartedGame panel = new GamePanelNotStartedGame(game, this);</span>
+<span class="nc" id="L274">		vbox_notStarted.getChildren().add(panel);</span>
+<span class="nc" id="L275">		arrayListNotStartedTab.add(panel);</span>
+<span class="nc" id="L276">	}</span>
+
+	/**
+	 * @param game Adds GamePanelEndedGame
+	 */
+	public void addEndedGame(Game game) {
+<span class="nc" id="L282">		GamePanelEndedGame panel = new GamePanelEndedGame(game, this);</span>
+<span class="nc" id="L283">		vbox_ended.getChildren().add(panel);</span>
+<span class="nc" id="L284">		arrayListEndedTab.add(panel);</span>
+<span class="nc" id="L285">	}</span>
+
+	/**
+	 * @param game Adds GamePanelTournament
+	 */
+	public void addTournament(Game game) {
+<span class="nc" id="L291">		GamePanelTournament panel = new GamePanelTournament(game, this);</span>
+<span class="nc" id="L292">		vbox_tournament.getChildren().add(panel);</span>
+<span class="nc" id="L293">		arrayListTournamentTab.add(panel);</span>
+<span class="nc" id="L294">	}</span>
+
+	/**
+	 * Deletes all game panels
+	 */
+	public void deleteAllPanels() {
+
+<span class="nc bnc" id="L301" title="All 2 branches missed.">		for (Node panel : vbox_started.getChildren()) {</span>
+<span class="nc" id="L302">			int id = ((GamePanelStartedGame) panel).getGameID();</span>
+<span class="nc" id="L303">			idStartedGame.add(id);</span>
+		}
+<span class="nc bnc" id="L305" title="All 2 branches missed.">		for (Node panel : vbox_notStarted.getChildren()) {</span>
+<span class="nc" id="L306">			int id = ((GamePanelNotStartedGame) panel).getGameID();</span>
+<span class="nc" id="L307">			idNotStartedGame.add(id);</span>
+		}
+<span class="nc bnc" id="L309" title="All 2 branches missed.">		for (Node panel : vbox_ended.getChildren()) {</span>
+<span class="nc" id="L310">			int id = ((GamePanelEndedGame) panel).getGameID();</span>
+<span class="nc" id="L311">			idEndedGame.add(id);</span>
+		}
+<span class="nc bnc" id="L313" title="All 2 branches missed.">		for (Node panel : vbox_tournament.getChildren()) {</span>
+<span class="nc" id="L314">			int id = ((GamePanelTournament) panel).getGameID();</span>
+<span class="nc" id="L315">			idTournament.add(id);</span>
+		}
+
+<span class="nc bnc" id="L318" title="All 2 branches missed.">		for (int id : idStartedGame) {</span>
+<span class="nc" id="L319">			deleteStartedGameID(id);</span>
+		}
+<span class="nc bnc" id="L321" title="All 2 branches missed.">		for (int id : idNotStartedGame) {</span>
+<span class="nc" id="L322">			deleteNotStartedGameID(id);</span>
+		}
+<span class="nc bnc" id="L324" title="All 2 branches missed.">		for (int id : idEndedGame) {</span>
+<span class="nc" id="L325">			deleteEndedGameID(id);</span>
+		}
+<span class="nc bnc" id="L327" title="All 2 branches missed.">		for (int id : idTournament) {</span>
+<span class="nc" id="L328">			deleteTournamentGameID(id);</span>
+		}
+<span class="nc" id="L330">	}</span>
+
+	/**
+	 * @param gameID
+	 */
+	public void deleteStartedGameID(int gameID) {
+<span class="nc" id="L336">		vbox_started.getChildren().remove(searchGameIDStarted(gameID));</span>
+<span class="nc" id="L337">	}</span>
+
+	/**
+	 * @param gameID
+	 */
+	public void deleteNotStartedGameID(int gameID) {
+<span class="nc" id="L343">		vbox_notStarted.getChildren().remove(searchGameIDNotStarted(gameID));</span>
+<span class="nc" id="L344">	}</span>
+
+	/**
+	 * @param gameID
+	 */
+	public void deleteEndedGameID(int gameID) {
+<span class="nc" id="L350">		vbox_ended.getChildren().remove(searchGameIDEnded(gameID));</span>
+<span class="nc" id="L351">	}</span>
+
+	/**
+	 * @param gameID
+	 */
+	public void deleteTournamentGameID(int gameID) {
+<span class="nc" id="L357">		vbox_tournament.getChildren().remove(searchGameIDTournament(gameID));</span>
+<span class="nc" id="L358">	}</span>
+
+	/**
+	 * @param gameID
+	 * @return panel
+	 */
+	public Node searchGameIDStarted(int gameID) {
+<span class="nc bnc" id="L365" title="All 2 branches missed.">		for (Node panel : vbox_started.getChildren()) {</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">			if (((GamePanelStartedGame) panel).getGameID() == gameID) {</span>
+<span class="nc" id="L367">				return panel;</span>
+			}
+		}
+		;
+<span class="nc" id="L371">		return null;</span>
+	}
+
+	/**
+	 * @param gameID
+	 * @return panel
+	 */
+	public Node searchGameIDNotStarted(int gameID) {
+<span class="nc bnc" id="L379" title="All 2 branches missed.">		for (Node panel : vbox_notStarted.getChildren()) {</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">			if (((GamePanelNotStartedGame) panel).getGameID() == gameID) {</span>
+<span class="nc" id="L381">				return panel;</span>
+			}
+		}
+		;
+<span class="nc" id="L385">		return null;</span>
+	}
+
+	/**
+	 * @param gameID
+	 * @return panel
+	 */
+	public Node searchGameIDEnded(int gameID) {
+<span class="nc bnc" id="L393" title="All 2 branches missed.">		for (Node panel : vbox_ended.getChildren()) {</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">			if (((GamePanelEndedGame) panel).getGameID() == gameID) {</span>
+<span class="nc" id="L395">				return panel;</span>
+			}
+		}
+		;
+<span class="nc" id="L399">		return null;</span>
+	}
+
+	/**
+	 * @param gameID
+	 * @return panel
+	 */
+	public Node searchGameIDTournament(int gameID) {
+<span class="nc bnc" id="L407" title="All 2 branches missed.">		for (Node panel : vbox_tournament.getChildren()) {</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">			if (((GamePanelTournament) panel).getGameID() == gameID) {</span>
+<span class="nc" id="L409">				return panel;</span>
+			}
+		}
+		;
+<span class="nc" id="L413">		return null;</span>
+	}
+
+	/**
+	 * @param gameID Shows configuration of panel
+	 */
+	public void showConfigStarted(int gameID) {
+<span class="nc" id="L420">		GamePanelStartedGame panel = (GamePanelStartedGame) searchGameIDStarted(gameID);</span>
+<span class="nc" id="L421">		this.addSubStage(SceneMapping.CONFIG);</span>
+<span class="nc" id="L422">		notifySceneMessage(SceneMapping.CONFIG,</span>
+<span class="nc" id="L423">				new Tuple&lt;String, Configuration&gt;(panel.getGameName(), panel.getConfiguration()));</span>
+
+<span class="nc" id="L425">	}</span>
+
+	/**
+	 * @param gameID Shows configuration of panel
+	 */
+	public void showConfigNotStarted(int gameID) {
+<span class="nc" id="L431">		GamePanelNotStartedGame panel = (GamePanelNotStartedGame) searchGameIDNotStarted(gameID);</span>
+<span class="nc" id="L432">		this.addSubStage(SceneMapping.CONFIG);</span>
+<span class="nc" id="L433">		notifySceneMessage(SceneMapping.CONFIG,</span>
+<span class="nc" id="L434">				new Tuple&lt;String, Configuration&gt;(panel.getGameName(), panel.getConfiguration()));</span>
+<span class="nc" id="L435">	}</span>
+
+	/**
+	 * @param gameID Shows configuration of panel
+	 */
+	public void showConfigEnded(int gameID) {
+<span class="nc" id="L441">		GamePanelEndedGame panel = (GamePanelEndedGame) searchGameIDEnded(gameID);</span>
+<span class="nc" id="L442">		this.addSubStage(SceneMapping.CONFIG);</span>
+<span class="nc" id="L443">		notifySceneMessage(SceneMapping.CONFIG,</span>
+<span class="nc" id="L444">				new Tuple&lt;String, Configuration&gt;(panel.getGameName(), panel.getConfiguration()));</span>
+<span class="nc" id="L445">	}</span>
+
+	/**
+	 * @param gameID Shows configuration of panel
+	 */
+	public void showConfigTournament(int gameID) {
+<span class="nc" id="L451">		GamePanelTournament panel = (GamePanelTournament) searchGameIDTournament(gameID);</span>
+<span class="nc" id="L452">		this.addSubStage(SceneMapping.CONFIG);</span>
+<span class="nc" id="L453">		notifySceneMessage(SceneMapping.CONFIG,</span>
+<span class="nc" id="L454">				new Tuple&lt;String, Configuration&gt;(panel.getGameName(), panel.getConfiguration()));</span>
+<span class="nc" id="L455">	}</span>
+
+	/*
+	 * @see
+	 * controller.LobbySceneControllerInterface#updateGames(java.util.Collection)
+	 * Updates games that are stored in ArrayLists and sorts them
+	 */
+	public void updateGames(Collection&lt;Game&gt; cGames) {
+<span class="nc bnc" id="L463" title="All 2 branches missed.">		if (this.gameUpdatePossible = true) {</span>
+<span class="nc" id="L464">			this.gameUpdatePossible = false;</span>
+<span class="nc" id="L465">			ArrayList&lt;Game&gt; games = new ArrayList&lt;Game&gt;(cGames);</span>
+<span class="nc" id="L466">			Lobby.setCurrentGames(games);</span>
+<span class="nc" id="L467">			deleteAllPanels();</span>
+<span class="nc bnc" id="L468" title="All 2 branches missed.">			for (Game game : games) {</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">				if (game.getConfig() == null) {</span>
+<span class="nc" id="L470">					continue;</span>
+				}
+<span class="nc bnc" id="L472" title="All 4 branches missed.">				if ((game.getGameState() == GameState.PAUSED || game.getGameState() == GameState.IN_PROGRESS)</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">						&amp;&amp; game.isTournament() == false) {</span>
+<span class="nc" id="L474">					addStartedGame(game);</span>
+				}
+<span class="nc bnc" id="L476" title="All 4 branches missed.">				if (game.getGameState() == GameState.NOT_STARTED &amp;&amp; game.isTournament() == false) {</span>
+<span class="nc" id="L477">					addNotStartedGame(game);</span>
+				}
+<span class="nc bnc" id="L479" title="All 4 branches missed.">				if (game.getGameState() == GameState.ENDED &amp;&amp; game.isTournament() == false) {</span>
+<span class="nc" id="L480">					addEndedGame(game);</span>
+				}
+<span class="nc bnc" id="L482" title="All 2 branches missed.">				if (game.isTournament() == true) {</span>
+<span class="nc" id="L483">					addTournament(game);</span>
+				}
+			}
+		}
+<span class="nc" id="L487">		this.gameUpdatePossible = true;</span>
+<span class="nc" id="L488">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

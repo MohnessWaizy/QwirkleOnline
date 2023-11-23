@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>LoginParser.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">parser</a> &gt; <span class="el_source">LoginParser.java</span></div><h1>LoginParser.java</h1><pre class="source lang-java linenums">package parser;
+
+import org.NetworkInterface.NetClient;
+
+import controller.LoginSceneController;
+import de.upb.swtpra1819interface.messages.ConnectAccepted;
+import de.upb.swtpra1819interface.messages.Message;
+
+/**
+ * &lt;i&gt;LoginParser&lt;/i&gt; gets used to parse messages from the Server and sends it to the LoginSceneController 
+ * 
+ *
+ */
+public class LoginParser extends InterfaceParser{
+	
+	private NetClient client;
+	private LoginSceneController contrl;
+	
+	/**
+	 * Konstruktor of LoginParser
+	 * 
+	 * @param client {@link NetClient} for getting Messages
+	 * @param contrl {@link LoginSceneController} where the messages should be sent to
+	 * @param cycle the cycle length in which the messages gets parsed
+	 */
+<span class="nc" id="L26">	public LoginParser(NetClient client, LoginSceneController contrl, long cycle) {</span>
+<span class="nc" id="L27">		this.client = client;</span>
+<span class="nc" id="L28">		this.contrl = contrl;</span>
+<span class="nc" id="L29">		setClient(client);</span>
+<span class="nc" id="L30">		initClock(cycle);</span>
+<span class="nc" id="L31">		startQueueWorker();</span>
+		
+<span class="nc" id="L33">	}</span>
+	
+	/**
+	 * Parsing the last Message called by the {@link ParserClock}
+	 */
+	@Override
+	public void parseMessage(Message msg) {
+<span class="nc bnc" id="L40" title="All 3 branches missed.">		switch (msg.getUniqueId()) {</span>
+		case 101:
+			
+<span class="nc" id="L43">			ConnectAccepted ca = (ConnectAccepted) msg;</span>
+			
+<span class="nc" id="L45">			contrl.loginRequestIsValid(ca.getClientId());</span>
+<span class="nc" id="L46">			break;</span>
+		case 920:
+						
+<span class="nc" id="L49">			contrl.loginRequestNotValid();</span>
+			
+<span class="nc" id="L51">			break;</span>
+
+		default:
+			break;
+		}
+<span class="nc" id="L56">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

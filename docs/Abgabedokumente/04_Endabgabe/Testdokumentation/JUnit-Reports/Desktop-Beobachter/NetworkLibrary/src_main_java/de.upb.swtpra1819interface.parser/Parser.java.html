@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">NetworkLibrary</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">de.upb.swtpra1819interface.parser</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">package de.upb.swtpra1819interface.parser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import de.upb.swtpra1819interface.messages.AbortGame;
+import de.upb.swtpra1819interface.messages.AccessDenied;
+import de.upb.swtpra1819interface.messages.BagRequest;
+import de.upb.swtpra1819interface.messages.BagResponse;
+import de.upb.swtpra1819interface.messages.ConnectAccepted;
+import de.upb.swtpra1819interface.messages.ConnectRequest;
+import de.upb.swtpra1819interface.messages.CurrentPlayer;
+import de.upb.swtpra1819interface.messages.EndGame;
+import de.upb.swtpra1819interface.messages.GameDataRequest;
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.messages.GameJoinAccepted;
+import de.upb.swtpra1819interface.messages.GameJoinRequest;
+import de.upb.swtpra1819interface.messages.GameListRequest;
+import de.upb.swtpra1819interface.messages.GameListResponse;
+import de.upb.swtpra1819interface.messages.LeavingPlayer;
+import de.upb.swtpra1819interface.messages.LeavingRequest;
+import de.upb.swtpra1819interface.messages.Message;
+import de.upb.swtpra1819interface.messages.MessageSend;
+import de.upb.swtpra1819interface.messages.MessageSignal;
+import de.upb.swtpra1819interface.messages.MoveValid;
+import de.upb.swtpra1819interface.messages.NotAllowed;
+import de.upb.swtpra1819interface.messages.ParsingError;
+import de.upb.swtpra1819interface.messages.PauseGame;
+import de.upb.swtpra1819interface.messages.PlayTiles;
+import de.upb.swtpra1819interface.messages.PlayerHandsRequest;
+import de.upb.swtpra1819interface.messages.PlayerHandsResponse;
+import de.upb.swtpra1819interface.messages.ResumeGame;
+import de.upb.swtpra1819interface.messages.ScoreRequest;
+import de.upb.swtpra1819interface.messages.ScoreResponse;
+import de.upb.swtpra1819interface.messages.SendTiles;
+import de.upb.swtpra1819interface.messages.SpectatorJoinAccepted;
+import de.upb.swtpra1819interface.messages.SpectatorJoinRequest;
+import de.upb.swtpra1819interface.messages.StartGame;
+import de.upb.swtpra1819interface.messages.StartTiles;
+import de.upb.swtpra1819interface.messages.TileSwapRequest;
+import de.upb.swtpra1819interface.messages.TileSwapResponse;
+import de.upb.swtpra1819interface.messages.TileSwapValid;
+import de.upb.swtpra1819interface.messages.TotalTimeRequest;
+import de.upb.swtpra1819interface.messages.TotalTimeResponse;
+import de.upb.swtpra1819interface.messages.TurnTimeLeftRequest;
+import de.upb.swtpra1819interface.messages.TurnTimeLeftResponse;
+import de.upb.swtpra1819interface.messages.Update;
+import de.upb.swtpra1819interface.messages.Winner;
+import de.upb.swtpra1819interface.models.Configuration;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Parser {
+	private Gson gson;
+	private Gson gsonPp;
+
+<span class="nc" id="L63">	public Parser() {</span>
+<span class="nc" id="L64">		GsonBuilder builder = new GsonBuilder();</span>
+<span class="nc" id="L65">		builder.enableComplexMapKeySerialization();</span>
+<span class="nc" id="L66">		gson = builder.create();</span>
+<span class="nc" id="L67">		builder.setPrettyPrinting();</span>
+<span class="nc" id="L68">		gsonPp = builder.create();</span>
+<span class="nc" id="L69">	}</span>
+
+	public String serialize(Message message) {
+<span class="nc" id="L72">		return gson.toJson(message);</span>
+	}
+
+	public Message deserialize(String jsonString) throws ParsingException {
+<span class="nc" id="L76">		JsonParser jp = new JsonParser();</span>
+<span class="nc" id="L77">		JsonElement jsonTree = jp.parse(jsonString);</span>
+<span class="nc" id="L78">		JsonObject jsonObject = jsonTree.getAsJsonObject();</span>
+<span class="nc" id="L79">		int id = 0;</span>
+		try {
+<span class="nc" id="L81">			id = jsonObject.get(&quot;uniqueId&quot;).getAsInt();</span>
+<span class="nc" id="L82">		} catch (NullPointerException e) {</span>
+<span class="nc" id="L83">			throw new ParsingException(&quot;Given jsonString has no uniqueID&quot;, e);</span>
+		}
+<span class="nc" id="L85">		Message message = null;</span>
+<span class="nc bnc" id="L86" title="All 43 branches missed.">		switch (id) {</span>
+		case 100:
+<span class="nc" id="L88">			message = (Message) gson.fromJson(jsonTree, ConnectRequest.class);</span>
+<span class="nc" id="L89">			break;</span>
+		case 300:
+<span class="nc" id="L91">			message = (Message) gson.fromJson(jsonTree, GameListRequest.class);</span>
+<span class="nc" id="L92">			break;</span>
+		case 302:
+<span class="nc" id="L94">			message = (Message) gson.fromJson(jsonTree, GameJoinRequest.class);</span>
+<span class="nc" id="L95">			break;</span>
+		case 304:
+<span class="nc" id="L97">			message = (Message) gson.fromJson(jsonTree, SpectatorJoinRequest.class);</span>
+<span class="nc" id="L98">			break;</span>
+		case 306:
+<span class="nc" id="L100">			message = (Message) gson.fromJson(jsonTree, MessageSend.class);</span>
+<span class="nc" id="L101">			break;</span>
+		case 405:
+<span class="nc" id="L103">			message = (Message) gson.fromJson(jsonTree, LeavingRequest.class);</span>
+<span class="nc" id="L104">			break;</span>
+		case 411:
+<span class="nc" id="L106">			message = (Message) gson.fromJson(jsonTree, TileSwapRequest.class);</span>
+<span class="nc" id="L107">			break;</span>
+		case 414:
+<span class="nc" id="L109">			message = (Message) gson.fromJson(jsonTree, PlayTiles.class);</span>
+<span class="nc" id="L110">			break;</span>
+		case 417:
+<span class="nc" id="L112">			message = (Message) gson.fromJson(jsonTree, ScoreRequest.class);</span>
+<span class="nc" id="L113">			break;</span>
+		case 419:
+<span class="nc" id="L115">			message = (Message) gson.fromJson(jsonTree, TurnTimeLeftRequest.class);</span>
+<span class="nc" id="L116">			break;</span>
+		case 421:
+<span class="nc" id="L118">			message = (Message) gson.fromJson(jsonTree, TotalTimeRequest.class);</span>
+<span class="nc" id="L119">			break;</span>
+		case 423:
+<span class="nc" id="L121">			message = (Message) gson.fromJson(jsonTree, BagRequest.class);</span>
+<span class="nc" id="L122">			break;</span>
+		case 425:
+<span class="nc" id="L124">			message = (Message) gson.fromJson(jsonTree, PlayerHandsRequest.class);</span>
+<span class="nc" id="L125">			break;</span>
+		case 498:
+<span class="nc" id="L127">			message = (Message) gson.fromJson(jsonTree, GameDataRequest.class);</span>
+<span class="nc" id="L128">			break;</span>
+
+		case 101:
+<span class="nc" id="L131">			message = (Message) gson.fromJson(jsonTree, ConnectAccepted.class);</span>
+<span class="nc" id="L132">			break;</span>
+		case 301:
+<span class="nc" id="L134">			message = (Message) gson.fromJson(jsonTree, GameListResponse.class);</span>
+<span class="nc" id="L135">			break;</span>
+		case 303:
+<span class="nc" id="L137">			message = (Message) gson.fromJson(jsonTree, GameJoinAccepted.class);</span>
+<span class="nc" id="L138">			break;</span>
+		case 305:
+<span class="nc" id="L140">			message = (Message) gson.fromJson(jsonTree, SpectatorJoinAccepted.class);</span>
+<span class="nc" id="L141">			break;</span>
+		case 307:
+<span class="nc" id="L143">			message = (Message) gson.fromJson(jsonTree, MessageSignal.class);</span>
+<span class="nc" id="L144">			break;</span>
+		case 400:
+<span class="nc" id="L146">			message = (Message) gson.fromJson(jsonTree, StartGame.class);</span>
+<span class="nc" id="L147">			break;</span>
+		case 401:
+<span class="nc" id="L149">			message = (Message) gson.fromJson(jsonTree, EndGame.class);</span>
+<span class="nc" id="L150">			break;</span>
+		case 402:
+<span class="nc" id="L152">			message = (Message) gson.fromJson(jsonTree, AbortGame.class);</span>
+<span class="nc" id="L153">			break;</span>
+		case 403:
+<span class="nc" id="L155">			message = (Message) gson.fromJson(jsonTree, PauseGame.class);</span>
+<span class="nc" id="L156">			break;</span>
+		case 404:
+<span class="nc" id="L158">			message = (Message) gson.fromJson(jsonTree, ResumeGame.class);</span>
+<span class="nc" id="L159">			break;</span>
+		case 406:
+<span class="nc" id="L161">			message = (Message) gson.fromJson(jsonTree, LeavingPlayer.class);</span>
+<span class="nc" id="L162">			break;</span>
+		case 407:
+<span class="nc" id="L164">			message = (Message) gson.fromJson(jsonTree, Winner.class);</span>
+<span class="nc" id="L165">			break;</span>
+		case 408:
+<span class="nc" id="L167">			message = (Message) gson.fromJson(jsonTree, StartTiles.class);</span>
+<span class="nc" id="L168">			break;</span>
+		case 409:
+<span class="nc" id="L170">			message = (Message) gson.fromJson(jsonTree, CurrentPlayer.class);</span>
+<span class="nc" id="L171">			break;</span>
+		case 410:
+<span class="nc" id="L173">			message = (Message) gson.fromJson(jsonTree, SendTiles.class);</span>
+<span class="nc" id="L174">			break;</span>
+		case 412:
+<span class="nc" id="L176">			message = (Message) gson.fromJson(jsonTree, TileSwapValid.class);</span>
+<span class="nc" id="L177">			break;</span>
+		case 413:
+<span class="nc" id="L179">			message = (Message) gson.fromJson(jsonTree, TileSwapResponse.class);</span>
+<span class="nc" id="L180">			break;</span>
+		case 415:
+<span class="nc" id="L182">			message = (Message) gson.fromJson(jsonTree, MoveValid.class);</span>
+<span class="nc" id="L183">			break;</span>
+		case 416:
+<span class="nc" id="L185">			message = (Message) gson.fromJson(jsonTree, Update.class);</span>
+<span class="nc" id="L186">			break;</span>
+		case 418:
+<span class="nc" id="L188">			message = (Message) gson.fromJson(jsonTree, ScoreResponse.class);</span>
+<span class="nc" id="L189">			break;</span>
+		case 420:
+<span class="nc" id="L191">			message = (Message) gson.fromJson(jsonTree, TurnTimeLeftResponse.class);</span>
+<span class="nc" id="L192">			break;</span>
+		case 422:
+<span class="nc" id="L194">			message = (Message) gson.fromJson(jsonTree, TotalTimeResponse.class);</span>
+<span class="nc" id="L195">			break;</span>
+		case 424:
+<span class="nc" id="L197">			message = (Message) gson.fromJson(jsonTree, BagResponse.class);</span>
+<span class="nc" id="L198">			break;</span>
+		case 426:
+<span class="nc" id="L200">			message = (Message) gson.fromJson(jsonTree, PlayerHandsResponse.class);</span>
+<span class="nc" id="L201">			break;</span>
+		case 499:
+<span class="nc" id="L203">			message = (Message) gson.fromJson(jsonTree, GameDataResponse.class);</span>
+<span class="nc" id="L204">			break;</span>
+		case 900:
+<span class="nc" id="L206">			message = (Message) gson.fromJson(jsonTree, AccessDenied.class);</span>
+<span class="nc" id="L207">			break;</span>
+		case 910:
+<span class="nc" id="L209">			message = (Message) gson.fromJson(jsonTree, ParsingError.class);</span>
+<span class="nc" id="L210">			break;</span>
+		case 920:
+<span class="nc" id="L212">			message = (Message) gson.fromJson(jsonTree, NotAllowed.class);</span>
+			break;
+		}
+
+<span class="nc bnc" id="L216" title="All 2 branches missed.">		if (message == null) {</span>
+<span class="nc" id="L217">			throw new ParsingException(&quot;Could not parse message&quot;);</span>
+		}
+<span class="nc" id="L219">		return message;</span>
+	}
+
+	public Configuration loadConfig(String filePath) throws ParsingException {
+<span class="nc" id="L223">		BufferedReader bufferedReader = null;</span>
+		try {
+<span class="nc" id="L225">			bufferedReader = new BufferedReader(new FileReader(filePath));</span>
+<span class="nc" id="L226">			StringBuilder stringBuilder = new StringBuilder();</span>
+<span class="nc" id="L227">			String line = bufferedReader.readLine();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">			while (line != null) {</span>
+<span class="nc" id="L229">				stringBuilder.append(line);</span>
+<span class="nc" id="L230">				stringBuilder.append(System.lineSeparator());</span>
+<span class="nc" id="L231">				line = bufferedReader.readLine();</span>
+			}
+<span class="nc" id="L233">			String jsonString = stringBuilder.toString();</span>
+<span class="nc" id="L234">			Configuration configuration = (Configuration) gsonPp.fromJson(jsonString, Configuration.class);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">			if (configuration == null) {</span>
+<span class="nc" id="L236">				throw new ParsingException(&quot;Could not parse file to Configuration&quot;);</span>
+			}
+<span class="nc" id="L238">			return configuration;</span>
+<span class="nc" id="L239">		} catch (FileNotFoundException e) {</span>
+<span class="nc" id="L240">			e.printStackTrace();</span>
+<span class="nc" id="L241">		} catch (IOException e) {</span>
+<span class="nc" id="L242">			e.printStackTrace();</span>
+		} finally {
+			try {
+<span class="nc" id="L245">				bufferedReader.close();</span>
+<span class="nc" id="L246">			} catch (IOException e) {</span>
+<span class="nc" id="L247">				e.printStackTrace();</span>
+			}
+		}
+<span class="nc" id="L250">		return null;</span>
+	}
+
+	public void saveConfig(Configuration config, String filePath) {
+<span class="nc bnc" id="L254" title="All 2 branches missed.">		if (filePath.contains(File.separator)) {</span>
+<span class="nc" id="L255">			String[] directories = filePath.split(File.separator);</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">			for (int i = 0; i &lt; directories.length - 1; i++) {</span>
+<span class="nc" id="L257">				StringBuilder currentPath = new StringBuilder();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">				for (int j = 0; j &lt; i; j++) {</span>
+<span class="nc" id="L259">					currentPath.append(directories[j] + File.separator);</span>
+				}
+<span class="nc" id="L261">				String path = currentPath.toString();</span>
+<span class="nc" id="L262">				File file = new File(path + directories[i]);</span>
+<span class="nc" id="L263">				file.mkdir();</span>
+			}
+		}
+<span class="nc" id="L266">		String jsonString = gsonPp.toJson(config);</span>
+<span class="nc" id="L267">		File file = new File(filePath);</span>
+		try {
+<span class="nc" id="L269">			file.createNewFile();</span>
+<span class="nc" id="L270">			FileWriter fileWriter = new FileWriter(file);</span>
+<span class="nc" id="L271">			fileWriter.write(jsonString);</span>
+<span class="nc" id="L272">			fileWriter.close();</span>
+<span class="nc" id="L273">		} catch (FileNotFoundException e) {</span>
+<span class="nc" id="L274">			e.printStackTrace();</span>
+<span class="nc" id="L275">		} catch (IOException e) {</span>
+<span class="nc" id="L276">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L278">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>SuperController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">SuperController.java</span></div><h1>SuperController.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import main.App;
+import model.GameData;
+
+/**
+ * &lt;p&gt;
+ * The &lt;i&gt;SuperController&lt;/i&gt; is the general entry point of the client. It
+ * delegates the control of every Scene. Moreover the &lt;i&gt;SuperController&lt;/i&gt;
+ * enables switching to other scenes.
+ * &lt;/p&gt;
+ */
+<span class="nc" id="L26">public class SuperController extends Application {</span>
+
+	// Window
+<span class="nc" id="L29">	private Stage stage = null;</span>
+
+	// Actual Scene
+<span class="nc" id="L32">	private SceneMapping actualScene = SceneMapping.LOG_IN;</span>
+	// Mapping from Scenes of the enum to the loaded FXML Scenes
+
+<span class="nc" id="L35">	private final Map&lt;SceneMapping, DisplayedScene&gt; guiScenes = new HashMap&lt;SceneMapping, DisplayedScene&gt;() {</span>
+		{
+<span class="nc" id="L37">			put(SceneMapping.LOG_IN, new DisplayedScene(&quot;view/Login.fxml&quot;, Arrays.asList(</span>
+<span class="nc" id="L38">					new String[] { &quot;style/application.css&quot;, &quot;style/login.css&quot;, &quot;style/buttonIcons.css&quot; }),</span>
+<span class="nc" id="L39">					false, new LoginSceneController()));</span>
+
+<span class="nc" id="L41">			put(SceneMapping.LOBBY, new DisplayedScene(&quot;view/LobbyGui.fxml&quot;, Arrays.asList(</span>
+<span class="nc" id="L42">					new String[] { &quot;style/application.css&quot;, &quot;style/buttonIcons.css&quot;, &quot;style/lobby.css&quot; }),</span>
+<span class="nc" id="L43">					false, new LobbySceneController()));</span>
+
+<span class="nc" id="L45">			put(SceneMapping.CONFIG, new DisplayedScene(&quot;view/Config.fxml&quot;,</span>
+<span class="nc" id="L46">					Arrays.asList(new String[] { &quot;style/config.css&quot;}), false, new ConfigSceneController()));</span>
+
+<span class="nc" id="L48">			put(SceneMapping.FIELD, new DisplayedScene(&quot;view/Field.fxml&quot;, Arrays.asList(</span>
+<span class="nc" id="L49">					new String[] { &quot;style/application.css&quot;, &quot;style/buttonIcons.css&quot;, &quot;style/field.css&quot; }),</span>
+<span class="nc" id="L50">					true, new FieldSceneController(new GameData())));</span>
+		}
+	};
+
+	/**
+	 * This method is called automatically by JavaFx.
+	 * 
+	 * @param primaryStage
+	 */
+	public void start(Stage primaryStage) {
+		// Keep the reference
+<span class="nc" id="L61">		stage = primaryStage;</span>
+
+		// Set Title and Application Icon
+<span class="nc" id="L64">		stage.getIcons().add(new Image(App.class.getClassLoader().getResource(&quot;icons/cubes.png&quot;).toExternalForm()));</span>
+<span class="nc" id="L65">		stage.setTitle(&quot;Qwirkle&quot;);</span>
+
+		// Reference SuperController
+<span class="nc" id="L68">		AbstractSceneController.setSuperController(this);</span>
+
+		// Load the first (default) Scene
+<span class="nc" id="L71">		DisplayedScene nextScene = guiScenes.get(actualScene);</span>
+<span class="nc" id="L72">		Scene scene = nextScene.getScene();</span>
+
+		// Set up stage
+<span class="nc" id="L75">		stage.setScene(scene);</span>
+<span class="nc" id="L76">		stage.setResizable(nextScene.isResizeable());</span>
+<span class="nc" id="L77">		stage.show();</span>
+
+<span class="nc" id="L79">		stage.setOnCloseRequest(new EventHandler&lt;WindowEvent&gt;() {</span>
+
+			@Override
+			public void handle(WindowEvent event) {
+<span class="nc" id="L83">				Platform.exit();</span>
+<span class="nc" id="L84">				System.exit(0);</span>
+<span class="nc" id="L85">			}</span>
+		});
+<span class="nc" id="L87">	}</span>
+
+	/**
+	 * Center the actual Scene relative to the Screen.
+	 */
+	public void centerScene() {
+<span class="nc" id="L93">		Scene scene = stage.getScene();</span>
+
+<span class="nc" id="L95">		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();</span>
+
+<span class="nc" id="L97">		stage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);</span>
+<span class="nc" id="L98">		stage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);</span>
+<span class="nc" id="L99">	}</span>
+
+	public &lt;T&gt; void displayScene(SceneMapping sm, T message) {
+		// Don't switch scenes if not needed
+<span class="nc bnc" id="L103" title="All 2 branches missed.">		if (actualScene != sm) {</span>
+			// Get associated scene
+<span class="nc" id="L105">			DisplayedScene nextScene = guiScenes.get(sm);</span>
+<span class="nc" id="L106">			Scene scene = nextScene.getScene();</span>
+
+			// Set up stage
+<span class="nc" id="L109">			stage.setScene(scene);</span>
+<span class="nc" id="L110">			stage.setResizable(nextScene.isResizeable());</span>
+
+			// Notify next Controller
+<span class="nc" id="L113">			nextScene.getSceneController().onSceneSwitch(message);</span>
+<span class="nc" id="L114">			actualScene = sm;</span>
+
+		}
+<span class="nc" id="L117">	}</span>
+
+	/**
+	 * &lt;p&gt;
+	 * Switch to a new Scene to be displayed.
+	 * &lt;/p&gt;
+	 * 
+	 * @param sm Scene to be displayed
+	 */
+	public void displayScene(SceneMapping sm) {
+		// Don't switch scenes if not needed
+<span class="nc bnc" id="L128" title="All 2 branches missed.">		if (actualScene != sm) {</span>
+			// Get associated scene
+<span class="nc" id="L130">			DisplayedScene nextScene = guiScenes.get(sm);</span>
+<span class="nc" id="L131">			Scene scene = nextScene.getScene();</span>
+
+			// Set up stage
+<span class="nc" id="L134">			stage.setScene(scene);</span>
+<span class="nc" id="L135">			stage.setResizable(nextScene.isResizeable());</span>
+
+			// Notify next Controller
+<span class="nc" id="L138">			nextScene.getSceneController().onSceneSwitch();</span>
+<span class="nc" id="L139">			actualScene = sm;</span>
+
+		}
+<span class="nc" id="L142">	}</span>
+
+	public &lt;T&gt; void notifyScene(SceneMapping sm, T message) {
+
+<span class="nc bnc" id="L146" title="All 2 branches missed.">		if (actualScene != sm) {</span>
+			// Get associated scene
+<span class="nc" id="L148">			DisplayedScene scene = guiScenes.get(sm);</span>
+<span class="nc" id="L149">			scene.getSceneController().receiveMessage(message);</span>
+		}
+<span class="nc" id="L151">	}</span>
+
+	/**
+	 * Entry point of this Application
+	 * 
+	 * @param args
+	 */
+	public static void init(String[] args) {
+<span class="nc" id="L159">		launch(args);</span>
+<span class="nc" id="L160">	}</span>
+
+	public static void main(String[] args) {
+<span class="nc" id="L163">		launch(args);</span>
+<span class="nc" id="L164">	}</span>
+	
+	public Stage getStage() {
+<span class="nc" id="L167">		return stage;</span>
+	}
+
+	public void setStage(Stage stage) {
+<span class="nc" id="L171">		this.stage = stage;</span>
+<span class="nc" id="L172">	}</span>
+
+	public Map&lt;SceneMapping, DisplayedScene&gt; getGuiScenes() {
+<span class="nc" id="L175">		return guiScenes;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSceneController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">AbstractSceneController.java</span></div><h1>AbstractSceneController.java</h1><pre class="source lang-java linenums">package controller;
+
+import javafx.fxml.Initializable;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+/**
+ * &lt;p&gt;
+ * Every Scene created needs its own Controller for its GUI. This class
+ * implements &lt;i&gt;{@linkplain Initializable}&lt;/i&gt; to initialize its Controller.
+ * For a new SceneController, one simply needs to extend this class and
+ * implement all needed method(given by the &lt;i&gt;{@linkplain Initializable}&lt;/i&gt;
+ * Interface).
+ * &lt;/p&gt;
+ */
+public abstract class AbstractSceneController implements Initializable {
+
+	// Reference to SuperController to be able to switch Scenes
+	private static SuperController supCtrl;
+
+	protected void addSubStage(SceneMapping scene) {
+<span class="nc" id="L22">		Stage subStage = new Stage();</span>
+<span class="nc" id="L23">		subStage.setScene(supCtrl.getGuiScenes().get(scene).getScene());</span>
+<span class="nc" id="L24">		subStage.initOwner(supCtrl.getStage().getOwner());</span>
+<span class="nc" id="L25">		subStage.initModality(Modality.APPLICATION_MODAL);</span>
+<span class="nc" id="L26">		subStage.show();</span>
+<span class="nc" id="L27">	}</span>
+
+<span class="nc" id="L29">	public AbstractSceneController() {</span>
+
+<span class="nc" id="L31">	}</span>
+
+	/**
+	 * &lt;p&gt;
+	 * {@linkplain application.SuperController#displayScene}
+	 * &lt;/p&gt;
+	 * 
+	 * @param    &lt;T&gt;
+	 * 
+	 * @param sm Scene to be displayed
+	 */
+
+	/**
+	 * After a scene is successfully switched, the new scene will be notified.
+	 */
+	public void onSceneSwitch() {
+
+<span class="nc" id="L48">	}</span>
+
+	/**
+	 * After a scene is successfully switched, the new scene will be notified and
+	 * will receive a message from the caller of switchScene.
+	 * 
+	 * @param message Message the next scene will receive
+	 */
+
+	public &lt;T&gt; void onSceneSwitch(T message) {
+
+<span class="nc" id="L59">	}</span>
+
+	public final &lt;T&gt; void notifySceneMessage(SceneMapping sm, T message) {
+<span class="nc" id="L62">		supCtrl.notifyScene(sm, message);</span>
+<span class="nc" id="L63">	}</span>
+
+	public &lt;T&gt; void receiveMessage(T message) {
+
+<span class="nc" id="L67">	}</span>
+
+	public final void switchScene(SceneMapping sm) {
+<span class="nc" id="L70">		supCtrl.displayScene(sm);</span>
+<span class="nc" id="L71">	}</span>
+
+	public final &lt;T&gt; void switchScene(SceneMapping sm, T message) {
+<span class="nc" id="L74">		supCtrl.displayScene(sm, message);</span>
+<span class="nc" id="L75">	}</span>
+
+	public static void setSuperController(SuperController superController) {
+<span class="nc" id="L78">		supCtrl = superController;</span>
+<span class="nc" id="L79">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

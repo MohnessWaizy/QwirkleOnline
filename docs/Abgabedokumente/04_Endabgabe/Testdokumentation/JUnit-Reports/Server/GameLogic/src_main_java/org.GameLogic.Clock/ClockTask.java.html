@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ClockTask.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Clock</a> &gt; <span class="el_source">ClockTask.java</span></div><h1>ClockTask.java</h1><pre class="source lang-java linenums">package org.GameLogic.Clock;
+
+/**
+ * {@link ClockTask} runs as a thread. Therefore, Thread will call {@link run()} method.
+ */
+public class ClockTask implements Runnable {
+
+	/**
+	 * The given clock interface with callable ticking method.
+	 */
+	private ClockInterface clock;
+
+	/**
+	 * Instantiate object as runnable. 
+	 * Can be started with {@link start()}
+	 * @param clock
+	 */
+	public ClockTask(ClockInterface clock) {
+<span class="fc" id="L19">		super();</span>
+<span class="fc" id="L20">		this.clock = clock;</span>
+<span class="fc" id="L21">	}</span>
+
+	/**
+	 * Is called when thread will be started.
+	 */
+	public void run() {
+<span class="fc" id="L27">		clock.ticking();</span>
+<span class="fc" id="L28">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

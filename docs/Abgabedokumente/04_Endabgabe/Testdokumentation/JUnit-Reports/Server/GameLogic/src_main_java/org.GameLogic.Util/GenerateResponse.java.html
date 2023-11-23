@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GenerateResponse.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Util</a> &gt; <span class="el_source">GenerateResponse.java</span></div><h1>GenerateResponse.java</h1><pre class="source lang-java linenums">package org.GameLogic.Util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.DataStructures.CycleList;
+import org.GameLogic.DataStructures.Player;
+
+import de.upb.swtpra1819interface.models.*;
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.messages.Winner;
+
+/**
+ * Class to structure GameHandler and remove overhead
+ */
+<span class="nc" id="L21">public final class GenerateResponse {</span>
+	/**
+	 * Constructs a {@link GameDataResponse} by given parameters of the interface
+	 * 
+	 * @param board
+	 * @param current
+	 * @param ownTiles
+	 * @param gameState
+	 * @return GameDataResponse instance
+	 */
+	public final static GameDataResponse constructGameDataResponse(Map&lt;Coordinate, Tile&gt; board, Player current,
+			List&lt;Tile&gt; ownTiles, GameState gameState) {
+
+<span class="fc" id="L34">		List&lt;TileOnPosition&gt; convertedBoard = new ArrayList&lt;TileOnPosition&gt;();</span>
+
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		for (Entry&lt;Coordinate, Tile&gt; entry : board.entrySet()) {</span>
+<span class="nc" id="L37">			Coordinate coord = entry.getKey();</span>
+<span class="nc" id="L38">			convertedBoard.add(new TileOnPosition(coord.getX(), coord.getY(), entry.getValue()));</span>
+		}
+
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">		return new GameDataResponse(convertedBoard, current == null ? null : current.getClient(), ownTiles, gameState);</span>
+
+	}
+
+	/**
+	 * Constructs a {@link Winner} by given parameters of the interface
+	 * 
+	 * @param winner
+	 * @param players
+	 * @return Winner instance
+	 */
+	public final static Winner constructWinner(Player winner, CycleList&lt;Player&gt; players) {
+
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if (winner == null) {</span>
+<span class="nc" id="L55">			return new Winner(null, 0, Collections.emptyMap());</span>
+		}
+
+<span class="fc" id="L58">		Map&lt;Client, Integer&gt; score = new HashMap&lt;Client, Integer&gt;();</span>
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		for (Player player : players) {</span>
+<span class="fc" id="L61">			score.put(player.getClient(), player.getScore());</span>
+		}
+
+<span class="fc" id="L64">		return new Winner(winner.getClient(), winner.getScore(), score);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

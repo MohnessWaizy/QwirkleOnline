@@ -1,0 +1,10 @@
+{
+  "colorShapeCount": 0,
+  "tileCount": 0,
+  "maxHandTiles": 0,
+  "turnTime": 0,
+  "timeVisualization": 0,
+  "wrongMovePenalty": 0,
+  "slowMovePenalty": 0,
+  "maxPlayerNumber": 0
+}

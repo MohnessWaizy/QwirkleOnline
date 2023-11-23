@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Configuration.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">NetworkLibrary</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">de.upb.swtpra1819interface.models</a> &gt; <span class="el_source">Configuration.java</span></div><h1>Configuration.java</h1><pre class="source lang-java linenums">package de.upb.swtpra1819interface.models;
+
+
+
+public class Configuration
+{
+  private int colorShapeCount;
+  
+
+  private int tileCount;
+  
+
+  private int maxHandTiles;
+  
+
+  private long turnTime;
+  
+
+  private long timeVisualization;
+  
+
+  private WrongMove wrongMove;
+  
+
+  private int wrongMovePenalty;
+  
+
+  private SlowMove slowMove;
+  
+
+  private int slowMovePenalty;
+  
+  private int maxPlayerNumber;
+  
+
+<span class="fc" id="L36">  public Configuration(int colorShapeCount, int tileCount, int maxHandTiles, long turnTime, long timeVisualization, WrongMove wrongMove, int wrongMovePenalty, SlowMove slowMove, int slowMovePenalty, int maxPlayerNumber)</span>
+  {
+<span class="fc" id="L38">    this.colorShapeCount = colorShapeCount;</span>
+<span class="fc" id="L39">    this.tileCount = tileCount;</span>
+<span class="fc" id="L40">    this.maxHandTiles = maxHandTiles;</span>
+<span class="fc" id="L41">    this.turnTime = turnTime;</span>
+<span class="fc" id="L42">    this.timeVisualization = timeVisualization;</span>
+<span class="fc" id="L43">    this.wrongMove = wrongMove;</span>
+<span class="fc" id="L44">    this.wrongMovePenalty = wrongMovePenalty;</span>
+<span class="fc" id="L45">    this.slowMove = slowMove;</span>
+<span class="fc" id="L46">    this.slowMovePenalty = slowMovePenalty;</span>
+<span class="fc" id="L47">    this.maxPlayerNumber = maxPlayerNumber;</span>
+<span class="fc" id="L48">  }</span>
+  
+  public int getColorShapeCount() {
+<span class="nc" id="L51">    return colorShapeCount;</span>
+  }
+  
+  public int getTileCount() {
+<span class="nc" id="L55">    return tileCount;</span>
+  }
+  
+  public int getMaxHandTiles() {
+<span class="nc" id="L59">    return maxHandTiles;</span>
+  }
+  
+  public long getTurnTime() {
+<span class="nc" id="L63">    return turnTime;</span>
+  }
+  
+  public long getTimeVisualization() {
+<span class="nc" id="L67">    return timeVisualization;</span>
+  }
+  
+  public WrongMove getWrongMove() {
+<span class="nc" id="L71">    return wrongMove;</span>
+  }
+  
+  public int getWrongMovePenalty() {
+<span class="nc" id="L75">    return wrongMovePenalty;</span>
+  }
+  
+  public SlowMove getSlowMove() {
+<span class="nc" id="L79">    return slowMove;</span>
+  }
+  
+  public int getSlowMovePenalty() {
+<span class="nc" id="L83">    return slowMovePenalty;</span>
+  }
+  
+  public int getMaxPlayerNumber() {
+<span class="nc" id="L87">    return maxPlayerNumber;</span>
+  }
+  
+  public boolean equals(Object o)
+  {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L93">      return true;</span>
+    }
+<span class="nc bnc" id="L95" title="All 2 branches missed.">    if (!(o instanceof Configuration)) {</span>
+<span class="nc" id="L96">      return false;</span>
+    }
+<span class="nc" id="L98">    Configuration that = (Configuration)o;</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">    return (getColorShapeCount() == that.getColorShapeCount()) &amp;&amp; </span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">      (getTileCount() == that.getTileCount()) &amp;&amp; </span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">      (getMaxHandTiles() == that.getMaxHandTiles()) &amp;&amp; </span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">      (getTurnTime() == that.getTurnTime()) &amp;&amp; </span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">      (getTimeVisualization() == that.getTimeVisualization()) &amp;&amp; </span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">      (getWrongMovePenalty() == that.getWrongMovePenalty()) &amp;&amp; </span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">      (getSlowMovePenalty() == that.getSlowMovePenalty()) &amp;&amp; </span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">      (getMaxPlayerNumber() == that.getMaxPlayerNumber()) &amp;&amp; </span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      (getWrongMove() == that.getWrongMove()) &amp;&amp; </span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">      (getSlowMove() == that.getSlowMove());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

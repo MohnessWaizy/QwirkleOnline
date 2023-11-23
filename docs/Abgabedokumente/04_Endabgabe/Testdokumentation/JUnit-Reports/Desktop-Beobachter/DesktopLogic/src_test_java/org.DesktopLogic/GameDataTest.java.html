@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameDataTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.DesktopLogic</a> &gt; <span class="el_source">GameDataTest.java</span></div><h1>GameDataTest.java</h1><pre class="source lang-java linenums">package org.DesktopLogic;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
+import org.junit.Test;
+
+import de.upb.swtpra1819interface.messages.GameDataResponse;
+import de.upb.swtpra1819interface.messages.Winner;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.ClientType;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.Game;
+import de.upb.swtpra1819interface.models.GameState;
+import de.upb.swtpra1819interface.models.SlowMove;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.TileOnPosition;
+import de.upb.swtpra1819interface.models.WrongMove;
+import model.Bag;
+import model.GameData;
+
+<span class="fc" id="L26">public class GameDataTest {</span>
+	private GameData gameData;
+	private int gameID;
+	private ArrayList&lt;Client&gt; clients;
+	private GameState gameState;
+	private List&lt;TileOnPosition&gt; board;
+	private HashMap&lt;Integer, ArrayList&lt;Tile&gt;&gt; hands;
+	private HashMap&lt;Client, Integer&gt; scores;
+	private Client currentPlayer;
+	private Client previousPlayer;
+	private Bag bag;
+	private Winner winner;
+	private Configuration config;
+<span class="fc" id="L39">	private final static Configuration STANDARDCONFIGURATION = new Configuration(6, 1, 6, 30, 10, WrongMove.NOTHING, 4,</span>
+<span class="fc" id="L40">			SlowMove.POINT_LOSS, 0, 2);</span>
+
+	@Test
+	public void testsetHandsPaused() {
+<span class="fc" id="L44">		GameState state = GameState.NOT_STARTED;</span>
+<span class="fc" id="L45">		ArrayList&lt;Client&gt; clients = new ArrayList&lt;Client&gt;();</span>
+<span class="fc" id="L46">		clients.add(new Client(0, &quot;player1&quot;, ClientType.PLAYER));</span>
+<span class="fc" id="L47">		clients.add(new Client(1, &quot;player2&quot;, ClientType.PLAYER));</span>
+
+<span class="fc" id="L49">		gameData = new GameData(100, clients, state, currentPlayer, bag, winner, hands, board, STANDARDCONFIGURATION,</span>
+<span class="fc" id="L50">				previousPlayer);</span>
+<span class="fc" id="L51">		gameData.setCurrentPlayer(null);</span>
+
+<span class="fc" id="L53">		HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt; handsToSet = new HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt;();</span>
+<span class="fc" id="L54">		ArrayList&lt;Tile&gt; handPlayer1 = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L55">		handPlayer1.add(new Tile(1, 0, 1));</span>
+
+<span class="fc" id="L57">		ArrayList&lt;Tile&gt; handPlayer2 = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L58">		handPlayer2.add(new Tile(0, 0, 2));</span>
+<span class="fc" id="L59">		handPlayer2.add(new Tile(1, 1, 3));</span>
+
+<span class="fc" id="L61">		handsToSet.put(gameData.getClients().get(0), handPlayer1);</span>
+<span class="fc" id="L62">		handsToSet.put(gameData.getClients().get(1), handPlayer2);</span>
+
+<span class="fc" id="L64">		gameData.setHands(handsToSet);</span>
+
+<span class="fc" id="L66">		TileOnPosition tileOnPosition = new TileOnPosition(0, 0, new Tile(0, 0, 0));</span>
+<span class="fc" id="L67">		ArrayList&lt;TileOnPosition&gt; boardGame = new ArrayList&lt;TileOnPosition&gt;();</span>
+<span class="fc" id="L68">		boardGame.add(tileOnPosition);</span>
+<span class="fc" id="L69">		ArrayList&lt;Tile&gt; ownTiles = gameData.getHands().get(0);</span>
+<span class="fc" id="L70">		GameDataResponse gameDataResponse = new GameDataResponse(boardGame, gameData.getClients().get(0), ownTiles,</span>
+<span class="fc" id="L71">				GameState.PAUSED);</span>
+
+<span class="fc" id="L73">		assertEquals(gameData.getCurrentPlayer(), null);</span>
+<span class="fc" id="L74">		assertNull(gameData.getBoard());</span>
+<span class="fc" id="L75">		gameData.importGameData(gameDataResponse);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">		assertTrue(gameData.getBoard().size() == 1);</span>
+<span class="fc" id="L77">		assertEquals(gameData.getGameState(), GameState.PAUSED);</span>
+<span class="fc" id="L78">		assertEquals(gameData.getCurrentPlayer(), gameData.getClients().get(0));</span>
+
+<span class="fc" id="L80">	}</span>
+
+	@Test
+	public void testsetHandNotPaused() {
+<span class="fc" id="L84">		ArrayList&lt;Client&gt; clients = new ArrayList&lt;Client&gt;();</span>
+<span class="fc" id="L85">		clients.add(new Client(0, &quot;player1&quot;, ClientType.PLAYER));</span>
+<span class="fc" id="L86">		clients.add(new Client(1, &quot;player2&quot;, ClientType.PLAYER));</span>
+		
+<span class="fc" id="L88">		Game game = new  Game(100, &quot;Game1&quot;, GameState.NOT_STARTED, false, clients, STANDARDCONFIGURATION);</span>
+
+<span class="fc" id="L90">		gameData = new GameData();</span>
+<span class="fc" id="L91">		gameData.setGame(game);</span>
+		
+<span class="fc" id="L93">		gameData.setCurrentPlayer(null);</span>
+
+<span class="fc" id="L95">		HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt; handsToSet = new HashMap&lt;Client, ArrayList&lt;Tile&gt;&gt;();</span>
+<span class="fc" id="L96">		ArrayList&lt;Tile&gt; handPlayer1 = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L97">		handPlayer1.add(new Tile(1, 0, 1));</span>
+
+<span class="fc" id="L99">		ArrayList&lt;Tile&gt; handPlayer2 = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L100">		handPlayer2.add(new Tile(0, 0, 2));</span>
+<span class="fc" id="L101">		handPlayer2.add(new Tile(1, 1, 3));</span>
+
+<span class="fc" id="L103">		handsToSet.put(gameData.getClients().get(0), handPlayer1);</span>
+<span class="fc" id="L104">		handsToSet.put(gameData.getClients().get(1), handPlayer2);</span>
+
+<span class="fc" id="L106">		gameData.setHands(handsToSet);</span>
+
+<span class="fc" id="L108">		TileOnPosition tileOnPosition = new TileOnPosition(0, 0, new Tile(0, 0, 0));</span>
+<span class="fc" id="L109">		ArrayList&lt;TileOnPosition&gt; boardGame = new ArrayList&lt;TileOnPosition&gt;();</span>
+<span class="fc" id="L110">		boardGame.add(tileOnPosition);</span>
+<span class="fc" id="L111">		ArrayList&lt;Tile&gt; ownTiles = gameData.getHands().get(0);</span>
+<span class="fc" id="L112">		GameDataResponse gameDataResponse = new GameDataResponse(boardGame, gameData.getClients().get(0), ownTiles,</span>
+<span class="fc" id="L113">				GameState.NOT_STARTED);</span>
+
+<span class="fc" id="L115">		assertEquals(gameData.getGameState(), GameState.NOT_STARTED);</span>
+<span class="fc" id="L116">		gameData.importGameData(gameDataResponse);</span>
+<span class="fc" id="L117">		assertEquals(gameData.getGameState(), GameState.IN_PROGRESS);</span>
+
+<span class="fc" id="L119">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

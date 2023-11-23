@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MapLogic.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Board</a> &gt; <span class="el_source">MapLogic.java</span></div><h1>MapLogic.java</h1><pre class="source lang-java linenums">package org.GameLogic.Board;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.GameLogic.DataStructures.Tuple;
+import org.GameLogic.Handler.GameHandler;
+
+import de.upb.swtpra1819interface.models.Tile;
+
+/**
+ * This class will take care of placing tiles on the board. It operates on the
+ * data structure {@link Map}.
+ */
+public class MapLogic {
+
+	/**
+	 * Primary map
+	 */
+	private Map map;
+	/**
+	 * Given by config
+	 */
+	private int maxColorShape;
+	/**
+	 * The last available turn of the game
+	 */
+<span class="fc" id="L29">	private List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; lastMove = null;</span>
+
+<span class="fc" id="L31">	public MapLogic(int colorShapeCount) {</span>
+<span class="fc" id="L32">		map = new Map();</span>
+<span class="fc" id="L33">		this.maxColorShape = colorShapeCount;</span>
+<span class="fc" id="L34">	}</span>
+
+	/**
+	 * {@link Map#getBoard Delegates to map}
+	 * 
+	 * @return Board
+	 */
+	public HashMap&lt;Coordinate, Tile&gt; getBoard() {
+<span class="fc" id="L42">		return map.getBoard();</span>
+	}
+
+	/**
+	 * Tells the {@linkplain GameHandler} if a move of a player is right and put
+	 * tiles on map
+	 * 
+	 * @param tilesWithCoordinate List of tiles that are put on a certain coordinate
+	 * @return true if the move is valid
+	 */
+	public boolean validateMove(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tilesWithCoordinate) {
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		if (isTileOnCoordinate(tilesWithCoordinate)) {</span>
+<span class="fc" id="L55">			return false;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		} else if (!tileOnZero(tilesWithCoordinate)) {</span>
+<span class="fc" id="L57">			return false;</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">		} else if (!sameColorShapeInMove(tilesWithCoordinate)) {</span>
+<span class="nc" id="L59">			return false;</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		} else if (!isConnectedHorizontalVertical(tilesWithCoordinate)) {</span>
+<span class="fc" id="L61">			return false;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">		} else if (gapOnMap(tilesWithCoordinate)) {</span>
+<span class="fc" id="L63">			return false;</span>
+		}
+
+		/*
+		 * add tiles to check if they are compatible to tiles on map
+		 */
+<span class="fc" id="L69">		map.addTiles(tilesWithCoordinate);</span>
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		if (!compatibleWithTilesOnMap(tilesWithCoordinate)) {</span>
+			/*
+			 * Remove tiles if move is incorrect
+			 */
+<span class="fc" id="L75">			map.removeTiles(tilesWithCoordinate);</span>
+<span class="fc" id="L76">			return false;</span>
+		}
+
+		/*
+		 * if move is validate, save move in lastTurn
+		 */
+<span class="fc" id="L82">		lastMove = tilesWithCoordinate;</span>
+<span class="fc" id="L83">		return true;</span>
+	}
+
+	/**
+	 * 
+	 * @return List of last validate move
+	 */
+	public List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; getLastMove() {
+<span class="nc" id="L91">		return lastMove;</span>
+	}
+
+	/**
+	 * Checks if the player has placed tiles on empty coordinates
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true if tile is already on Coordinate
+	 */
+	private boolean isTileOnCoordinate(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">			if (map.isTileOn(tile.getFirst())) {</span>
+<span class="fc" id="L103">				return true;</span>
+			}
+		}
+<span class="fc" id="L106">		return false;</span>
+	}
+
+	/**
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true if a tile is on coordinate (0,0)
+	 */
+	private boolean tileOnZero(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc bfc" id="L115" title="All 2 branches covered.">		if (map.getTilesPlayed() == 0) {</span>
+<span class="fc" id="L116">			boolean tileOnZero = false;</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">				if (tile.getFirst().getX() == 0 &amp;&amp; tile.getFirst().getY() == 0) {</span>
+<span class="fc" id="L120">					tileOnZero = true;</span>
+				}
+			}
+
+<span class="fc" id="L124">			return tileOnZero;</span>
+		}
+<span class="fc" id="L126">		return true;</span>
+	}
+
+	/**
+	 * Checks, if move is horizontal or vertical and if there are gaps in move.
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return false if no valid, else true
+	 */
+	private boolean isConnectedHorizontalVertical(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc bfc" id="L136" title="All 2 branches covered.">		if (isHorizontal(moves)) {</span>
+<span class="fc" id="L137">			map.addTiles(moves);</span>
+
+<span class="fc" id="L139">			Coordinate coord = moves.get(0).getFirst();</span>
+<span class="fc" id="L140">			ArrayList&lt;Tile&gt; move = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L142">				move.add(tile.getSecond());</span>
+			}
+<span class="fc" id="L144">			move.remove(moves.get(0).getSecond());</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">			while (map.isTileOn(coord.left())) {</span>
+<span class="fc" id="L146">				Tile tile = map.getTile(coord.left());</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">				if (move.contains(tile)) {</span>
+<span class="nc" id="L148">					move.remove(tile);</span>
+				}
+<span class="fc" id="L150">				coord = coord.left();</span>
+			}
+
+<span class="fc" id="L153">			coord = moves.get(0).getFirst();</span>
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">			while (map.isTileOn(coord.right())) {</span>
+<span class="fc" id="L156">				Tile tile = map.getTile(coord.right());</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">				if (move.contains(tile)) {</span>
+<span class="fc" id="L158">					move.remove(tile);</span>
+				}
+<span class="fc" id="L160">				coord = coord.right();</span>
+			}
+
+<span class="fc" id="L163">			map.removeTiles(moves);</span>
+
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">			return move.size() == 0;</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">		} else if (isVertical(moves)) {</span>
+<span class="fc" id="L167">			map.addTiles(moves);</span>
+
+<span class="fc" id="L169">			Coordinate coord = moves.get(0).getFirst();</span>
+<span class="fc" id="L170">			ArrayList&lt;Tile&gt; move = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L172">				move.add(tile.getSecond());</span>
+			}
+<span class="fc" id="L174">			move.remove(moves.get(0).getSecond());</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">			while (map.isTileOn(coord.up())) {</span>
+<span class="fc" id="L176">				Tile tile = map.getTile(coord.up());</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">				if (move.contains(tile)) {</span>
+<span class="fc" id="L178">					move.remove(tile);</span>
+				}
+<span class="fc" id="L180">				coord = coord.up();</span>
+			}
+
+<span class="fc" id="L183">			coord = moves.get(0).getFirst();</span>
+
+<span class="fc bfc" id="L185" title="All 2 branches covered.">			while (map.isTileOn(coord.down())) {</span>
+<span class="fc" id="L186">				Tile tile = map.getTile(coord.down());</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">				if (move.contains(tile)) {</span>
+<span class="fc" id="L188">					move.remove(tile);</span>
+				}
+<span class="fc" id="L190">				coord = coord.down();</span>
+			}
+
+<span class="fc" id="L193">			map.removeTiles(moves);</span>
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">			return move.size() == 0;</span>
+		} else {
+<span class="nc" id="L197">			return false;</span>
+		}
+
+	}
+
+	/**
+	 * Checks if the player has laid tiles in a horizontal line
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true, if all tiles are in horizontal line and with same color or
+	 *         shape
+	 */
+	private boolean isHorizontal(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc" id="L210">		int horizontalCoord = moves.get(0).getFirst().getY();</span>
+
+<span class="fc bfc" id="L212" title="All 2 branches covered.">		for (int i = 1; i &lt; moves.size(); i++) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">			if (horizontalCoord != moves.get(i).getFirst().getY()) {</span>
+<span class="fc" id="L214">				return false;</span>
+			}
+		}
+
+<span class="fc" id="L218">		return true;</span>
+	}
+
+	/**
+	 * Checks if the player has laid tiles in a vertical line
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true, if all tiles are in vertical line and with same color or shape
+	 */
+	private boolean isVertical(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc" id="L228">		int verticalCoord = moves.get(0).getFirst().getX();</span>
+
+<span class="fc bfc" id="L230" title="All 2 branches covered.">		for (int i = 1; i &lt; moves.size(); i++) {</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">			if (verticalCoord != moves.get(i).getFirst().getX()) {</span>
+<span class="nc" id="L232">				return false;</span>
+			}
+		}
+
+<span class="fc" id="L236">		return true;</span>
+	}
+
+	/**
+	 * Check if all tiles in this move have the same color or shape
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true if tiles in this move have same color or shape
+	 */
+	private boolean sameColorShapeInMove(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc" id="L246">		Tile firstTile = moves.get(0).getSecond();</span>
+<span class="fc" id="L247">		int color = firstTile.getColor();</span>
+<span class="fc" id="L248">		int shape = firstTile.getShape();</span>
+<span class="fc" id="L249">		boolean sameColor = true;</span>
+<span class="fc" id="L250">		boolean sameShape = true;</span>
+
+<span class="fc bfc" id="L252" title="All 2 branches covered.">		for (int i = 1; i &lt; moves.size(); i++) {</span>
+<span class="fc" id="L253">			Tile currentTile = moves.get(i).getSecond();</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">			if (color != currentTile.getColor()) {</span>
+<span class="fc" id="L255">				sameColor = false;</span>
+
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">			} else if (shape != currentTile.getShape()) {</span>
+<span class="fc" id="L258">				sameShape = false;</span>
+			}
+		}
+<span class="pc bpc" id="L261" title="1 of 4 branches missed.">		return (sameColor || sameShape);</span>
+	}
+
+	/**
+	 * Check if all tiles are compatible with the tiles on the map
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true if tiles are compatible with tiles on map
+	 */
+	private boolean compatibleWithTilesOnMap(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc bfc" id="L271" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L272">			int colorId = tile.getSecond().getColor();</span>
+<span class="fc" id="L273">			int shapeId = tile.getSecond().getShape();</span>
+
+			/*
+			 * checks, if tile has left or right connected tiles
+			 */
+<span class="fc bfc" id="L278" title="All 4 branches covered.">			if (map.isTileOn(tile.getFirst().left()) || map.isTileOn(tile.getFirst().right())) {</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">				if (!isHorizontalCompatible(tile.getFirst(), colorId, shapeId)) {</span>
+<span class="fc" id="L280">					return false;</span>
+				}
+			}
+			/*
+			 * checks, if tile has up or down connected tiles
+			 */
+<span class="fc bfc" id="L286" title="All 4 branches covered.">			if (map.isTileOn(tile.getFirst().up()) || map.isTileOn(tile.getFirst().down())) {</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">				if (!isVerticalCompatible(tile.getFirst(), colorId, shapeId)) {</span>
+<span class="fc" id="L288">					return false;</span>
+				}
+			}
+
+		}
+<span class="fc" id="L293">		return true;</span>
+	}
+
+	/**
+	 * Check if tile is horizontal compatible
+	 * 
+	 * @param coord   Coordinate of the currently checked tile
+	 * @param colorId ColorId of the currently checked tile
+	 * @param shapeId ShapeId of the currently checked tile
+	 * @return true if tile is horizontal compatible
+	 */
+	private boolean isHorizontalCompatible(Coordinate coord, int colorId, int shapeId) {
+<span class="fc" id="L305">		Coordinate currentCoord = coord;</span>
+		Coordinate compareCoord;
+
+		int currentColorId;
+		int currentShapeId;
+
+		/*
+		 * checks, if horizontal line is a color line
+		 */
+		boolean isColorLine;
+
+		/*
+		 * current tile has connected tile on left and right side
+		 */
+<span class="fc bfc" id="L319" title="All 4 branches covered.">		if (map.isTileOn(currentCoord.right()) &amp;&amp; map.isTileOn(currentCoord.left())) {</span>
+			int compareColorId;
+			int compareShapeId;
+
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.left()).getColor());</span>
+
+<span class="fc bfc" id="L325" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L326">				compareCoord = currentCoord.left();</span>
+<span class="fc" id="L327">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L328">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="fc bfc" id="L330" title="All 2 branches covered.">				while (map.isTileOn(compareCoord)) {</span>
+<span class="fc" id="L331">					compareColorId = map.getTile(compareCoord).getColor();</span>
+<span class="fc" id="L332">					compareShapeId = map.getTile(compareCoord).getShape();</span>
+
+<span class="pc bpc" id="L334" title="5 of 6 branches missed.">					if ((isColorLine &amp;&amp; (currentShapeId == compareShapeId || currentColorId != compareColorId))</span>
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">							|| (!isColorLine</span>
+<span class="pc bpc" id="L336" title="2 of 4 branches missed.">									&amp;&amp; (currentShapeId != compareShapeId || currentColorId == compareColorId))) {</span>
+<span class="nc" id="L337">						return false;</span>
+					}
+<span class="fc" id="L339">					compareCoord = compareCoord.left();</span>
+
+				}
+<span class="fc" id="L342">				currentCoord = currentCoord.right();</span>
+			}
+<span class="fc" id="L344">		}</span>
+		/*
+		 * current tile has connected tile only on left side
+		 */
+<span class="fc bfc" id="L348" title="All 2 branches covered.">		else if (map.isTileOn(currentCoord.left())) {</span>
+<span class="fc bfc" id="L349" title="All 2 branches covered.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.left()).getColor());</span>
+
+<span class="fc" id="L351">			currentCoord = currentCoord.left();</span>
+
+<span class="fc bfc" id="L353" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L354">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L355">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="pc bpc" id="L357" title="1 of 6 branches missed.">				if ((isColorLine &amp;&amp; (currentShapeId == shapeId || currentColorId != colorId))</span>
+<span class="pc bpc" id="L358" title="2 of 6 branches missed.">						|| (!isColorLine &amp;&amp; (currentShapeId != shapeId || currentColorId == colorId))) {</span>
+<span class="fc" id="L359">					return false;</span>
+				}
+<span class="fc" id="L361">				currentCoord = currentCoord.left();</span>
+			}
+<span class="fc" id="L363">		}</span>
+		/*
+		 * current tile has connected tile only on left side
+		 */
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">		else if (map.isTileOn(currentCoord.right())) {</span>
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.right()).getColor());</span>
+
+<span class="fc" id="L370">			currentCoord = currentCoord.right();</span>
+
+<span class="fc bfc" id="L372" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L373">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L374">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="pc bpc" id="L376" title="5 of 6 branches missed.">				if ((isColorLine &amp;&amp; (currentShapeId == shapeId || currentColorId != colorId))</span>
+<span class="pc bpc" id="L377" title="3 of 6 branches missed.">						|| (!isColorLine &amp;&amp; (currentShapeId != shapeId || currentColorId == colorId))) {</span>
+<span class="nc" id="L378">					return false;</span>
+				}
+<span class="fc" id="L380">				currentCoord = currentCoord.right();</span>
+			}
+		}
+<span class="fc" id="L383">		return true;</span>
+	}
+
+	/**
+	 * Check if tile is vertical compatible
+	 * 
+	 * @param coord   Coordinate of the currently checked tile
+	 * @param colorId ColorId of the currently checked tile
+	 * @param shapeId ShapeId of the currently checked tile
+	 * @return true if tile is vertical compatible
+	 */
+	private boolean isVerticalCompatible(Coordinate coord, int colorId, int shapeId) {
+<span class="fc" id="L395">		Coordinate currentCoord = coord;</span>
+		Coordinate compareCoord;
+
+		int currentColorId;
+		int currentShapeId;
+
+		/*
+		 * checks, if vertical line is a color line
+		 */
+		boolean isColorLine;
+
+		/*
+		 * current tile has connected tile on down and up side
+		 */
+<span class="fc bfc" id="L409" title="All 4 branches covered.">		if (map.isTileOn(currentCoord.up()) &amp;&amp; map.isTileOn(currentCoord.down())) {</span>
+			int compareColorId;
+			int compareShapeId;
+
+<span class="fc bfc" id="L413" title="All 2 branches covered.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.down()).getColor());</span>
+
+<span class="fc bfc" id="L415" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L416">				compareCoord = currentCoord.down();</span>
+<span class="fc" id="L417">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L418">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="fc bfc" id="L420" title="All 2 branches covered.">				while (map.isTileOn(compareCoord)) {</span>
+<span class="fc" id="L421">					compareColorId = map.getTile(compareCoord).getColor();</span>
+<span class="fc" id="L422">					compareShapeId = map.getTile(compareCoord).getShape();</span>
+
+<span class="pc bpc" id="L424" title="1 of 6 branches missed.">					if ((isColorLine &amp;&amp; (currentShapeId == compareShapeId || currentColorId != compareColorId))</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">							|| (!isColorLine</span>
+<span class="pc bpc" id="L426" title="2 of 4 branches missed.">									&amp;&amp; (currentShapeId != compareShapeId || currentColorId == compareColorId))) {</span>
+<span class="fc" id="L427">						return false;</span>
+					}
+<span class="fc" id="L429">					compareCoord = compareCoord.down();</span>
+
+				}
+<span class="fc" id="L432">				currentCoord = currentCoord.up();</span>
+			}
+<span class="fc" id="L434">		}</span>
+		/*
+		 * current tile has connected tile only on down side
+		 */
+<span class="fc bfc" id="L438" title="All 2 branches covered.">		else if (map.isTileOn(currentCoord.down())) {</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.down()).getColor());</span>
+
+<span class="fc" id="L441">			currentCoord = currentCoord.down();</span>
+
+<span class="fc bfc" id="L443" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L444">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L445">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="pc bpc" id="L447" title="2 of 6 branches missed.">				if ((isColorLine &amp;&amp; (currentShapeId == shapeId || currentColorId != colorId))</span>
+<span class="pc bpc" id="L448" title="1 of 6 branches missed.">						|| (!isColorLine &amp;&amp; (currentShapeId != shapeId || currentColorId == colorId))) {</span>
+<span class="fc" id="L449">					return false;</span>
+				}
+<span class="fc" id="L451">				currentCoord = currentCoord.down();</span>
+			}
+<span class="fc" id="L453">		}</span>
+		/*
+		 * current tile has connected tile only on down side
+		 */
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">		else if (map.isTileOn(currentCoord.up())) {</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">			isColorLine = (map.getTile(currentCoord).getColor() == map.getTile(currentCoord.up()).getColor());</span>
+
+<span class="fc" id="L460">			currentCoord = currentCoord.up();</span>
+
+<span class="fc bfc" id="L462" title="All 2 branches covered.">			while (map.isTileOn(currentCoord)) {</span>
+<span class="fc" id="L463">				currentColorId = map.getTile(currentCoord).getColor();</span>
+<span class="fc" id="L464">				currentShapeId = map.getTile(currentCoord).getShape();</span>
+
+<span class="pc bpc" id="L466" title="2 of 6 branches missed.">				if ((isColorLine &amp;&amp; (currentShapeId == shapeId || currentColorId != colorId))</span>
+<span class="pc bpc" id="L467" title="1 of 6 branches missed.">						|| (!isColorLine &amp;&amp; (currentShapeId != shapeId || currentColorId == colorId))) {</span>
+<span class="fc" id="L468">					return false;</span>
+				}
+<span class="fc" id="L470">				currentCoord = currentCoord.up();</span>
+			}
+		}
+<span class="fc" id="L473">		return true;</span>
+	}
+
+	/**
+	 * Verifies that all tiles on the map are connected
+	 * 
+	 * @param moves List of tiles that are put on a certain coordinate
+	 * @return true if a gap is on the map
+	 */
+	private boolean gapOnMap(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+		// first tile on map
+<span class="fc bfc" id="L484" title="All 2 branches covered.">		if (map.getTilesPlayed() == 0) {</span>
+<span class="fc" id="L485">			return false;</span>
+		}
+
+<span class="fc" id="L488">		List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; notConnectedTiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc bfc" id="L489" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L490">			notConnectedTiles.add(tile);</span>
+		}
+
+<span class="fc" id="L493">		int i = 0;</span>
+<span class="pc bpc" id="L494" title="1 of 4 branches missed.">		while (i &lt; notConnectedTiles.size() &amp;&amp; !notConnectedTiles.isEmpty()) {</span>
+<span class="fc" id="L495">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; toRemove = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc bfc" id="L496" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : notConnectedTiles) {</span>
+<span class="fc bfc" id="L497" title="All 4 branches covered.">				if (map.isTileOn(tile.getFirst().down()) || map.isTileOn(tile.getFirst().left())</span>
+<span class="pc bpc" id="L498" title="1 of 4 branches missed.">						|| map.isTileOn(tile.getFirst().right()) || map.isTileOn(tile.getFirst().up())) {</span>
+<span class="fc" id="L499">					map.addTile(tile);</span>
+<span class="fc" id="L500">					toRemove.add(tile);</span>
+				}
+			}
+<span class="fc" id="L503">			notConnectedTiles.removeAll(toRemove);</span>
+<span class="fc" id="L504">			i++;</span>
+		}
+
+		// remove Tiles
+<span class="fc bfc" id="L508" title="All 2 branches covered.">		for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L509">			map.removeTile(tile);</span>
+		}
+
+<span class="fc bfc" id="L512" title="All 2 branches covered.">		return notConnectedTiles.size() != 0;</span>
+	}
+
+	/**
+	 * After a validated move, doMove can be called to calculate the points of the
+	 * actual move
+	 * 
+	 * @param moves Tiles that are played on certain coordinates
+	 * @return Points of actual score
+	 */
+	public int doMove(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc" id="L523">		int layedTiles = moves.size();</span>
+		/*
+		 * First move on map
+		 */
+<span class="fc bfc" id="L527" title="All 2 branches covered.">		if (map.getTilesPlayed() == layedTiles) {</span>
+<span class="fc bfc" id="L528" title="All 2 branches covered.">			if (layedTiles == maxColorShape) {</span>
+<span class="fc" id="L529">				return layedTiles * 2;</span>
+			}
+<span class="fc" id="L531">			return layedTiles;</span>
+		}
+
+<span class="fc" id="L534">		int score = 0;</span>
+		Coordinate leftCoord, rightCoord, upCoord, downCoord;
+		/*
+		 * the counters count the tiles in a line to check if a line is a qwirkle
+		 */
+<span class="fc" id="L539">		int horizontalCounter = 0;</span>
+<span class="fc" id="L540">		int verticalCounter = 0;</span>
+
+<span class="fc bfc" id="L542" title="All 2 branches covered.">		if (moves.size() == 1) {</span>
+			/*
+			 * tiles horizontal
+			 */
+<span class="fc" id="L546">			leftCoord = moves.get(0).getFirst();</span>
+<span class="fc" id="L547">			rightCoord = moves.get(0).getFirst().right();</span>
+
+<span class="pc bpc" id="L549" title="1 of 4 branches missed.">			if (map.isTileOn(leftCoord.left()) || map.isTileOn(rightCoord)) {</span>
+<span class="pc bfc" id="L550" title="All 2 branches covered.">				while (map.isTileOn(leftCoord)) {</span>
+<span class="fc" id="L551">					horizontalCounter++;</span>
+<span class="fc" id="L552">					score++;</span>
+<span class="fc" id="L553">					leftCoord = leftCoord.left();</span>
+				}
+<span class="pc bpc" id="L555" title="1 of 2 branches missed.">				while (map.isTileOn(rightCoord)) {</span>
+<span class="nc" id="L556">					horizontalCounter++;</span>
+<span class="nc" id="L557">					score++;</span>
+<span class="nc" id="L558">					rightCoord = rightCoord.right();</span>
+				}
+
+				/*
+				 * Player layed a qwirkle and gets double points
+				 */
+<span class="pc bpc" id="L564" title="1 of 2 branches missed.">				if (horizontalCounter == maxColorShape) {</span>
+<span class="nc" id="L565">					score = score + maxColorShape;</span>
+				}
+			}
+
+			/*
+			 * tiles vertical
+			 */
+<span class="fc" id="L572">			upCoord = moves.get(0).getFirst();</span>
+<span class="fc" id="L573">			downCoord = moves.get(0).getFirst().down();</span>
+
+<span class="pc bpc" id="L575" title="1 of 4 branches missed.">			if (map.isTileOn(upCoord.up()) || map.isTileOn(downCoord)) {</span>
+<span class="pc bfc" id="L576" title="All 2 branches covered.">				while (map.isTileOn(upCoord)) {</span>
+<span class="fc" id="L577">					verticalCounter++;</span>
+<span class="fc" id="L578">					score++;</span>
+<span class="fc" id="L579">					upCoord = upCoord.up();</span>
+				}
+<span class="pc bpc" id="L581" title="1 of 2 branches missed.">				while (map.isTileOn(downCoord)) {</span>
+<span class="nc" id="L582">					verticalCounter++;</span>
+<span class="nc" id="L583">					score++;</span>
+<span class="nc" id="L584">					downCoord = downCoord.down();</span>
+				}
+
+				/*
+				 * Player layed a qwirkle and gets double points
+				 */
+<span class="pc bpc" id="L590" title="1 of 2 branches missed.">				if (verticalCounter == maxColorShape) {</span>
+<span class="nc" id="L591">					score = score + maxColorShape;</span>
+				}
+			}
+<span class="nc" id="L594">		}</span>
+
+		/*
+		 * if move is horizontal
+		 */
+<span class="fc bfc" id="L599" title="All 2 branches covered.">		else if (isHorizontal(moves)) {</span>
+<span class="fc" id="L600">			leftCoord = moves.get(0).getFirst();</span>
+<span class="fc" id="L601">			rightCoord = moves.get(0).getFirst().right();</span>
+
+<span class="fc bfc" id="L603" title="All 2 branches covered.">			while (map.isTileOn(leftCoord)) {</span>
+<span class="fc" id="L604">				horizontalCounter++;</span>
+<span class="fc" id="L605">				score++;</span>
+<span class="fc" id="L606">				leftCoord = leftCoord.left();</span>
+			}
+<span class="fc bfc" id="L608" title="All 2 branches covered.">			while (map.isTileOn(rightCoord)) {</span>
+<span class="fc" id="L609">				horizontalCounter++;</span>
+<span class="fc" id="L610">				score++;</span>
+<span class="fc" id="L611">				rightCoord = rightCoord.right();</span>
+			}
+
+			/*
+			 * Player layed a qwirkle and gets double points
+			 */
+<span class="pc bpc" id="L617" title="1 of 2 branches missed.">			if (horizontalCounter == maxColorShape) {</span>
+<span class="nc" id="L618">				score = score + maxColorShape;</span>
+			}
+
+			/*
+			 * Check vertical direction
+			 */
+<span class="fc bfc" id="L624" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L625">				upCoord = tile.getFirst().up();</span>
+<span class="fc" id="L626">				downCoord = tile.getFirst().down();</span>
+<span class="fc" id="L627">				verticalCounter = 0;</span>
+
+<span class="pc bpc" id="L629" title="2 of 4 branches missed.">				if (map.isTileOn(upCoord) || map.isTileOn(downCoord)) {</span>
+<span class="nc" id="L630">					verticalCounter++;</span>
+<span class="nc" id="L631">					score++;</span>
+				}
+
+<span class="pc bpc" id="L634" title="1 of 2 branches missed.">				while (map.isTileOn(upCoord)) {</span>
+<span class="nc" id="L635">					verticalCounter++;</span>
+<span class="nc" id="L636">					score++;</span>
+<span class="nc" id="L637">					upCoord = upCoord.up();</span>
+				}
+<span class="pc bpc" id="L639" title="1 of 2 branches missed.">				while (map.isTileOn(downCoord)) {</span>
+<span class="nc" id="L640">					verticalCounter++;</span>
+<span class="nc" id="L641">					score++;</span>
+<span class="nc" id="L642">					downCoord = downCoord.down();</span>
+				}
+
+				/*
+				 * Player layed a qwirkle and gets double points
+				 */
+<span class="pc bpc" id="L648" title="1 of 2 branches missed.">				if (verticalCounter == maxColorShape) {</span>
+<span class="nc" id="L649">					score = score + maxColorShape;</span>
+				}
+			}
+<span class="fc" id="L652">		}</span>
+		/*
+		 * if move is vertical
+		 */
+		else {
+<span class="fc" id="L657">			upCoord = moves.get(0).getFirst();</span>
+<span class="fc" id="L658">			downCoord = moves.get(0).getFirst().down();</span>
+
+<span class="fc bfc" id="L660" title="All 2 branches covered.">			while (map.isTileOn(upCoord)) {</span>
+<span class="fc" id="L661">				verticalCounter++;</span>
+<span class="fc" id="L662">				score++;</span>
+<span class="fc" id="L663">				upCoord = upCoord.up();</span>
+			}
+<span class="fc bfc" id="L665" title="All 2 branches covered.">			while (map.isTileOn(downCoord)) {</span>
+<span class="fc" id="L666">				verticalCounter++;</span>
+<span class="fc" id="L667">				score++;</span>
+<span class="fc" id="L668">				downCoord = downCoord.down();</span>
+			}
+
+			/*
+			 * Player layed a qwirkle and gets double points
+			 */
+<span class="fc bfc" id="L674" title="All 2 branches covered.">			if (verticalCounter == maxColorShape) {</span>
+<span class="fc" id="L675">				score = score + maxColorShape;</span>
+			}
+
+			/*
+			 * Check horizontal direction
+			 */
+<span class="fc bfc" id="L681" title="All 2 branches covered.">			for (Tuple&lt;Coordinate, Tile&gt; tile : moves) {</span>
+<span class="fc" id="L682">				leftCoord = tile.getFirst().left();</span>
+<span class="fc" id="L683">				rightCoord = tile.getFirst().right();</span>
+<span class="fc" id="L684">				horizontalCounter = 0;</span>
+
+<span class="pc bpc" id="L686" title="1 of 4 branches missed.">				if (map.isTileOn(leftCoord) || map.isTileOn(rightCoord)) {</span>
+<span class="fc" id="L687">					horizontalCounter++;</span>
+<span class="fc" id="L688">					score++;</span>
+				}
+
+<span class="fc bfc" id="L691" title="All 2 branches covered.">				while (map.isTileOn(leftCoord)) {</span>
+<span class="fc" id="L692">					horizontalCounter++;</span>
+<span class="fc" id="L693">					score++;</span>
+<span class="fc" id="L694">					leftCoord = leftCoord.left();</span>
+				}
+<span class="pc bpc" id="L696" title="1 of 2 branches missed.">				while (map.isTileOn(rightCoord)) {</span>
+<span class="nc" id="L697">					horizontalCounter++;</span>
+<span class="nc" id="L698">					score++;</span>
+<span class="nc" id="L699">					rightCoord = rightCoord.right();</span>
+				}
+
+				/*
+				 * Player layed a qwirkle and gets double points
+				 */
+<span class="fc bfc" id="L705" title="All 2 branches covered.">				if (horizontalCounter == maxColorShape) {</span>
+<span class="fc" id="L706">					score = score + maxColorShape;</span>
+				}
+			}
+		}
+
+<span class="fc" id="L711">		return score;</span>
+	}
+
+	/**
+	 * Put tiles on map without validation. Only for test cases!
+	 * 
+	 * @param moves Tiles that are played on certain coordinates
+	 */
+	public void doMoveWithoutValidate(List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moves) {
+<span class="fc" id="L720">		map.addTiles(moves);</span>
+<span class="fc" id="L721">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>BasicCommunicationHandler.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">NetworkInterface</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.BasicCommunication</a> &gt; <span class="el_source">BasicCommunicationHandler.java</span></div><h1>BasicCommunicationHandler.java</h1><pre class="source lang-java linenums">package org.BasicCommunication;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import org.NetworkInterface.MessageWithClientId;
+
+/**
+ * 
+ * Class that is used as a base class for the Lobby and the CommunicationHandler
+ *
+ */
+public abstract class BasicCommunicationHandler implements Runnable {
+
+	protected ConcurrentLinkedQueue&lt;MessageWithClientId&gt; queue;
+<span class="nc" id="L14">	private volatile boolean canReceive = true;</span>
+
+<span class="nc" id="L16">	public BasicCommunicationHandler() {</span>
+<span class="nc" id="L17">		this.queue = new ConcurrentLinkedQueue&lt;MessageWithClientId&gt;();</span>
+<span class="nc" id="L18">	}</span>
+
+	public MessageWithClientId pollNextMessage() {
+<span class="nc" id="L21">		return queue.poll();</span>
+	}
+
+	public synchronized void addToMessageQueue(MessageWithClientId msg) {
+<span class="nc bnc" id="L25" title="All 2 branches missed.">		if (msg != null) {</span>
+<span class="nc" id="L26">			queue.offer(msg);</span>
+		}
+<span class="nc" id="L28">	}</span>
+
+	public boolean canReceiveMessage() {
+<span class="nc" id="L31">		return canReceive;</span>
+	}
+
+	public void shutdown() {
+<span class="nc" id="L35">		this.canReceive = false;</span>
+<span class="nc" id="L36">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

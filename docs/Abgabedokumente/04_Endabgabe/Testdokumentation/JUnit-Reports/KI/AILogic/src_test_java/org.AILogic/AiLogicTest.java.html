@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>AiLogicTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 06:34:28)</a> &gt; <a href="../../index.html" class="el_group">AILogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.AILogic</a> &gt; <span class="el_source">AiLogicTest.java</span></div><h1>AiLogicTest.java</h1><pre class="source lang-java linenums">package org.AILogic;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.Board.Tuple;
+import org.junit.Test;
+
+import com.google.common.collect.HashBasedTable;
+
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.SlowMove;
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.WrongMove;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class AiLogicTest {
+
+	private AiLogic logic;
+	private AiLogic logic1;
+	private Configuration config;
+
+<span class="fc" id="L26">	public AiLogicTest() {</span>
+<span class="fc" id="L27">		config = new Configuration(7, 4, 6, 30, 5, WrongMove.NOTHING, 1, SlowMove.POINT_LOSS, 1, 2);</span>
+<span class="fc" id="L28">		logic = new AiLogic(config);</span>
+
+<span class="fc" id="L30">	}</span>
+
+	/**
+	 * Convert ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; to ArrayList&lt;Tile&gt;
+	 * 
+	 * @param list List that will be converted
+	 * @return ArrayList with tiles
+	 */
+	private ArrayList&lt;Tile&gt; getTileList(ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; list) {
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">		if (list == null) {</span>
+<span class="nc" id="L40">			return null;</span>
+		}
+<span class="fc" id="L42">		ArrayList&lt;Tile&gt; tileList = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		for (int i = 0; i &lt; list.size(); i++) {</span>
+<span class="fc" id="L44">			tileList.add(list.get(i).getSecond());</span>
+		}
+<span class="fc" id="L46">		return tileList;</span>
+	}
+
+	/**
+	 * Convert ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; to ArrayCoordinate&lt;Coordinate&gt;
+	 * 
+	 * @param list List that will be converted
+	 * @return ArrayList with Coordinates
+	 */
+	private ArrayList&lt;Coordinate&gt; getCoordinateList(ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; list) {
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">		if (list == null) {</span>
+<span class="nc" id="L57">			return null;</span>
+		}
+<span class="fc" id="L59">		ArrayList&lt;Coordinate&gt; coordinateList = new ArrayList&lt;Coordinate&gt;();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		for (int i = 0; i &lt; list.size(); i++) {</span>
+<span class="fc" id="L61">			coordinateList.add(list.get(i).getFirst());</span>
+		}
+<span class="fc" id="L63">		return coordinateList;</span>
+	}
+
+	@Test
+	public void addTilesToHandTest() {
+
+<span class="fc" id="L69">		ArrayList&lt;Tile&gt; hand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L70">		hand.add(new Tile(0, 1, 1));</span>
+<span class="fc" id="L71">		hand.add(new Tile(1, 1, 2));</span>
+<span class="fc" id="L72">		hand.add(new Tile(2, 1, 3));</span>
+<span class="fc" id="L73">		hand.add(new Tile(3, 1, 4));</span>
+<span class="fc" id="L74">		hand.add(new Tile(4, 1, 5));</span>
+<span class="fc" id="L75">		hand.add(new Tile(5, 1, 6));</span>
+
+<span class="fc" id="L77">		logic.addTilesToHand(hand);</span>
+
+<span class="fc" id="L79">		ArrayList&lt;Tile&gt;[] colorHand = logic.getColorHand();</span>
+
+<span class="fc" id="L81">		int tileCount = 0;</span>
+
+<span class="fc bfc" id="L83" title="All 2 branches covered.">		for (int i = 0; i &lt; config.getColorShapeCount(); i++) {</span>
+<span class="fc" id="L84">			tileCount = tileCount + colorHand[i].size();</span>
+		}
+
+		/*
+		 * Check if all Tiles are on hand
+		 */
+<span class="fc" id="L90">		assertEquals(&quot;Wrong number of tiles in hand&quot;, tileCount, hand.size());</span>
+
+		/*
+		 * Check if Tiles are sorted by color
+		 */
+<span class="fc" id="L95">		assertEquals(&quot;Hand is not sorted by color&quot;, 2, colorHand[2].get(0).getColor());</span>
+
+<span class="fc" id="L97">		ArrayList&lt;Tile&gt; removeHand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L98">		removeHand.add(new Tile(0, 1, 1));</span>
+<span class="fc" id="L99">		removeHand.add(new Tile(1, 1, 2));</span>
+
+<span class="fc" id="L101">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L103">		ArrayList&lt;Tile&gt; addHand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L104">		addHand.add(new Tile(0, 3, 7));</span>
+<span class="fc" id="L105">		addHand.add(new Tile(2, 5, 8));</span>
+
+<span class="fc" id="L107">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L109">		colorHand = logic.getColorHand();</span>
+<span class="fc" id="L110">		tileCount = 0;</span>
+
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		for (int i = 0; i &lt; config.getColorShapeCount(); i++) {</span>
+<span class="fc" id="L113">			tileCount = tileCount + colorHand[i].size();</span>
+		}
+
+		/*
+		 * Check if all Tiles are on hand
+		 */
+<span class="fc" id="L119">		assertEquals(&quot;Wrong number of tiles after add new tiles&quot;, tileCount, hand.size());</span>
+
+		/*
+		 * Check if Tiles are sorted by color after add new
+		 */
+<span class="fc" id="L124">		assertEquals(&quot;New Tiles are not sorted&quot;, 2, colorHand[2].size());</span>
+
+		/*
+		 * Check if Tile is played at the beginning
+		 */
+<span class="fc" id="L129">		assertEquals(&quot;Tile is played on wrong position in ArrayList&quot;, 7, colorHand[0].get(0).getUniqueId());</span>
+
+<span class="fc" id="L131">	}</span>
+
+	@Test
+	public void removeTilesFormHandTest() {
+<span class="fc" id="L135">		ArrayList&lt;Tile&gt; hand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L136">		hand.add(new Tile(0, 1, 1));</span>
+<span class="fc" id="L137">		hand.add(new Tile(1, 1, 2));</span>
+<span class="fc" id="L138">		hand.add(new Tile(2, 1, 3));</span>
+<span class="fc" id="L139">		hand.add(new Tile(3, 1, 4));</span>
+<span class="fc" id="L140">		hand.add(new Tile(4, 1, 5));</span>
+<span class="fc" id="L141">		hand.add(new Tile(5, 1, 6));</span>
+
+<span class="fc" id="L143">		logic.addTilesToHand(hand);</span>
+
+<span class="fc" id="L145">		ArrayList&lt;Tile&gt; removeHand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L146">		removeHand.add(new Tile(0, 1, 1));</span>
+<span class="fc" id="L147">		removeHand.add(new Tile(1, 1, 2));</span>
+
+<span class="fc" id="L149">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L151">		ArrayList&lt;Tile&gt;[] colorHand = logic.getColorHand();</span>
+
+<span class="fc" id="L153">		int tileCount = 0;</span>
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">		for (int i = 0; i &lt; config.getColorShapeCount(); i++) {</span>
+<span class="fc" id="L156">			tileCount = tileCount + colorHand[i].size();</span>
+		}
+
+		/*
+		 * check if Tiles are removed
+		 */
+<span class="fc" id="L162">		assertEquals(&quot;Wrong number of tiles in hand&quot;, tileCount, hand.size() - removeHand.size());</span>
+<span class="fc" id="L163">		assertEquals(&quot;Wrong number of tiles in hand&quot;, 4, logic.getHand().size());</span>
+
+<span class="fc" id="L165">		logic.removeTilesFromHand(removeHand);</span>
+<span class="fc" id="L166">	}</span>
+
+	@Test
+	public void updateMapTest() {
+<span class="fc" id="L170">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L172">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(0, 0, 1)));</span>
+<span class="fc" id="L173">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), new Tile(0, 1, 2)));</span>
+<span class="fc" id="L174">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(0, 3, 3)));</span>
+
+<span class="fc" id="L176">		logic.updateMap(move);</span>
+
+<span class="fc" id="L178">		HashBasedTable&lt;Integer, Integer, Tile&gt; horizontalHead = logic.getHozirontalHead();</span>
+<span class="fc" id="L179">		HashBasedTable&lt;Integer, Integer, Tile&gt; verticalHead = logic.getVerticalHead();</span>
+
+<span class="fc" id="L181">		assertEquals(&quot;Wrong number of tiles in horizontalHead&quot;, 3, horizontalHead.size());</span>
+<span class="fc" id="L182">		assertEquals(&quot;Wrong number of tiles in verticalHead&quot;, 2, verticalHead.size());</span>
+
+		// Add new tile
+<span class="fc" id="L185">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move2 = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L187">		move2.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), new Tile(0, 2, 4)));</span>
+
+<span class="fc" id="L189">		logic.updateMap(move2);</span>
+
+<span class="fc" id="L191">		horizontalHead = logic.getHozirontalHead();</span>
+<span class="fc" id="L192">		verticalHead = logic.getVerticalHead();</span>
+
+<span class="fc" id="L194">		assertEquals(&quot;Wrong number of tiles in horizontalHead&quot;, 4, horizontalHead.size());</span>
+<span class="fc" id="L195">		assertEquals(&quot;Wrong number of tiles in verticalHead&quot;, 2, verticalHead.size());</span>
+
+		// Add three new tiles
+<span class="fc" id="L198">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move3 = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L200">		move3.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), new Tile(0, 2, 5)));</span>
+<span class="fc" id="L201">		move3.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), new Tile(0, 1, 6)));</span>
+<span class="fc" id="L202">		move3.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 2), new Tile(0, 4, 7)));</span>
+<span class="fc" id="L203">		move3.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, 6), new Tile(0, 3, 8)));</span>
+
+<span class="fc" id="L205">		logic.updateMap(move3);</span>
+
+<span class="fc" id="L207">		horizontalHead = logic.getHozirontalHead();</span>
+<span class="fc" id="L208">		verticalHead = logic.getVerticalHead();</span>
+
+<span class="fc" id="L210">		assertEquals(&quot;Wrong number of tiles in horizontalHead&quot;, 7, horizontalHead.size());</span>
+<span class="fc" id="L211">		assertEquals(&quot;Wrong number of tiles in verticalHead&quot;, 6, verticalHead.size());</span>
+<span class="fc" id="L212">	}</span>
+
+	@Test
+	public void findMoveTest() {
+		// add tiles to map
+<span class="fc" id="L217">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L219">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), new Tile(0, 0, 31)));</span>
+<span class="fc" id="L220">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 1), new Tile(0, 1, 32)));</span>
+<span class="fc" id="L221">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, 1), new Tile(0, 2, 33)));</span>
+<span class="fc" id="L222">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, 2), new Tile(1, 2, 34)));</span>
+<span class="fc" id="L223">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(5, 0), new Tile(2, 2, 35)));</span>
+
+<span class="fc" id="L225">		logic.updateMap(move);</span>
+<span class="fc" id="L226">		move.clear();</span>
+
+		// no tiles fit
+<span class="fc" id="L229">		ArrayList&lt;Tile&gt; hand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L230">		hand.add(new Tile(6, 3, 4));</span>
+<span class="fc" id="L231">		hand.add(new Tile(6, 5, 5));</span>
+<span class="fc" id="L232">		hand.add(new Tile(3, 5, 6));</span>
+<span class="fc" id="L233">		hand.add(new Tile(3, 3, 7));</span>
+<span class="fc" id="L234">		hand.add(new Tile(6, 3, 8));</span>
+<span class="fc" id="L235">		hand.add(new Tile(6, 5, 9));</span>
+
+<span class="fc" id="L237">		logic.addTilesToHand(hand);</span>
+
+<span class="fc" id="L239">		assertEquals(&quot;a move hat wrong number of tiles&quot;, null, logic.findMove());</span>
+
+		// add tiles to hand (two tiles are Ok)
+<span class="fc" id="L242">		ArrayList&lt;Tile&gt; removeHand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L243">		removeHand.add(new Tile(6, 3, 4));</span>
+<span class="fc" id="L244">		removeHand.add(new Tile(6, 5, 5));</span>
+
+<span class="fc" id="L246">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L248">		removeHand.clear();</span>
+
+<span class="fc" id="L250">		ArrayList&lt;Tile&gt; addHand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L251">		addHand.add(new Tile(0, 3, 1));</span>
+<span class="fc" id="L252">		addHand.add(new Tile(0, 5, 2));</span>
+
+<span class="fc" id="L254">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L256">		addHand.clear();</span>
+
+<span class="fc" id="L258">		ArrayList&lt;Tile&gt;[] arrayHand = logic.getColorHand();</span>
+
+<span class="fc" id="L260">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; firstMove = logic.findMove();</span>
+<span class="fc" id="L261">		ArrayList&lt;Tile&gt; tileList = getTileList(firstMove);</span>
+
+<span class="fc" id="L263">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 3, firstMove.size());</span>
+
+		// test, there are in move tiles, that they have the same color and shape
+<span class="fc" id="L266">		boolean temp = false;</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">		for (int i = 0; i &lt; firstMove.size() - 1; i++) {</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">			for (int j = i + 1; j &lt; firstMove.size(); j++) {</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">				if (firstMove.get(i).getSecond().getColor() == firstMove.get(j).getSecond().getColor()</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">						&amp;&amp; firstMove.get(i).getSecond().getShape() == firstMove.get(j).getSecond().getShape()) {</span>
+<span class="nc" id="L271">					temp = true;</span>
+				}
+			}
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">			assertTrue(&quot;There are more tiles, that they have the same color and shape &quot;, temp == false);</span>
+		}
+
+<span class="fc" id="L277">		assertEquals(&quot;a score is wrong&quot;, 6, logic.getScore(firstMove));</span>
+
+		// test right - left
+		// change tiles in hand (four tiles are Ok)
+
+<span class="fc" id="L282">		removeHand.add(new Tile(3, 5, 6));</span>
+<span class="fc" id="L283">		removeHand.add(new Tile(3, 3, 7));</span>
+
+<span class="fc" id="L285">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L287">		removeHand.clear();</span>
+
+<span class="fc" id="L289">		addHand.add(new Tile(0, 4, 3));</span>
+<span class="fc" id="L290">		addHand.add(new Tile(0, 6, 10));</span>
+
+<span class="fc" id="L292">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L294">		addHand.clear();</span>
+
+<span class="fc" id="L296">		arrayHand = logic.getColorHand();</span>
+
+<span class="fc" id="L298">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; secondMove = logic.findMove();</span>
+<span class="fc" id="L299">		tileList = getTileList(secondMove);</span>
+
+<span class="fc" id="L301">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 4, secondMove.size());</span>
+<span class="fc" id="L302">		assertEquals(&quot;not all tiles were used&quot;, true, tileList.contains(arrayHand[0].get(0)));</span>
+<span class="fc" id="L303">		assertEquals(&quot;not all tiles were used&quot;, true, tileList.contains(arrayHand[0].get(1)));</span>
+<span class="fc" id="L304">		assertEquals(&quot;not all tiles were used&quot;, true, tileList.contains(arrayHand[0].get(2)));</span>
+<span class="fc" id="L305">		assertEquals(&quot;not all tiles were used&quot;, true, tileList.contains(arrayHand[0].get(3)));</span>
+<span class="fc" id="L306">		assertEquals(&quot;a score is wrong&quot;, 14, logic.getScore(secondMove));</span>
+
+<span class="fc" id="L308">		tileList.clear();</span>
+
+		// test with shapes
+<span class="fc" id="L311">		removeHand.add(new Tile(0, 4, 3));</span>
+<span class="fc" id="L312">		removeHand.add(new Tile(0, 6, 10));</span>
+<span class="fc" id="L313">		removeHand.add(new Tile(0, 3, 1));</span>
+<span class="fc" id="L314">		removeHand.add(new Tile(0, 5, 2));</span>
+
+<span class="fc" id="L316">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L318">		removeHand.clear();</span>
+
+<span class="fc" id="L320">		addHand.add(new Tile(3, 2, 24));</span>
+<span class="fc" id="L321">		addHand.add(new Tile(4, 5, 25));</span>
+<span class="fc" id="L322">		addHand.add(new Tile(5, 5, 26));</span>
+<span class="fc" id="L323">		addHand.add(new Tile(6, 6, 27));</span>
+
+<span class="fc" id="L325">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L327">		addHand.clear();</span>
+
+		// test1: a move with the most score was found
+<span class="fc" id="L330">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; verticalMove = logic.findMove();</span>
+<span class="fc" id="L331">		ArrayList&lt;Tile&gt; tileListVertical = getTileList(verticalMove);</span>
+<span class="fc" id="L332">		ArrayList&lt;Coordinate&gt; coordinateList = getCoordinateList(verticalMove);</span>
+
+<span class="fc" id="L334">		ArrayList&lt;Tile&gt;[] arrayShapeHand = logic.getShapeHand();</span>
+
+<span class="fc" id="L336">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 1, verticalMove.size());</span>
+<span class="fc" id="L337">		assertEquals(&quot;not all tiles were used&quot;, true, tileListVertical.contains(arrayShapeHand[2].get(0)));</span>
+<span class="fc" id="L338">		assertEquals(&quot; was found not the best move&quot;, true, coordinateList.contains(new Coordinate(4, 0)));</span>
+<span class="fc" id="L339">		assertEquals(&quot;a score is wrong&quot;, 5, logic.getScore(verticalMove));</span>
+
+<span class="fc" id="L341">		verticalMove.clear();</span>
+<span class="fc" id="L342">		coordinateList.clear();</span>
+
+		// test2: to find a move with the most score
+		// add to Hand second tile with shape 2
+<span class="fc" id="L346">		removeHand.add(new Tile(4, 5, 25));</span>
+
+<span class="fc" id="L348">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L350">		removeHand.clear();</span>
+
+<span class="fc" id="L352">		addHand.add(new Tile(5, 2, 28));</span>
+
+<span class="fc" id="L354">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L356">		addHand.clear();</span>
+
+<span class="fc" id="L358">		verticalMove = logic.findMove();</span>
+<span class="fc" id="L359">		tileListVertical = getTileList(verticalMove);</span>
+<span class="fc" id="L360">		coordinateList = getCoordinateList(verticalMove);</span>
+
+<span class="fc" id="L362">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 2, verticalMove.size());</span>
+<span class="fc" id="L363">		assertEquals(&quot;was found not the best move&quot;, true, coordinateList.contains(new Coordinate(5, 1)));</span>
+<span class="fc" id="L364">		assertEquals(&quot;was found not the best move&quot;, true, coordinateList.contains(new Coordinate(5, 2)));</span>
+<span class="fc" id="L365">		assertEquals(&quot;not all tiles were used&quot;, true, tileListVertical.contains(arrayShapeHand[2].get(0)));</span>
+<span class="fc" id="L366">		assertEquals(&quot;a score is wrong&quot;, 7, logic.getScore(verticalMove));</span>
+<span class="fc" id="L367">		verticalMove.clear();</span>
+<span class="fc" id="L368">		coordinateList.clear();</span>
+
+		// test3: move vertical with shapes 0
+<span class="fc" id="L371">		removeHand.add(new Tile(3, 2, 24));</span>
+<span class="fc" id="L372">		removeHand.add(new Tile(5, 2, 28));</span>
+<span class="fc" id="L373">		removeHand.add(new Tile(5, 5, 26));</span>
+
+<span class="fc" id="L375">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L377">		removeHand.clear();</span>
+
+<span class="fc" id="L379">		addHand.add(new Tile(3, 0, 1));</span>
+<span class="fc" id="L380">		addHand.add(new Tile(4, 0, 2));</span>
+<span class="fc" id="L381">		addHand.add(new Tile(5, 0, 3));</span>
+
+<span class="fc" id="L383">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L385">		addHand.clear();</span>
+
+<span class="fc" id="L387">		verticalMove = logic.findMove();</span>
+<span class="fc" id="L388">		tileListVertical = getTileList(verticalMove);</span>
+<span class="fc" id="L389">		coordinateList = getCoordinateList(verticalMove);</span>
+<span class="fc" id="L390">		arrayShapeHand = logic.getShapeHand();</span>
+
+<span class="fc" id="L392">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 3, verticalMove.size());</span>
+
+		// test, there are in move tiles, that they have the same color and shape
+<span class="fc" id="L395">		temp = false;</span>
+<span class="fc bfc" id="L396" title="All 2 branches covered.">		for (int i = 0; i &lt; verticalMove.size() - 1; i++) {</span>
+<span class="fc bfc" id="L397" title="All 2 branches covered.">			for (int j = i + 1; j &lt; verticalMove.size(); j++) {</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">				if (verticalMove.get(i).getSecond().getColor() == verticalMove.get(j).getSecond().getColor()</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">						&amp;&amp; verticalMove.get(i).getSecond().getShape() == verticalMove.get(j).getSecond().getShape()) {</span>
+<span class="nc" id="L400">					temp = true;</span>
+				}
+			}
+<span class="pc bpc" id="L403" title="1 of 2 branches missed.">			assertTrue(&quot;There are in move more tiles, that they have the same color and shape &quot;, temp == false);</span>
+		}
+<span class="fc" id="L405">		assertEquals(&quot;was found not the best move1&quot;, true, coordinateList.contains(new Coordinate(0, 0)));</span>
+<span class="fc" id="L406">		assertEquals(&quot;a score is wrong&quot;, 5, logic.getScore(verticalMove));</span>
+
+		// test4: move vertical with shapes 0
+		// to map add in Coordinate(0, -1) Tile(1, 0, 37)
+<span class="fc" id="L410">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), new Tile(1, 0, 37)));</span>
+<span class="fc" id="L411">		logic.updateMap(move);</span>
+<span class="fc" id="L412">		move.clear();</span>
+
+<span class="fc" id="L414">		verticalMove = logic.findMove();</span>
+<span class="fc" id="L415">		tileListVertical = getTileList(verticalMove);</span>
+<span class="fc" id="L416">		coordinateList = getCoordinateList(verticalMove);</span>
+<span class="fc" id="L417">		arrayShapeHand = logic.getShapeHand();</span>
+
+<span class="fc" id="L419">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 3, verticalMove.size());</span>
+
+		// test, there are in move tiles, that they have the same color and shape
+<span class="fc" id="L422">		temp = false;</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">		for (int i = 0; i &lt; verticalMove.size() - 1; i++) {</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">			for (int j = i + 1; j &lt; verticalMove.size(); j++) {</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">				if (verticalMove.get(i).getSecond().getColor() == verticalMove.get(j).getSecond().getColor()</span>
+<span class="nc bnc" id="L426" title="All 2 branches missed.">						&amp;&amp; verticalMove.get(i).getSecond().getShape() == verticalMove.get(j).getSecond().getShape()) {</span>
+<span class="nc" id="L427">					temp = true;</span>
+				}
+			}
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">			assertTrue(&quot;There are in move more tiles, that they have the same color and shape &quot;, temp == false);</span>
+		}
+
+<span class="fc" id="L433">		assertEquals(&quot;was found not the best move1&quot;, true, coordinateList.contains(new Coordinate(0, 0)));</span>
+<span class="fc" id="L434">		assertEquals(&quot;a score is wrong&quot;, 6, logic.getScore(verticalMove));</span>
+
+		// test4: there are more possibilities to do move
+<span class="fc" id="L437">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, -2), new Tile(2, 6, 38)));</span>
+<span class="fc" id="L438">		logic.updateMap(move);</span>
+<span class="fc" id="L439">		move.clear();</span>
+
+<span class="fc" id="L441">		removeHand.add(new Tile(3, 0, 1));</span>
+<span class="fc" id="L442">		removeHand.add(new Tile(4, 0, 2));</span>
+<span class="fc" id="L443">		removeHand.add(new Tile(5, 0, 3));</span>
+<span class="fc" id="L444">		removeHand.add(new Tile(6, 3, 8));</span>
+<span class="fc" id="L445">		removeHand.add(new Tile(6, 5, 9));</span>
+<span class="fc" id="L446">		removeHand.add(new Tile(6, 6, 27));</span>
+<span class="fc" id="L447">		logic.removeTilesFromHand(removeHand);</span>
+
+<span class="fc" id="L449">		removeHand.clear();</span>
+
+<span class="fc" id="L451">		addHand.add(new Tile(1, 1, 11));</span>
+<span class="fc" id="L452">		addHand.add(new Tile(1, 6, 12));</span>
+<span class="fc" id="L453">		addHand.add(new Tile(5, 5, 13));</span>
+<span class="fc" id="L454">		addHand.add(new Tile(3, 5, 14));</span>
+<span class="fc" id="L455">		addHand.add(new Tile(4, 4, 15));</span>
+<span class="fc" id="L456">		addHand.add(new Tile(5, 6, 16));</span>
+<span class="fc" id="L457">		logic.addTilesToHand(addHand);</span>
+
+<span class="fc" id="L459">		addHand.clear();</span>
+
+<span class="fc" id="L461">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; chooseMove = logic.findMove();</span>
+
+<span class="fc" id="L463">		assertEquals(&quot;the move has wrong numbers of tiles&quot;, 2, chooseMove.size());</span>
+<span class="fc" id="L464">		assertEquals(&quot;a score is wrong&quot;, 4, logic.getScore(chooseMove));</span>
+<span class="fc" id="L465">	}</span>
+
+	@Test
+	public void findMoveTestBigMap() {
+<span class="fc" id="L469">		config = new Configuration(7, 4, 6, 30, 5, WrongMove.NOTHING, 1, SlowMove.POINT_LOSS, 1, 2);</span>
+<span class="fc" id="L470">		logic1 = new AiLogic(config);</span>
+		// add tiles to map
+<span class="fc" id="L472">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L474">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 2), new Tile(0, 2, 0)));</span>
+<span class="fc" id="L475">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 1), new Tile(0, 0, 1)));</span>
+<span class="fc" id="L476">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, -1), new Tile(1, 4, 2)));</span>
+<span class="fc" id="L477">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 2), new Tile(1, 2, 3)));</span>
+<span class="fc" id="L478">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 3), new Tile(1, 3, 4)));</span>
+<span class="fc" id="L479">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), new Tile(2, 4, 5)));</span>
+<span class="fc" id="L480">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(2, 1, 6)));</span>
+<span class="fc" id="L481">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(2, 2, 7)));</span>
+<span class="fc" id="L482">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, -1), new Tile(3, 4, 8)));</span>
+<span class="fc" id="L483">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), new Tile(3, 1, 9)));</span>
+<span class="fc" id="L484">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, -2), new Tile(3, 3, 10)));</span>
+<span class="fc" id="L485">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, -1), new Tile(3, 4, 11)));</span>
+<span class="fc" id="L486">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, -1), new Tile(4, 4, 12)));</span>
+<span class="fc" id="L487">		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), new Tile(4, 1, 13)));</span>
+
+<span class="fc" id="L489">		logic1.updateMap(move);</span>
+<span class="fc" id="L490">		move.clear();</span>
+
+		// Hand
+<span class="fc" id="L493">		ArrayList&lt;Tile&gt; hand = new ArrayList&lt;Tile&gt;();</span>
+<span class="fc" id="L494">		hand.add(new Tile(1, 3, 20));</span>
+<span class="fc" id="L495">		hand.add(new Tile(2, 3, 21));</span>
+<span class="fc" id="L496">		hand.add(new Tile(3, 3, 22));</span>
+<span class="fc" id="L497">		hand.add(new Tile(3, 3, 23));</span>
+<span class="fc" id="L498">		hand.add(new Tile(6, 2, 24));</span>
+<span class="fc" id="L499">		hand.add(new Tile(6, 5, 25));</span>
+
+<span class="fc" id="L501">		logic1.addTilesToHand(hand);</span>
+		
+<span class="fc" id="L503">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; chooseMove = logic1.findMove();</span>
+
+		// test, there are in move tiles, that they have the same color and shape
+<span class="fc" id="L506">		boolean temp = false;</span>
+<span class="fc bfc" id="L507" title="All 2 branches covered.">		for (int i = 0; i &lt; chooseMove.size() - 1; i++) {</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">			for (int j = i + 1; j &lt; chooseMove.size(); j++) {</span>
+<span class="pc bpc" id="L509" title="1 of 2 branches missed.">				if (chooseMove.get(i).getSecond().getColor() == chooseMove.get(j).getSecond().getColor()</span>
+<span class="nc bnc" id="L510" title="All 2 branches missed.">						&amp;&amp; chooseMove.get(i).getSecond().getShape() == chooseMove.get(j).getSecond().getShape()) {</span>
+<span class="nc" id="L511">					temp = true;</span>
+				}
+			}
+<span class="pc bpc" id="L514" title="1 of 2 branches missed.">			assertTrue(&quot;There are more tiles, that they have the same color and shape &quot;, temp == false);</span>
+		}
+
+<span class="fc" id="L517">	}</span>
+
+	/*@Test
+	public void findMoveTestBigMapWrongMove() {
+		config = new Configuration(7, 4, 6, 30, 5, WrongMove.POINT_LOSS, 1, SlowMove.POINT_LOSS, 1, 2);
+		logic1 = new AiLogic(config);
+		// add tiles to map
+		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();
+
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 2), new Tile(0, 2, 0)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 1), new Tile(0, 0, 1)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, -1), new Tile(1, 4, 2)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 2), new Tile(1, 2, 3)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 3), new Tile(1, 3, 4)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), new Tile(2, 4, 5)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), new Tile(2, 1, 6)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), new Tile(2, 2, 7)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, -1), new Tile(3, 4, 8)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), new Tile(3, 1, 9)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, -2), new Tile(3, 3, 10)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, -1), new Tile(3, 4, 11)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, -1), new Tile(4, 4, 12)));
+		move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), new Tile(4, 1, 13)));
+
+		logic1.updateMap(move);
+		move.clear();
+
+		// Hand
+		ArrayList&lt;Tile&gt; hand = new ArrayList&lt;Tile&gt;();
+		hand.add(new Tile(1, 3, 20));
+		hand.add(new Tile(2, 3, 21));
+		hand.add(new Tile(3, 3, 22));
+		hand.add(new Tile(3, 3, 23));
+		hand.add(new Tile(6, 2, 24));
+		hand.add(new Tile(6, 5, 25));
+
+		logic1.addTilesToHand(hand);
+
+		System.out.println(&quot;Test2&quot;);
+		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; chooseMove = logic1.findMove();
+		System.out.println(&quot;Score: &quot; + logic1.getScore(chooseMove));
+		for (int i = 0; i &lt; chooseMove.size(); i++) {
+			System.out.println(chooseMove.get(i).getFirst());
+			System.out.println(&quot;Tile id: &quot; + chooseMove.get(i).getSecond().getUniqueId() + &quot; color: &quot;
+					+ chooseMove.get(i).getSecond().getColor() + &quot; shape: &quot; + chooseMove.get(i).getSecond().getShape());
+		}
+
+		// test, there are in move tiles, that they have the same color and shape
+		boolean temp = false;
+		for (int i = 0; i &lt; chooseMove.size() - 1; i++) {
+			for (int j = i + 1; j &lt; chooseMove.size(); j++) {
+				if (chooseMove.get(i).getSecond().getColor() == chooseMove.get(j).getSecond().getColor()
+						&amp;&amp; chooseMove.get(i).getSecond().getShape() == chooseMove.get(j).getSecond().getShape()) {
+					temp = true;
+				}
+			}
+			assertTrue(&quot;There are in move more tiles, that they have the same color and shape &quot;, temp == true);
+		}
+	}*/
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 06:34:28)</div></body></html>

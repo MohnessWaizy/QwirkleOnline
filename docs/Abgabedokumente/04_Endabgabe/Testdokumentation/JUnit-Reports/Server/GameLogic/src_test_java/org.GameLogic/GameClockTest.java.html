@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameClockTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic</a> &gt; <span class="el_source">GameClockTest.java</span></div><h1>GameClockTest.java</h1><pre class="source lang-java linenums">package org.GameLogic;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.GameLogic.Clock.ClockState;
+import org.GameLogic.Clock.GameClock;
+import org.junit.Test;
+
+<span class="fc" id="L10">public class GameClockTest {</span>
+
+	public void threadSleep(int milliseconds) {
+		try {
+<span class="fc" id="L14">			Thread.sleep(milliseconds);</span>
+<span class="nc" id="L15">		} catch (InterruptedException e) {</span>
+<span class="nc" id="L16">			assertTrue(&quot;Thread could not be paused!&quot;, true);</span>
+<span class="fc" id="L17">		}</span>
+<span class="fc" id="L18">	}</span>
+
+	@Test
+	public void initialization() {
+<span class="fc" id="L22">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L23">		long turnTime = 2000;</span>
+<span class="fc" id="L24">		long visualizationTime = 2000;</span>
+<span class="fc" id="L25">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">		assertTrue(&quot;ClockState not properly set&quot;, clock.getState() == ClockState.STOPPED);</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">		assertTrue(&quot;GameClockState not properly set&quot;, clock.isInTurnTime() == true);</span>
+
+<span class="fc" id="L30">		clock.destroy();</span>
+<span class="fc" id="L31">	}</span>
+
+	@Test
+	public void ticking() {
+<span class="fc" id="L35">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L36">		long turnTime = 2000;</span>
+<span class="fc" id="L37">		long visualizationTime = 2000;</span>
+<span class="fc" id="L38">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L40">		clock.startTicking();</span>
+
+<span class="fc" id="L42">		threadSleep(1200);</span>
+
+<span class="fc" id="L44">		clock.pauseTicking();</span>
+
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">		assertTrue(&quot;Clock is not ticking&quot;, clock.getTotalTime() &gt;= 1000);</span>
+
+<span class="fc" id="L48">		clock.destroy();</span>
+<span class="fc" id="L49">	}</span>
+
+	@Test
+	public void stopAndStart() {
+<span class="fc" id="L53">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L54">		long turnTime = 2000;</span>
+<span class="fc" id="L55">		long visualizationTime = 2000;</span>
+<span class="fc" id="L56">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L58">		clock.startTicking();</span>
+
+<span class="fc" id="L60">		threadSleep(1200);</span>
+
+<span class="fc" id="L62">		clock.pauseTicking();</span>
+<span class="fc" id="L63">		long totalTime = clock.getTotalTime();</span>
+<span class="fc" id="L64">		long time = clock.getTime();</span>
+
+<span class="fc" id="L66">		threadSleep(520);</span>
+
+<span class="fc" id="L68">		assertEquals(&quot;Clock is not stopped&quot;, totalTime, clock.getTotalTime());</span>
+<span class="fc" id="L69">		assertEquals(&quot;Clock is not stopped&quot;, time, clock.getTime());</span>
+
+<span class="fc" id="L71">		clock.startTicking();</span>
+
+<span class="fc" id="L73">		threadSleep(520);</span>
+
+<span class="fc" id="L75">		clock.pauseTicking();</span>
+
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not resumed properly&quot;, totalTime != clock.getTotalTime());</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not resumed properly&quot;, time != clock.getTime());</span>
+
+<span class="fc" id="L80">		clock.destroy();</span>
+<span class="fc" id="L81">	}</span>
+
+	@Test
+	public void destroy() {
+<span class="fc" id="L85">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L86">		long turnTime = 2000;</span>
+<span class="fc" id="L87">		long visualizationTime = 2000;</span>
+<span class="fc" id="L88">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L90">		clock.startTicking();</span>
+
+<span class="fc" id="L92">		threadSleep(1200);</span>
+
+<span class="fc" id="L94">		clock.destroy();</span>
+
+<span class="fc" id="L96">		threadSleep(1000);</span>
+
+<span class="fc" id="L98">	}</span>
+
+	@Test
+	public void testMilliseconds() {
+		// will test clock milliseconds at rate 500
+<span class="fc" id="L103">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L104">		long turnTime = 200;</span>
+<span class="fc" id="L105">		long visualizationTime = 200;</span>
+<span class="fc" id="L106">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L108">		clock.startTicking();</span>
+
+<span class="fc" id="L110">		threadSleep(5000);</span>
+
+<span class="fc" id="L112">		clock.destroy();</span>
+<span class="fc" id="L113">	}</span>
+
+	@Test
+	public void cycle() {
+<span class="fc" id="L117">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L118">		long turnTime = 1000;</span>
+<span class="fc" id="L119">		long visualizationTime = 1000;</span>
+<span class="fc" id="L120">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L122">		clock.startTicking();</span>
+
+<span class="fc" id="L124">		threadSleep(500);</span>
+
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not in started state&quot;, clock.getState() == ClockState.STARTED);</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">		assertTrue(&quot;Clock should be in turntime&quot;, clock.isInTurnTime() == true);</span>
+
+<span class="fc" id="L129">		clock.pauseTicking();</span>
+
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">		assertTrue(&quot;Clock should be paused&quot;, clock.isPaused() == true);</span>
+
+<span class="fc" id="L133">		clock.startTicking();</span>
+
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not in started state&quot;, clock.getState() == ClockState.STARTED);</span>
+
+<span class="fc" id="L137">		threadSleep(510);</span>
+
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not in visualization time&quot;, clock.isInTurnTime() == false);</span>
+
+<span class="fc" id="L141">		threadSleep(510);</span>
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">		assertTrue(&quot;Clock not in turn time&quot;, clock.isInTurnTime() == true);</span>
+
+<span class="fc" id="L145">		clock.destroy();</span>
+<span class="fc" id="L146">	}</span>
+
+	@Test
+	public void turnTimeOver() {
+<span class="fc" id="L150">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L151">		long turnTime = 800;</span>
+<span class="fc" id="L152">		long visualizationTime = 1000;</span>
+<span class="fc" id="L153">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L155">		clock.startTicking();</span>
+
+<span class="fc" id="L157">		threadSleep(500);</span>
+
+<span class="fc" id="L159">		clock.turnTimeOver();</span>
+
+<span class="fc" id="L161">		threadSleep(200);</span>
+
+<span class="fc" id="L163">		clock.pauseTicking();</span>
+
+<span class="fc" id="L165">		assertEquals(&quot;Clock not in visualization time&quot;, false, clock.isInTurnTime());</span>
+
+<span class="fc" id="L167">		clock.startTicking();</span>
+
+<span class="fc" id="L169">		long time = clock.getTime();</span>
+<span class="fc" id="L170">		clock.turnTimeOver();</span>
+
+<span class="fc" id="L172">		clock.pauseTicking();</span>
+
+<span class="fc" id="L174">		assertEquals(&quot;Clock time should not be changed&quot;, time, clock.getTime());</span>
+<span class="fc" id="L175">		assertEquals(&quot;Clock not in visualization time&quot;, false, clock.isInTurnTime());</span>
+
+<span class="fc" id="L177">		clock.destroy();</span>
+<span class="fc" id="L178">	}</span>
+
+	@Test
+	public void getTurnTime() {
+<span class="fc" id="L182">		ClockableTestClass ctc = new ClockableTestClass();</span>
+<span class="fc" id="L183">		long turnTime = 600;</span>
+<span class="fc" id="L184">		long visualizationTime = 600;</span>
+<span class="fc" id="L185">		GameClock clock = new GameClock(ctc, turnTime, visualizationTime);</span>
+
+<span class="fc" id="L187">		clock.startTicking();</span>
+
+<span class="fc" id="L189">		threadSleep(200);</span>
+
+<span class="fc" id="L191">		clock.turnTimeOver();</span>
+
+<span class="fc" id="L193">		threadSleep(200);</span>
+
+<span class="fc" id="L195">		clock.pauseTicking();</span>
+
+<span class="fc" id="L197">		threadSleep(500);</span>
+
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">		assertTrue(&quot;Clock total time wrong&quot;, clock.getTotalTime() &lt;= 600);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">		assertTrue(&quot;Clock left time wrong&quot;, clock.getTimeLeft() &gt;= 200);</span>
+
+<span class="fc" id="L202">		clock.destroy();</span>
+<span class="fc" id="L203">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

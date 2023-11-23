@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Coordinate.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 06:34:28)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Board</a> &gt; <span class="el_source">Coordinate.java</span></div><h1>Coordinate.java</h1><pre class="source lang-java linenums">package org.GameLogic.Board;
+
+import java.util.Objects;
+
+/*
+ * This class is immutable
+ */
+
+public class Coordinate {
+
+	private int xCoord;
+	private int yCoord;
+
+<span class="fc" id="L14">	public Coordinate(int xCoord, int yCoord) {</span>
+<span class="fc" id="L15">		this.xCoord = xCoord;</span>
+<span class="fc" id="L16">		this.yCoord = yCoord;</span>
+<span class="fc" id="L17">	}</span>
+
+	public static Coordinate of(int x, int y) {
+<span class="fc" id="L20">		return new Coordinate(x, y);</span>
+	}
+
+	/*
+	 * Manipulate coordinates
+	 */
+
+	public Coordinate right() {
+<span class="fc" id="L28">		return of(xCoord + 1, yCoord);</span>
+	}
+
+	public Coordinate left() {
+<span class="fc" id="L32">		return of(xCoord - 1, yCoord);</span>
+	}
+
+	public Coordinate up() {
+<span class="fc" id="L36">		return of(xCoord, yCoord + 1);</span>
+	}
+
+	public Coordinate down() {
+<span class="fc" id="L40">		return of(xCoord, yCoord - 1);</span>
+	}
+
+	public Coordinate next(char dir) {
+<span class="pc bpc" id="L44" title="1 of 5 branches missed.">		switch (dir) {</span>
+		case 'r':
+<span class="fc" id="L46">			return right();</span>
+		case 'l':
+<span class="fc" id="L48">			return left();</span>
+		case 'u':
+<span class="fc" id="L50">			return up();</span>
+		case 'd':
+<span class="fc" id="L52">			return down();</span>
+		default:
+<span class="nc" id="L54">			return null;</span>
+		}
+	}
+
+	/*
+	 * Getters
+	 */
+
+	public int getX() {
+<span class="fc" id="L63">		return xCoord;</span>
+	}
+
+	public int getY() {
+<span class="fc" id="L67">		return yCoord;</span>
+	}
+
+	@Override
+	public int hashCode() {
+
+		/**
+		 * Create better HashCode -&gt; using one int to store x and y
+		 */
+
+<span class="nc" id="L77">		final int prime = 31;</span>
+<span class="nc" id="L78">		int result = 1;</span>
+<span class="nc" id="L79">		result = prime * result + xCoord;</span>
+<span class="nc" id="L80">		result = prime * result + yCoord;</span>
+<span class="nc" id="L81">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L87">			return true;</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L89">			return false;</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L91">			return false;</span>
+<span class="fc" id="L92">		Coordinate other = (Coordinate) obj;</span>
+<span class="pc bpc" id="L93" title="1 of 4 branches missed.">		return yCoord == other.getY() &amp;&amp; xCoord == other.getX();</span>
+	}
+
+	@Override
+	public String toString() {
+<span class="fc" id="L98">		return &quot;Coordinate [xCoord=&quot; + xCoord + &quot;, yCoord=&quot; + yCoord + &quot;]&quot;;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 06:34:28)</div></body></html>

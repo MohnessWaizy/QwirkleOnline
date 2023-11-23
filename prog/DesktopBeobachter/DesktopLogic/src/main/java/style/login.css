@@ -1,0 +1,9 @@
+
+#label_login{
+	-fx-text-fill: #46494C;
+}
+
+#label_error{
+	-fx-text-fill: #ff0000;
+	-fx-font-size: 10;
+}

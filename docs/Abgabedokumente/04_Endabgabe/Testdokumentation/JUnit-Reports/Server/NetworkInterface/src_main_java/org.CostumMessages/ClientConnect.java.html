@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ClientConnect.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">NetworkInterface</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.CostumMessages</a> &gt; <span class="el_source">ClientConnect.java</span></div><h1>ClientConnect.java</h1><pre class="source lang-java linenums">package org.CostumMessages;
+
+import de.upb.swtpra1819interface.messages.ConnectRequest;
+import de.upb.swtpra1819interface.messages.Message;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.ClientType;
+
+/**
+ * 
+ * Send if a client joins the Structure Send by: GameManagement; Received by:
+ * Game, Lobby, Gui
+ *
+ */
+public class ClientConnect extends Message {
+	private ClientType type;
+	private int clientId;
+	private String username;
+
+	public ClientConnect(String username, int clientId, ClientType type) {
+<span class="nc" id="L20">		super(1000);</span>
+<span class="nc" id="L21">		this.type = type;</span>
+<span class="nc" id="L22">		this.clientId = clientId;</span>
+<span class="nc" id="L23">		this.username = username;</span>
+<span class="nc" id="L24">	}</span>
+
+	public ClientConnect(int clientId, ConnectRequest req) {
+<span class="nc" id="L27">		super(1000);</span>
+<span class="nc" id="L28">		this.type = req.getClientType();</span>
+<span class="nc" id="L29">		this.clientId = clientId;</span>
+<span class="nc" id="L30">		this.username = req.getClientName();</span>
+<span class="nc" id="L31">	}</span>
+
+	public ClientConnect(Client client) {
+<span class="nc" id="L34">		super(1000);</span>
+<span class="nc" id="L35">		this.type = client.getClientType();</span>
+<span class="nc" id="L36">		this.clientId = client.getClientId();</span>
+<span class="nc" id="L37">		this.username = client.getClientName();</span>
+<span class="nc" id="L38">	}</span>
+
+	public ClientType getType() {
+<span class="nc" id="L41">		return type;</span>
+	}
+
+	public int getClientId() {
+<span class="nc" id="L45">		return clientId;</span>
+	}
+
+	public String getUsername() {
+<span class="nc" id="L49">		return username;</span>
+	}
+
+	public Client getClient() {
+<span class="nc" id="L53">		return new Client(clientId, username, type);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchorPane_main" prefHeight="592.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+    <AnchorPane id="pane_mainPane" minHeight="0.0" minWidth="0.0" prefHeight="628.0" prefWidth="462.0">
+         <children>
+            
+            <Text fx:id="text_nameTournament" layoutX="14.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Turniers" wrappingWidth="101.693359375" />
+            <TextField id="textField_nameTournament" fx:id="textField_nameTournament" alignment="CENTER" layoutX="284.0" layoutY="25.0" prefHeight="25.0" prefWidth="163.0" />
+            
+            <Text fx:id="text_shapeAmountTournament" layoutX="15.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Anzahl Farben/Symbole" />
+            <TextField id="textField_shapesTournament" fx:id="textField_shapesTournament" alignment="CENTER" layoutX="308.0" layoutY="150.0" prefHeight="25.0" prefWidth="115.0" styleClass="textField" text="6" />
+            <Text fx:id="text_wrongShapeAmountTournament" fill="RED" layoutX="308.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle aus 2-12!" />
+            <Button fx:id="button_decShapesTournament" layoutX="284.0" layoutY="150.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button fx:id="button_incShapesTournament" layoutX="422.0" layoutY="150.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            
+            <Text fx:id="text_tileFrequencyTournament" layoutX="15.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Häufigkeit der Spielsteine" />
+            <Text fx:id="text_wrongTileFrequencyTournament" fill="RED" layoutX="308.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle mindestens 1!" />
+            <TextField fx:id="textField_tileFrequencyTournament" alignment="CENTER" layoutX="308.0" layoutY="200.0" prefHeight="25.0" prefWidth="115.0" text="1" />
+            <Button fx:id="button_decTileFrequencyTournament" layoutX="284.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button fx:id="button_incTileFrequencyTournament" layoutX="422.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            
+            <Text fx:id="text_respiteTournament" layoutX="14.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bedenkzeit pro Spielzug in Millisekunden" />
+            <Text fx:id="text_wrongRespiteTournament" fill="RED" layoutX="308.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle größer als 0!" />
+            <TextField fx:id="textField_respiteTournament" alignment="CENTER" layoutX="308.0" layoutY="250.0" prefHeight="25.0" prefWidth="115.0" text="3000" />
+            <Button fx:id="button_decRespiteTournament" layoutX="284.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button fx:id="button_incRespiteTournament" layoutX="422.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            
+            <Text fx:id="text_timeToDrawTournament" layoutX="14.0" layoutY="316.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zeit für Visualisierungen in Millisekunden" />
+            <Text fx:id="text_wrongTimeToDrawTournament" fill="RED" layoutX="308.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle größer als 0!" />
+            <TextField fx:id="textField_timeToDrawTournament" alignment="CENTER" layoutX="308.0" layoutY="299.0" prefHeight="25.0" prefWidth="115.0" text="1000" />
+            <Button fx:id="button_decTimeToDrawTournament" layoutX="284.0" layoutY="299.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button fx:id="button_incTimeToDrawTournament" layoutX="422.0" layoutY="299.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            
+            <Text fx:id="text_maxTilesTournament" layoutX="15.0" layoutY="366.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximale Anzahl Steine auf der Hand" />
+            <Text fx:id="text_wrongMaxTilesTournament" fill="RED" layoutX="308.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle mindestens 1!" />
+            <TextField fx:id="textField_maxTilesTournament" alignment="CENTER" layoutX="308.0" layoutY="349.0" prefHeight="25.0" prefWidth="115.0" text="6" />
+            <Button fx:id="button_decMaxTilesTournament" layoutX="284.0" layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button fx:id="button_incMaxTilesTournament" layoutX="422.0" layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            
+            <Text fx:id="text_wrongMoveTournament" layoutX="15.0" layoutY="408.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Konsequenzen bei regelwidrigem Spielzug" />
+			<RadioButton fx:id="radioButton_nothingWrongMoveTournament" layoutX="284.0" layoutY="395.0" mnemonicParsing="false" text="Nichts" />
+            <RadioButton fx:id="radioButton_decPointsWrongMoveTournament" layoutX="284.0" layoutY="419.0" mnemonicParsing="false" text="Punktabzug" />
+            <TextField fx:id="textField_pointLossWrongMoveTournament" alignment="CENTER" layoutX="330.0" layoutY="450.0" prefHeight="25.0" prefWidth="92.0" text="1" />
+      		<Button fx:id="button_decPointLossWrongMoveTournament" layoutX="306.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+      		<Button fx:id="button_incPointLossWrongMoveTournament" layoutX="422.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            <RadioButton fx:id="radioButton_removeFromGameWrongMoveTournament" layoutX="285.0" layoutY="486.0" mnemonicParsing="false" text="Ausschluss vom Spiel" />
+      		
+            <Text fx:id="text_slowMoveTournament" layoutX="15.0" layoutY="537.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Konsequenzen bei abgelaufener Zeit" />
+            <RadioButton fx:id="radioButton_removeFromGameSlowMoveTournament" layoutX="285.0" layoutY="591.0" mnemonicParsing="false" text="Ausschluss vom Spiel" />
+            <RadioButton fx:id="radioButton_decPointsSlowMoveTournament" layoutX="284.0" layoutY="524.0" mnemonicParsing="false" text="Punktabzug" />
+            <Button fx:id="button_incPointLossSlowMoveTournament" layoutX="422.0" layoutY="555.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            <Button fx:id="button_decPointLossSlowMoveTournament" layoutX="306.0" layoutY="555.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <TextField fx:id="textField_pointLossSlowMoveTournament" alignment="CENTER" layoutX="330.0" layoutY="555.0" prefHeight="25.0" prefWidth="92.0" text="1" />
+            <Text fx:id="text_wrongPointLossSlowMoveTournament" fill="RED" layoutX="330.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle eine Zahl" />
+            <Text fx:id="text_wrongPointLossWrongMoveTournament" fill="RED" layoutX="330.0" layoutY="447.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle eine Zahl" />
+            <Text fx:id="text_noNameTournament" fill="RED" layoutX="308.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wähle einen Namen!" />
+            <Text fx:id="text_gameConfigurationTournament" layoutX="13.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: BOLD;" text="Konfiguration der Spiele">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            
+         </children>
+      </AnchorPane>
+      
+            <Pane id="pane_bottomBar" layoutY="628.0" prefHeight="53.0" prefWidth="462.0">
+         <children>
+         	  <Button fx:id="button_saveAsTournament" layoutX="85.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="235.0" text="Spielkonfiguration als Vorlage speichern" />
+            <Button fx:id="button_createTournament" layoutX="346.0" layoutY="14.0" mnemonicParsing="false" text="Turnier erstellen" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

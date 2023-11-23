@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MapLogicTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 06:34:28)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic</a> &gt; <span class="el_source">MapLogicTest.java</span></div><h1>MapLogicTest.java</h1><pre class="source lang-java linenums">package org.GameLogic;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.GameLogic.Board.Coordinate;
+import org.GameLogic.Board.MapLogic;
+import org.GameLogic.Board.Tuple;
+import org.junit.Test;
+
+import de.upb.swtpra1819interface.models.Tile;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.SlowMove;
+import de.upb.swtpra1819interface.models.WrongMove;
+
+import static org.junit.Assert.assertEquals;
+
+<span class="fc" id="L19">public class MapLogicTest {</span>
+
+	@Test
+	public void validateMoveTest() {
+
+<span class="fc" id="L24">		WrongMove wrongMove = WrongMove.NOTHING;</span>
+<span class="fc" id="L25">		SlowMove slowMove = SlowMove.POINT_LOSS;</span>
+
+<span class="fc" id="L27">		Configuration config = new Configuration(7, 2, 6, 2, 2, wrongMove, 0, slowMove, 0, 2);</span>
+
+<span class="fc" id="L29">		MapLogic map = new MapLogic(config.getColorShapeCount());</span>
+
+		// thrid map to create a Qwirkles
+<span class="fc" id="L32">		MapLogic thirdMap = new MapLogic(config.getColorShapeCount());</span>
+
+		// fill third map
+<span class="fc" id="L35">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; fillMap = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L36">		fillMap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L37">		fillMap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 1, 2)));</span>
+<span class="fc" id="L38">		fillMap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(3, 1, 3)));</span>
+<span class="fc" id="L39">		fillMap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(4, 1, 4)));</span>
+<span class="fc" id="L40">		fillMap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 3), newTile(5, 2, 4)));</span>
+
+<span class="fc" id="L42">		thirdMap.doMove(fillMap);</span>
+
+<span class="fc" id="L44">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithGap = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L45">		moveWithGap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(5, 2, 1)));</span>
+<span class="fc" id="L46">		moveWithGap.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 2), newTile(7, 2, 3)));</span>
+
+		// create moves
+<span class="fc" id="L49">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; wrongFirstMove = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L50">		wrongFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, -1), newTile(0, 0, 1)));</span>
+
+		// single tile on empty map
+<span class="fc" id="L53">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveFirstTile = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L54">		moveFirstTile.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 0, 1)));</span>
+
+		// tile with same color under tile one
+<span class="fc" id="L57">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithSameColorLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L58">		moveWithSameColorLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(2, 1, 1)));</span>
+
+		// tile with different color and shape
+<span class="fc" id="L61">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithDifferentColorShape = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L62">		moveWithDifferentColorShape.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(3, 5, 6)));</span>
+
+		// tile with same shape besides tile one
+<span class="fc" id="L65">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithSameShapeLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L66">		moveWithSameShapeLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(4, 0, 2)));</span>
+
+		// tile with different shape as line but same color tile as tile besides
+<span class="fc" id="L69">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithDifferntColorLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L70">		moveWithDifferntColorLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(5, 1, 2)));</span>
+
+		// tile with different color as line but same shape tile as tile besides
+<span class="fc" id="L73">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithDifferntShapeLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L74">		moveWithDifferntShapeLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(6, 1, 2)));</span>
+
+		// tiles in horizontal line
+<span class="fc" id="L77">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveInHorizontalLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L78">		moveInHorizontalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(7, 4, 1)));</span>
+<span class="fc" id="L79">		moveInHorizontalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 0), newTile(8, 3, 1)));</span>
+
+		// same tile in line
+<span class="fc" id="L82">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; sameTileInLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L83">		sameTileInLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(9, 0, 4)));</span>
+<span class="fc" id="L84">		sameTileInLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(10, 0, 5)));</span>
+<span class="fc" id="L85">		sameTileInLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(11, 0, 2)));</span>
+
+		// tiles in vertrical line
+<span class="fc" id="L88">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveInVerticalLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L89">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(12, 0, 4)));</span>
+<span class="fc" id="L90">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(13, 0, 5)));</span>
+<span class="fc" id="L91">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(14, 0, 3)));</span>
+<span class="fc" id="L92">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 5), newTile(15, 0, 7)));</span>
+
+		// tiles not in one line
+<span class="fc" id="L95">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveNotInALine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L96">		moveNotInALine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(16, 0, 4)));</span>
+<span class="fc" id="L97">		moveNotInALine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, 0), newTile(17, 3, 1)));</span>
+
+		// color line down to create scenario for next test
+<span class="fc" id="L100">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; helpMove = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L101">		helpMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 1), newTile(18, 4, 3)));</span>
+<span class="fc" id="L102">		helpMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 2), newTile(19, 4, 4)));</span>
+
+		// tile between two lines
+<span class="fc" id="L105">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveBetweenLines = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L106">		moveBetweenLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 2), newTile(20, 2, 4)));</span>
+<span class="fc" id="L107">		moveBetweenLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 2), newTile(30, 3, 4)));</span>
+
+		// tile with no neighboring tile
+<span class="fc" id="L110">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithNoNeighbour = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L111">		moveWithNoNeighbour.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 3), newTile(21, 4, 1)));</span>
+
+		// line with tiles not connected to other tiles
+<span class="fc" id="L114">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; lineWithNoNeighbour = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L115">		lineWithNoNeighbour.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 4), newTile(22, 4, 2)));</span>
+<span class="fc" id="L116">		lineWithNoNeighbour.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 5), newTile(23, 4, 3)));</span>
+
+		// move in different lines
+<span class="fc" id="L119">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveInDifferentLines = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L120">		moveInDifferentLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(24, 0, 2)));</span>
+<span class="fc" id="L121">		moveInDifferentLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 5), newTile(25, 0, 3)));</span>
+<span class="fc" id="L122">		moveInDifferentLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 5), newTile(26, 0, 3)));</span>
+
+		// horizontal line, to create scenario for next test
+<span class="fc" id="L125">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; helpMove2 = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L126">		helpMove2.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 5), newTile(27, 1, 7)));</span>
+<span class="fc" id="L127">		helpMove2.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 5), newTile(28, 4, 7)));</span>
+
+		// move connects two lines with same tile in it
+<span class="fc" id="L130">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveBetweenLineWithSameTile = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L131">		moveBetweenLineWithSameTile.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 3), newTile(27, 4, 5)));</span>
+<span class="fc" id="L132">		moveBetweenLineWithSameTile.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 4), newTile(28, 4, 7)));</span>
+
+		// assert statements
+		// tile on empty field
+<span class="fc" id="L136">		assertEquals(&quot;Tile is not on coordinate (0,0)&quot;, false, map.validateMove(wrongFirstMove));</span>
+
+		// tile on empty field
+<span class="fc" id="L139">		assertEquals(&quot;Tile could not placed on empty board&quot;, true, map.validateMove(moveFirstTile));</span>
+<span class="fc" id="L140">		map.doMove(moveFirstTile);</span>
+
+		// tile on not empty field
+<span class="fc" id="L143">		assertEquals(&quot;Tile is placed on a not empty field&quot;, false, map.validateMove(moveFirstTile));</span>
+
+		// tile on line with the same color
+<span class="fc" id="L146">		assertEquals(&quot;Tile with same color is not validate&quot;, true, map.validateMove(moveWithSameColorLine));</span>
+<span class="fc" id="L147">		map.doMove(moveWithSameColorLine);</span>
+
+		// tile on line with same shape
+<span class="fc" id="L150">		assertEquals(&quot;Tile with same shape is not validate&quot;, true, map.validateMove(moveWithSameShapeLine));</span>
+<span class="fc" id="L151">		map.doMove(moveWithSameShapeLine);</span>
+
+		// tile with different color and shape
+<span class="fc" id="L154">		assertEquals(&quot;Tile with different color and shape is validate&quot;, false,</span>
+<span class="fc" id="L155">				map.validateMove(moveWithDifferentColorShape));</span>
+
+		// tile on line with different color
+<span class="fc" id="L158">		assertEquals(&quot;Tile with wrong color is validate&quot;, false, map.validateMove(moveWithDifferntColorLine));</span>
+
+		// tile on line with different shape
+<span class="fc" id="L161">		assertEquals(&quot;Tile with wrong shape is validate&quot;, false, map.validateMove(moveWithDifferntShapeLine));</span>
+
+		// all tiles in a horizontal line
+<span class="fc" id="L164">		assertEquals(&quot;Tiles in horizontal line are not validate&quot;, true, map.validateMove(moveInHorizontalLine));</span>
+<span class="fc" id="L165">		map.doMove(moveInHorizontalLine);</span>
+
+		// same tile in line
+<span class="fc" id="L168">		assertEquals(&quot;Same tile in line is validate&quot;, false, map.validateMove(sameTileInLine));</span>
+
+		// all tiles in a vertical line
+<span class="fc" id="L171">		assertEquals(&quot;Tiles in vertical line are not validate&quot;, true, map.validateMove(moveInVerticalLine));</span>
+<span class="fc" id="L172">		map.doMove(moveInVerticalLine);</span>
+
+		// tiles not in a line
+<span class="fc" id="L175">		assertEquals(&quot;Tiles not in a line are validate&quot;, false, map.validateMove(moveNotInALine));</span>
+
+		// help move to create szenario for next test
+<span class="fc" id="L178">		assertEquals(&quot;help line is not validate&quot;, true, map.validateMove(helpMove));</span>
+<span class="fc" id="L179">		map.doMove(helpMove);</span>
+
+		// tile between two correct lines
+<span class="fc" id="L182">		assertEquals(&quot;tiles between two color lines is validate&quot;, true, map.validateMove(moveBetweenLines));</span>
+<span class="fc" id="L183">		map.doMove(moveBetweenLines);</span>
+
+		// tile between two correct lines
+<span class="fc" id="L186">		assertEquals(&quot;tile with no neighbour is validate&quot;, false, map.validateMove(moveWithNoNeighbour));</span>
+
+		// tile between two correct lines
+<span class="fc" id="L189">		assertEquals(&quot;line with no neighbour is validate&quot;, false, map.validateMove(lineWithNoNeighbour));</span>
+
+		// tiles are not in one line
+<span class="fc" id="L192">		assertEquals(&quot;tiles in different line are validate&quot;, false, map.validateMove(moveInDifferentLines));</span>
+
+		// help move to create szenario for next test
+<span class="fc" id="L195">		assertEquals(&quot;help line 2 is not validate&quot;, true, map.validateMove(helpMove2));</span>
+<span class="fc" id="L196">		map.doMove(helpMove2);</span>
+
+		// tiles are not in one line
+<span class="fc" id="L199">		assertEquals(&quot;&quot;, false, thirdMap.validateMove(moveWithGap));</span>
+
+<span class="fc" id="L201">	}</span>
+
+	@Test
+	public void getScoreTest() {
+<span class="fc" id="L205">		WrongMove wrongMove = WrongMove.NOTHING;</span>
+<span class="fc" id="L206">		SlowMove slowMove = SlowMove.POINT_LOSS;</span>
+
+<span class="fc" id="L208">		Configuration config = new Configuration(7, 2, 6, 2, 2, wrongMove, 0, slowMove, 0, 2);</span>
+
+<span class="fc" id="L210">		MapLogic map = new MapLogic(config.getColorShapeCount());</span>
+
+		// second map to create a Qwirkles
+<span class="fc" id="L213">		MapLogic secondMap = new MapLogic(config.getColorShapeCount());</span>
+
+		// create moves
+
+		// tiles in horizontal line
+<span class="fc" id="L218">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveFirstTiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L219">		moveFirstTiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 0, 1)));</span>
+<span class="fc" id="L220">		moveFirstTiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(2, 1, 1)));</span>
+<span class="fc" id="L221">		moveFirstTiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(7, 4, 1)));</span>
+<span class="fc" id="L222">		moveFirstTiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 0), newTile(8, 3, 1)));</span>
+
+		// tiles in vertrical line
+<span class="fc" id="L225">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveInVerticalLine = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L226">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(4, 0, 2)));</span>
+<span class="fc" id="L227">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(12, 0, 4)));</span>
+<span class="fc" id="L228">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(13, 0, 5)));</span>
+<span class="fc" id="L229">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(14, 0, 3)));</span>
+<span class="fc" id="L230">		moveInVerticalLine.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 5), newTile(15, 0, 7)));</span>
+
+		// color line down to create scenario for next test
+<span class="fc" id="L233">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; helpMove = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L234">		helpMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 1), newTile(18, 4, 3)));</span>
+<span class="fc" id="L235">		helpMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 2), newTile(19, 4, 4)));</span>
+
+		// tile between two lines
+<span class="fc" id="L238">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveBetweenLines = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L239">		moveBetweenLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 2), newTile(20, 2, 4)));</span>
+<span class="fc" id="L240">		moveBetweenLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 2), newTile(30, 3, 4)));</span>
+
+		// horizontal line, to create scenario for next test
+<span class="fc" id="L243">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; helpMove2 = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L244">		helpMove2.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 5), newTile(27, 1, 7)));</span>
+
+		// move with two lines
+<span class="fc" id="L247">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; moveWithMulitpleLines = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L248">		moveWithMulitpleLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 5), newTile(28, 4, 7)));</span>
+<span class="fc" id="L249">		moveWithMulitpleLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 4), newTile(29, 4, 2)));</span>
+<span class="fc" id="L250">		moveWithMulitpleLines.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 3), newTile(30, 4, 5)));</span>
+
+		// qwirkle on first move
+<span class="fc" id="L253">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; qwirkleOnFirstMove = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L254">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 4, 1)));</span>
+<span class="fc" id="L255">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 4, 2)));</span>
+<span class="fc" id="L256">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(3, 4, 3)));</span>
+<span class="fc" id="L257">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(4, 4, 4)));</span>
+<span class="fc" id="L258">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 4), newTile(5, 4, 5)));</span>
+<span class="fc" id="L259">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 5), newTile(6, 4, 6)));</span>
+<span class="fc" id="L260">		qwirkleOnFirstMove.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 6), newTile(7, 4, 7)));</span>
+
+		// help move for double qwirkle
+<span class="fc" id="L263">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; helpForDoubleQwirkle = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L264">		helpForDoubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(8, 1, 1)));</span>
+<span class="fc" id="L265">		helpForDoubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(9, 2, 1)));</span>
+<span class="fc" id="L266">		helpForDoubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(3, 0), newTile(10, 3, 1)));</span>
+<span class="fc" id="L267">		helpForDoubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(4, 0), newTile(11, 5, 1)));</span>
+<span class="fc" id="L268">		helpForDoubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(5, 0), newTile(12, 6, 1)));</span>
+
+		// double qwirkle
+<span class="fc" id="L271">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; doubleQwirkle = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L272">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 0), newTile(13, 7, 1)));</span>
+<span class="fc" id="L273">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 1), newTile(14, 6, 1)));</span>
+<span class="fc" id="L274">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 2), newTile(15, 5, 1)));</span>
+<span class="fc" id="L275">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 3), newTile(16, 4, 1)));</span>
+<span class="fc" id="L276">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 4), newTile(17, 3, 1)));</span>
+<span class="fc" id="L277">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 5), newTile(18, 2, 1)));</span>
+<span class="fc" id="L278">		doubleQwirkle.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(6, 6), newTile(19, 1, 1)));</span>
+
+		// assert statements
+		// tile on empty field
+<span class="fc" id="L282">		assertEquals(&quot;wrong score for first tile on map&quot;, 4, map.getScore(moveFirstTiles));</span>
+<span class="fc" id="L283">		map.doMove(moveFirstTiles);</span>
+
+		// all tiles in a vertical line
+<span class="fc" id="L286">		assertEquals(&quot;wrong score for line&quot;, 6, map.getScore(moveInVerticalLine));</span>
+<span class="fc" id="L287">		map.doMove(moveInVerticalLine);</span>
+
+		// help move to create szenario for next test
+<span class="fc" id="L290">		assertEquals(&quot;wrong score for help move&quot;, 3, map.getScore(helpMove));</span>
+<span class="fc" id="L291">		map.doMove(helpMove);</span>
+
+		// tile between two correct lines
+<span class="fc" id="L294">		assertEquals(&quot;wrong score for move between lines&quot;, 4, map.getScore(moveBetweenLines));</span>
+<span class="fc" id="L295">		map.doMove(moveBetweenLines);</span>
+
+		// help move to create szenario for next test
+<span class="fc" id="L298">		assertEquals(&quot;wrong score for help 2 move&quot;, 2, map.getScore(helpMove2));</span>
+<span class="fc" id="L299">		map.doMove(helpMove2);</span>
+
+		// move with two lines
+<span class="fc" id="L302">		assertEquals(&quot;wrong score for move with two lines&quot;, 9, map.getScore(moveWithMulitpleLines));</span>
+<span class="fc" id="L303">		map.doMove(moveWithMulitpleLines);</span>
+
+		// qwirkle on first move
+<span class="fc" id="L306">		assertEquals(&quot;wrong score for qwirkle on first move&quot;, 14, secondMap.getScore(qwirkleOnFirstMove));</span>
+<span class="fc" id="L307">		secondMap.doMove(qwirkleOnFirstMove);</span>
+
+		// help move for double qwirkle
+<span class="fc" id="L310">		assertEquals(&quot;wrong score for help move&quot;, 6, secondMap.getScore(helpForDoubleQwirkle));</span>
+<span class="fc" id="L311">		secondMap.doMove(helpForDoubleQwirkle);</span>
+
+		// horizontal qwirkle
+<span class="fc" id="L314">		assertEquals(&quot;wrong score for double qwirkle&quot;, 28, secondMap.getScore(doubleQwirkle));</span>
+<span class="fc" id="L315">		secondMap.doMove(doubleQwirkle);</span>
+<span class="fc" id="L316">	}</span>
+
+	@Test
+	public void isTileOnCoordinateTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L323">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L324">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L325">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L326">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L329">			Class param[] = { List.class };</span>
+<span class="fc" id="L330">			Method method = map.getClass().getDeclaredMethod(&quot;isTileOnCoordinate&quot;, param);</span>
+<span class="fc" id="L331">			method.setAccessible(true);</span>
+
+<span class="fc" id="L333">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L334">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+
+			/*
+			 * tile on coordinate
+			 */
+<span class="fc" id="L339">			boolean isTileOn = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L340">			assertEquals(&quot;Tile is on position&quot;, true, isTileOn);</span>
+<span class="fc" id="L341">			move.clear();</span>
+
+			/*
+			 * no tile on coordinate
+			 */
+<span class="fc" id="L346">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L347">			isTileOn = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L348">			assertEquals(&quot;No tile is on position&quot;, false, isTileOn);</span>
+<span class="fc" id="L349">			move.clear();</span>
+<span class="pc" id="L350">		} catch (Exception e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L352">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L354">	}</span>
+
+	@Test
+	public void tileOnZeroTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L361">		MapLogic map = new MapLogic(6);</span>
+
+		try {
+<span class="fc" id="L364">			Class param[] = { List.class };</span>
+<span class="fc" id="L365">			Method method = map.getClass().getDeclaredMethod(&quot;tileOnZero&quot;, param);</span>
+<span class="fc" id="L366">			method.setAccessible(true);</span>
+
+<span class="fc" id="L368">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L369">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+
+			/*
+			 * tile on zero
+			 */
+<span class="fc" id="L374">			boolean isTileOn = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L375">			assertEquals(&quot;Tile is on zero&quot;, true, isTileOn);</span>
+<span class="fc" id="L376">			move.clear();</span>
+
+			/*
+			 * no tile on zero
+			 */
+<span class="fc" id="L381">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L382">			isTileOn = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L383">			assertEquals(&quot;Tile is not on zero&quot;, false, isTileOn);</span>
+<span class="fc" id="L384">			move.clear();</span>
+<span class="pc" id="L385">		} catch (Exception e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L387">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L389">	}</span>
+
+	@Test
+	public void isConnectedHorizontalVerticalTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L396">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L397">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L398">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L399">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 2, 1)));</span>
+<span class="fc" id="L400">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L403">			Class param[] = { List.class };</span>
+<span class="fc" id="L404">			Method method = map.getClass().getDeclaredMethod(&quot;isConnectedHorizontalVertical&quot;, param);</span>
+<span class="fc" id="L405">			method.setAccessible(true);</span>
+
+<span class="fc" id="L407">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * horizontal line with no gap
+			 */
+<span class="fc" id="L412">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(3, 3, 1)));</span>
+<span class="fc" id="L413">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(4, 4, 1)));</span>
+<span class="fc" id="L414">			boolean isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L415">			assertEquals(&quot;Move has no horizontal gap&quot;, true, isConnected);</span>
+<span class="fc" id="L416">			move.clear();</span>
+
+			/*
+			 * horizontal line with gap
+			 */
+<span class="fc" id="L421">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -2), newTile(3, 3, 1)));</span>
+<span class="fc" id="L422">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(4, 4, 1)));</span>
+<span class="fc" id="L423">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L424">			assertEquals(&quot;Move has horizontal gap&quot;, false, isConnected);</span>
+<span class="fc" id="L425">			move.clear();</span>
+
+			/*
+			 * vertical line with no gap
+			 */
+<span class="fc" id="L430">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(3, 3, 1)));</span>
+<span class="fc" id="L431">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(4, 4, 1)));</span>
+<span class="fc" id="L432">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L433">			assertEquals(&quot;Move has no vertical gap&quot;, true, isConnected);</span>
+<span class="fc" id="L434">			move.clear();</span>
+
+			/*
+			 * vertical line with gap
+			 */
+<span class="fc" id="L439">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(3, 3, 1)));</span>
+<span class="fc" id="L440">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(4, 4, 1)));</span>
+<span class="fc" id="L441">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L442">			assertEquals(&quot;Move has vertical gap&quot;, false, isConnected);</span>
+<span class="fc" id="L443">			move.clear();</span>
+
+<span class="pc" id="L445">		} catch (Exception e) {</span>
+<span class="nc" id="L446">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L448">	}</span>
+
+	@Test
+	public void isHorizontalTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L455">		MapLogic map = new MapLogic(6);</span>
+
+		try {
+<span class="fc" id="L458">			Class param[] = { List.class };</span>
+<span class="fc" id="L459">			Method method = map.getClass().getDeclaredMethod(&quot;isHorizontal&quot;, param);</span>
+<span class="fc" id="L460">			method.setAccessible(true);</span>
+
+<span class="fc" id="L462">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * horizontal move
+			 */
+<span class="fc" id="L467">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L468">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L469">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(1, 1, 1)));</span>
+
+<span class="fc" id="L471">			boolean isHorizontal = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L472">			assertEquals(&quot;Move is horizontal&quot;, true, isHorizontal);</span>
+<span class="fc" id="L473">			move.clear();</span>
+
+			/*
+			 * not horizontal move
+			 */
+<span class="fc" id="L478">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L479">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L480">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 1), newTile(1, 1, 1)));</span>
+
+<span class="fc" id="L482">			isHorizontal = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L483">			assertEquals(&quot;Move is not horizontal&quot;, false, isHorizontal);</span>
+<span class="fc" id="L484">			move.clear();</span>
+
+<span class="pc" id="L486">		} catch (Exception e) {</span>
+<span class="nc" id="L487">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L489">	}</span>
+
+	@Test
+	public void isVerticalTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L496">		MapLogic map = new MapLogic(6);</span>
+
+		try {
+<span class="fc" id="L499">			Class param[] = { List.class };</span>
+<span class="fc" id="L500">			Method method = map.getClass().getDeclaredMethod(&quot;isVertical&quot;, param);</span>
+<span class="fc" id="L501">			method.setAccessible(true);</span>
+
+<span class="fc" id="L503">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * horizontal move
+			 */
+<span class="fc" id="L508">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L509">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(1, 1, 1)));</span>
+<span class="fc" id="L510">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(1, 1, 1)));</span>
+
+<span class="fc" id="L512">			boolean isHorizontal = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L513">			assertEquals(&quot;Move is vertical&quot;, true, isHorizontal);</span>
+<span class="fc" id="L514">			move.clear();</span>
+
+			/*
+			 * not horizontal move
+			 */
+<span class="fc" id="L519">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 1, 1)));</span>
+<span class="fc" id="L520">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(1, 1, 1)));</span>
+<span class="fc" id="L521">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(1, 2), newTile(1, 1, 1)));</span>
+
+<span class="fc" id="L523">			isHorizontal = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L524">			assertEquals(&quot;Move is not vertical&quot;, false, isHorizontal);</span>
+<span class="fc" id="L525">			move.clear();</span>
+
+<span class="pc" id="L527">		} catch (Exception e) {</span>
+<span class="nc" id="L528">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L530">	}</span>
+
+	@Test
+	public void sameColorShapeInMoveTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L537">		MapLogic map = new MapLogic(6);</span>
+
+		try {
+<span class="fc" id="L540">			Class param[] = { List.class };</span>
+<span class="fc" id="L541">			Method method = map.getClass().getDeclaredMethod(&quot;sameColorShapeInMove&quot;, param);</span>
+<span class="fc" id="L542">			method.setAccessible(true);</span>
+
+<span class="fc" id="L544">			List&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * same shape
+			 */
+<span class="fc" id="L549">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(1, 2, 1)));</span>
+<span class="fc" id="L550">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -2), newTile(2, 1, 1)));</span>
+<span class="fc" id="L551">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -3), newTile(3, 3, 1)));</span>
+<span class="fc" id="L552">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -4), newTile(4, 5, 1)));</span>
+<span class="fc" id="L553">			boolean isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L554">			assertEquals(&quot;Tiles in move have the same shape&quot;, true, isConnected);</span>
+<span class="fc" id="L555">			move.clear();</span>
+
+			/*
+			 * different shapes
+			 */
+<span class="fc" id="L560">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(1, 2, 1)));</span>
+<span class="fc" id="L561">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -2), newTile(2, 1, 2)));</span>
+<span class="fc" id="L562">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -3), newTile(3, 3, 1)));</span>
+<span class="fc" id="L563">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -4), newTile(4, 5, 1)));</span>
+<span class="fc" id="L564">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L565">			assertEquals(&quot;Tiles in move have the same shape&quot;, false, isConnected);</span>
+<span class="fc" id="L566">			move.clear();</span>
+
+			/*
+			 * same color
+			 */
+<span class="fc" id="L571">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(1, 1, 1)));</span>
+<span class="fc" id="L572">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -2), newTile(2, 1, 2)));</span>
+<span class="fc" id="L573">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -3), newTile(3, 1, 3)));</span>
+<span class="fc" id="L574">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -4), newTile(4, 1, 4)));</span>
+<span class="fc" id="L575">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L576">			assertEquals(&quot;Tiles in move have the same color&quot;, true, isConnected);</span>
+<span class="fc" id="L577">			move.clear();</span>
+
+			/*
+			 * different color
+			 */
+<span class="fc" id="L582">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -1), newTile(1, 1, 1)));</span>
+<span class="fc" id="L583">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -2), newTile(2, 1, 2)));</span>
+<span class="fc" id="L584">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -3), newTile(3, 3, 3)));</span>
+<span class="fc" id="L585">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, -4), newTile(4, 1, 2)));</span>
+<span class="fc" id="L586">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L587">			assertEquals(&quot;Tiles in move have the same color&quot;, false, isConnected);</span>
+<span class="fc" id="L588">			move.clear();</span>
+
+<span class="pc" id="L590">		} catch (Exception e) {</span>
+<span class="nc" id="L591">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L593">	}</span>
+	
+	@Test
+	public void isHorizontalCompatibleTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L600">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L601">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L602">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 3, 1)));</span>
+<span class="fc" id="L603">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 2, 1)));</span>
+
+<span class="fc" id="L605">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 0), newTile(3, 3, 2)));</span>
+<span class="fc" id="L606">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-3, 0), newTile(4, 3, 3)));</span>
+
+<span class="fc" id="L608">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(5, 5, 5)));</span>
+<span class="fc" id="L609">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L612">			Class param[] = { Coordinate.class, int.class, int.class };</span>
+<span class="fc" id="L613">			Method method = map.getClass().getDeclaredMethod(&quot;isHorizontalCompatible&quot;, param);</span>
+<span class="fc" id="L614">			method.setAccessible(true);</span>
+
+<span class="fc" id="L616">			ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * compatible move the tile left and right
+			 */
+<span class="fc" id="L621">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(6, 3, 4)));</span>
+<span class="fc" id="L622">			map.doMove(move);</span>
+			
+<span class="fc" id="L624">			boolean isConnected = (boolean) method.invoke(map, new Coordinate(-1, 0), 3, 4);</span>
+<span class="fc" id="L625">			assertEquals(&quot;Move is compatible&quot;, true, isConnected);</span>
+<span class="fc" id="L626">			move.clear();</span>
+
+			/*
+			 * compatible move on left and right side of an existing line
+			 */
+<span class="fc" id="L631">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-4, 0), newTile(7, 3, 5)));</span>
+<span class="fc" id="L632">			map.doMove(move);</span>
+			
+<span class="fc" id="L634">			isConnected = (boolean) method.invoke(map, new Coordinate(-4, 0), 3, 5);</span>
+<span class="fc" id="L635">			assertEquals(&quot;Move is compatible&quot;, true, isConnected);</span>
+<span class="fc" id="L636">			move.clear();</span>
+
+			/*
+			 * tile is not connected
+			 */
+<span class="fc" id="L641">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-5, 0), newTile(6, 4, 5)));</span>
+<span class="fc" id="L642">			map.doMove(move);</span>
+			
+<span class="fc" id="L644">			isConnected = (boolean) method.invoke(map, new Coordinate(-5, 0), 4, 5);</span>
+<span class="fc" id="L645">			assertEquals(&quot;Move is not compatible&quot;, false, isConnected);</span>
+<span class="fc" id="L646">			move.clear();</span>
+
+
+<span class="pc" id="L649">		} catch (Exception e) {</span>
+<span class="nc" id="L650">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L652">	}</span>
+	
+	@Test
+	public void isVerticalCompatibleTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L659">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L660">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L661">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 3, 1)));</span>
+<span class="fc" id="L662">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 2, 1)));</span>
+
+<span class="fc" id="L664">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 0), newTile(3, 3, 2)));</span>
+<span class="fc" id="L665">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-3, 0), newTile(4, 3, 3)));</span>
+
+<span class="fc" id="L667">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(5, 5, 5)));</span>
+<span class="fc" id="L668">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L671">			Class param[] = { Coordinate.class, int.class, int.class };</span>
+<span class="fc" id="L672">			Method method = map.getClass().getDeclaredMethod(&quot;isVerticalCompatible&quot;, param);</span>
+<span class="fc" id="L673">			method.setAccessible(true);</span>
+
+<span class="fc" id="L675">			ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+			/*
+			 * compatible move the tile left and right
+			 */
+<span class="fc" id="L680">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 2), newTile(6, 1, 1)));</span>
+<span class="fc" id="L681">			map.doMove(move);</span>
+			
+<span class="fc" id="L683">			boolean isConnected = (boolean) method.invoke(map, new Coordinate(0, 2), 1, 1);</span>
+<span class="fc" id="L684">			assertEquals(&quot;Move is compatible&quot;, true, isConnected);</span>
+<span class="fc" id="L685">			move.clear();</span>
+
+			/*
+			 * tile is already in line
+			 */
+<span class="fc" id="L690">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 3), newTile(7, 1, 1)));</span>
+<span class="fc" id="L691">			map.doMove(move);</span>
+			
+<span class="fc" id="L693">			isConnected = (boolean) method.invoke(map, new Coordinate(0, 3), 1, 1);</span>
+<span class="fc" id="L694">			assertEquals(&quot;Move is not compatible&quot;, false, isConnected);</span>
+<span class="fc" id="L695">			move.clear();</span>
+
+<span class="pc" id="L697">		} catch (Exception e) {</span>
+<span class="nc" id="L698">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L700">	}</span>
+
+	@Test
+	public void compatibleWithTilesOnMapTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L707">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L708">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L709">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 3, 1)));</span>
+<span class="fc" id="L710">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 2, 1)));</span>
+
+<span class="fc" id="L712">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 0), newTile(3, 3, 3)));</span>
+<span class="fc" id="L713">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-3, 0), newTile(4, 3, 2)));</span>
+
+<span class="fc" id="L715">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(5, 5, 5)));</span>
+<span class="fc" id="L716">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L719">			Class param[] = { List.class };</span>
+<span class="fc" id="L720">			Method method = map.getClass().getDeclaredMethod(&quot;compatibleWithTilesOnMap&quot;, param);</span>
+<span class="fc" id="L721">			method.setAccessible(true);</span>
+
+<span class="fc" id="L723">			ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L725">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-4, 0), newTile(6, 3, 4)));</span>
+<span class="fc" id="L726">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(6, 3, 5)));</span>
+<span class="fc" id="L727">			map.doMove(move);</span>
+			
+<span class="fc" id="L729">			boolean isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L730">			assertEquals(&quot;Move is compatible&quot;, true, isConnected);</span>
+<span class="fc" id="L731">			move.clear();</span>
+			
+<span class="fc" id="L733">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-5, 0), newTile(6, 3, 5)));</span>
+<span class="fc" id="L734">			map.doMove(move);</span>
+			
+<span class="fc" id="L736">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L737">			assertEquals(&quot;same tile in line&quot;, false, isConnected);</span>
+<span class="fc" id="L738">			move.clear();</span>
+
+<span class="pc" id="L740">		} catch (Exception e) {</span>
+<span class="nc" id="L741">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L743">	}</span>
+	
+	@Test
+	public void gapOnMapTest() {
+		/*
+		 * build map
+		 */
+<span class="fc" id="L750">		MapLogic map = new MapLogic(6);</span>
+<span class="fc" id="L751">		ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; tiles = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+<span class="fc" id="L752">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 0), newTile(1, 3, 1)));</span>
+<span class="fc" id="L753">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(0, 1), newTile(2, 2, 1)));</span>
+
+<span class="fc" id="L755">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-2, 0), newTile(3, 3, 3)));</span>
+<span class="fc" id="L756">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-3, 0), newTile(4, 3, 2)));</span>
+
+<span class="fc" id="L758">		tiles.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(2, 0), newTile(5, 5, 5)));</span>
+<span class="fc" id="L759">		map.doMove(tiles);</span>
+
+		try {
+<span class="fc" id="L762">			Class param[] = { List.class };</span>
+<span class="fc" id="L763">			Method method = map.getClass().getDeclaredMethod(&quot;gapOnMap&quot;, param);</span>
+<span class="fc" id="L764">			method.setAccessible(true);</span>
+
+<span class="fc" id="L766">			ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt; move = new ArrayList&lt;Tuple&lt;Coordinate, Tile&gt;&gt;();</span>
+
+<span class="fc" id="L768">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-4, 0), newTile(6, 3, 4)));</span>
+<span class="fc" id="L769">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-1, 0), newTile(6, 3, 5)));</span>
+			
+<span class="fc" id="L771">			boolean isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L772">			assertEquals(&quot;Move is connected&quot;, false, isConnected);</span>
+<span class="fc" id="L773">			move.clear();</span>
+			
+<span class="fc" id="L775">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-5, 1), newTile(6, 3, 5)));</span>
+<span class="fc" id="L776">			move.add(new Tuple&lt;Coordinate, Tile&gt;(new Coordinate(-6, 1), newTile(6, 3, 4)));</span>
+			
+<span class="fc" id="L778">			isConnected = (boolean) method.invoke(map, move);</span>
+<span class="fc" id="L779">			assertEquals(&quot;line is not connected to map&quot;, true, isConnected);</span>
+<span class="fc" id="L780">			move.clear();</span>
+
+<span class="pc" id="L782">		} catch (Exception e) {</span>
+<span class="nc" id="L783">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L785">	}</span>
+
+	public Tile newTile(int id, int color, int shape) {
+<span class="fc" id="L788">		return new Tile(color, shape, id);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 06:34:28)</div></body></html>

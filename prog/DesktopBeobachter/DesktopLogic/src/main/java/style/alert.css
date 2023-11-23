@@ -1,0 +1,24 @@
+.dialog .button{
+	-fx-font-size: 16;
+	-fx-background-color:#C2C5C7;
+	-fx-text-fill: #6b7074;
+}
+.dialog{
+	-fx-font-family: "tahoma";
+	-fx-min-height: 150;
+	-fx-min-width: 200;
+	-fx-background-color: "white";
+}
+
+.dialog:header .header-panel {
+  -fx-background-color: "white";
+}
+
+
+.dialog .button:hover{
+	-fx-background-color: #8C9195;
+}
+
+.dialog > .button-bar > .container {
+  -fx-background-color: #6B7074;
+}

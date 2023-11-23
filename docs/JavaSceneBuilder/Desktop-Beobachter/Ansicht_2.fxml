@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Ansicht_2SceneController">
+   <children>
+      <BorderPane layoutX="167.0" layoutY="187.0" prefHeight="500.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <SplitPane dividerPositions="0.29797979797979796" prefHeight="45.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="23.0" prefWidth="150.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="5.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="4.0" text="Game-ID:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="5.0" />
+                              <Label fx:id="labelGameID" layoutX="112.0" layoutY="4.0" text="gameID" AnchorPane.topAnchor="5.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="150.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" layoutX="24.0" layoutY="5.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label layoutX="24.0" layoutY="4.0" text="Time left:" AnchorPane.topAnchor="5.0" />
+                              <Label fx:id="labelTime" layoutX="103.0" layoutY="4.0" text="time" AnchorPane.topAnchor="5.0" />
+                           </children>
+                        </HBox>
+                      <Button fx:id="buttonExitGame" mnemonicParsing="false" onAction="#closeGame" text="Exit Game" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </top>
+         <center>
+            <AnchorPane prefHeight="335.0" prefWidth="883.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas height="325.0" width="883.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <HBox alignment="TOP_RIGHT" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="Center" />
+                        <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" text="+" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" text="-" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </center>
+         <bottom>
+            <TitledPane animated="false" text="Info" BorderPane.alignment="CENTER">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="1200.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" layoutX="35.0" layoutY="14.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="buttonHand" layoutX="35.0" layoutY="14.0" mnemonicParsing="false" text="Hand" textAlignment="CENTER" />
+                              <Button fx:id="stack" layoutX="35.0" layoutY="45.0" mnemonicParsing="false" text="Stack" textAlignment="CENTER" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+         </bottom>
+         <right>
+            <AnchorPane prefHeight="371.0" prefWidth="320.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="75.0" layoutY="64.0" text="Es gibt hier eine Anchor Pane" />
+               </children>
+            </AnchorPane>
+         </right>
+      </BorderPane>
+   </children>
+</AnchorPane>

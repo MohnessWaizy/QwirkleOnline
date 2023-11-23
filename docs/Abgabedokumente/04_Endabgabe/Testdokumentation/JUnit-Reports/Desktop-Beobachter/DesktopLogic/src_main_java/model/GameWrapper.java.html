@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>GameWrapper.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">GameWrapper.java</span></div><h1>GameWrapper.java</h1><pre class="source lang-java linenums">package model;
+
+
+import org.NetworkInterface.NetClient;
+
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.Game;
+
+public class GameWrapper {
+	private Client client;
+	private NetClient netClient;
+	private Game game;
+	
+
+
+<span class="nc" id="L16">	public GameWrapper(Client client, NetClient netClient, Game game) {</span>
+<span class="nc" id="L17">		this.client = client;</span>
+<span class="nc" id="L18">		this.netClient = netClient;</span>
+<span class="nc" id="L19">		this.game = game;</span>
+<span class="nc" id="L20">	}</span>
+
+	public Game getGame() {
+<span class="nc" id="L23">		return this.game;</span>
+	}
+	
+	public void setGame(Game game) {
+<span class="nc" id="L27">		this.game = game;</span>
+<span class="nc" id="L28">	}</span>
+
+	public Client getClient() {
+<span class="nc" id="L31">		return this.client;</span>
+	}
+
+	public void setClient(Client client) {
+<span class="nc" id="L35">		this.client = client;</span>
+<span class="nc" id="L36">	}</span>
+	
+	public NetClient getNetClient() {
+<span class="nc" id="L39">		return netClient;</span>
+	}
+
+	public void setNetClient(NetClient netClient) {
+<span class="nc" id="L43">		this.netClient = netClient;</span>
+<span class="nc" id="L44">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

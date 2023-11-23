@@ -1,0 +1,68 @@
+#label_lobbyLogo{
+	-fx-font-size: 60px;
+	-fx-text-fill: #5990C3;
+}
+
+#pane_topLobby {
+	-fx-background-color: #F4F4F4;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:180px;
+    -fx-background-color: #F4F4F4;
+}
+
+.tab{
+    -fx-background-insets: 0 10 0 10,0,0;
+    -fx-background-radius: 0;
+}
+.tab-pane .tab {
+    -fx-background-color: #5990C3;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #C2C5C7;
+    -fx-focus-color: transparent;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    /*-fx-text-fill: #828282;*/
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label { 
+    -fx-alignment: CENTER;
+    /*-fx-text-fill: #96b946;*/
+}
+
+#vbox_started {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_ended {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_notStarted {
+	-fx-background-color: #C2C5C7;
+}
+
+#vbox_tournament {
+	-fx-background-color: #C2C5C7;
+}
+
+#lable_infoGamepanel {
+	-fx-font-size: 25px;
+	-fx-font-family: "Times New Roman";
+	
+}
+#label_gameID{
+	-fx-font-size: 15px;
+	-fx-font-weight: BOLD;
+}

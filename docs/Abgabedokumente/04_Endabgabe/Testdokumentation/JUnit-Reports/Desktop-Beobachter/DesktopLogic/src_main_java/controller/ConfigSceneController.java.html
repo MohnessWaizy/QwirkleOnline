@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ConfigSceneController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">ConfigSceneController.java</span></div><h1>ConfigSceneController.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import de.upb.swtpra1819interface.models.Configuration;
+import de.upb.swtpra1819interface.models.SlowMove;
+import de.upb.swtpra1819interface.models.WrongMove;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import model.Tuple;
+
+
+/**
+ * This class controls the conifg.fxml file. It put given game configuration
+ * into in the matching labels
+ *
+ */
+<span class="nc" id="L18">public class ConfigSceneController extends AbstractSceneController {</span>
+
+	/**
+	 * FXML Label to present the game name
+	 */
+	@FXML
+	Label label_gameName;
+
+	/**
+	 * FXML Label to present the number of different colored tiles
+	 */
+	@FXML
+	Label label_countColor;
+
+	/**
+	 * FXML Label to present the number of tiles
+	 */
+	@FXML
+	Label label_countTiles;
+
+	/**
+	 * FXML Label to present maximum number of tiles in the hand of a player
+	 */
+	@FXML
+	Label label_handTiles;
+
+	/**
+	 * FXML Label to present maximum amount of time of a player to make a move
+	 */
+	@FXML
+	Label label_turnTime;
+
+	/**
+	 * FXML Label to present the visualization time for the AIs
+	 */
+	@FXML
+	Label label_visuTime;
+
+	/**
+	 * FXML Label to present the penalty for the case of a wrong move
+	 */
+	@FXML
+	Label label_wrongMovePenalty;
+
+	/**
+	 * FXML Label to present the penalty for the case of a slow move
+	 */
+	@FXML
+	Label label_slowMovePenalty;
+
+	/**
+	 * FXML Label to present the maximum amount of players in the game lobby
+	 */
+	@FXML
+	Label label_maxPlayerAmount;
+	
+	@FXML
+	Label label_wrongMove;
+	
+	@FXML
+	Label label_slowMove;
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+<span class="nc" id="L83">	}</span>
+
+	/**
+	 * Set given game configuration into matching panels 
+	 * 
+	 * @param gameName name of the game instance
+	 * @param config   configuration of the game instance
+	 */
+	public void setConfig(String gameName, Configuration config) {
+<span class="nc" id="L92">		setGameName(gameName);</span>
+<span class="nc" id="L93">		setCountColor(config.getColorShapeCount());</span>
+<span class="nc" id="L94">		setCountTiles(config.getTileCount());</span>
+<span class="nc" id="L95">		setHandTiles(config.getMaxHandTiles());</span>
+<span class="nc" id="L96">		setTurnTime(config.getTurnTime());</span>
+<span class="nc" id="L97">		setVisuTime(config.getTimeVisualization());</span>
+<span class="nc" id="L98">		setWrongMove(config.getWrongMove());</span>
+<span class="nc" id="L99">		setWrongMovePenalty(config.getWrongMovePenalty());</span>
+<span class="nc" id="L100">		setSlowMove(config.getSlowMove());</span>
+<span class="nc" id="L101">		setSlowMovePenalty(config.getSlowMovePenalty());</span>
+<span class="nc" id="L102">		setMaxPlayerAmount(config.getMaxPlayerNumber());</span>
+<span class="nc" id="L103">	}</span>
+
+	/* 
+	 * @see controller.AbstractSceneController#receiveMessage(java.lang.Object)
+	 */
+	@Override
+	public &lt;T&gt; void receiveMessage(T message) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">		if (message instanceof Tuple) {</span>
+<span class="nc" id="L111">			Tuple&lt;String, Configuration&gt; info = (Tuple&lt;String, Configuration&gt;) message;</span>
+<span class="nc" id="L112">			setConfig(info.getFirst(), info.getSecond());</span>
+		}
+<span class="nc" id="L114">	}</span>
+
+	/**
+	 * Sets label_gameName to game name 
+	 * 
+	 * @param gameName
+	 */
+	public void setGameName(String gameName) {
+<span class="nc" id="L122">		label_gameName.setText(&quot;Spielname: &quot; + gameName);</span>
+<span class="nc" id="L123">	}</span>
+
+	/**
+	 * Sets label_countColor to amount of different colors of tiles
+	 * 
+	 * @param countColor
+	 */
+	public void setCountColor(int countColor) {
+<span class="nc" id="L131">		label_countColor.setText(&quot;Anzahl Farben: &quot; + Integer.toString(countColor));</span>
+<span class="nc" id="L132">	}</span>
+
+	/**
+	 * Sets label_countTiles to amount of tiles
+	 * 
+	 * @param countTiles
+	 */
+	public void setCountTiles(int countTiles) {
+<span class="nc" id="L140">		label_countTiles.setText(&quot;Anzahl Steine: &quot; + Integer.toString(countTiles));</span>
+<span class="nc" id="L141">	}</span>
+
+	/**
+	 * Sets label_countTiles to tiles on hand of player
+	 * 
+	 * @param handTiles
+	 */
+	public void setHandTiles(int handTiles) {
+<span class="nc" id="L149">		label_handTiles.setText(&quot;Steine auf der Hand: &quot; + Integer.toString(handTiles));</span>
+<span class="nc" id="L150">	}</span>
+
+	/**
+	 * Sets label_turnTime to maximum time for a players turn
+	 * 
+	 * @param turnTime
+	 */
+	public void setTurnTime(long turnTime) {
+<span class="nc" id="L158">		label_turnTime.setText(&quot;Zeit für ein Zug: &quot; + Long.toString(turnTime));</span>
+<span class="nc" id="L159">	}</span>
+
+	/**
+	 * Sets label_visuTime to visualization time 
+	 * 
+	 * @param visuTime
+	 */
+	public void setVisuTime(long visuTime) {
+<span class="nc" id="L167">		label_visuTime.setText(&quot;Visualisierungszeit: &quot; + Long.toString(visuTime));</span>
+<span class="nc" id="L168">	}</span>
+	
+	/**
+	 * Checks the given wrongMove and sets the label_wronMove to the given penaltyType in the game coniguration
+	 * @param wrongMove
+	 */
+	public void setWrongMove(WrongMove wrongMove) {
+		String penaltyType;
+<span class="nc bnc" id="L176" title="All 2 branches missed.">		if (wrongMove == WrongMove.NOTHING) {</span>
+<span class="nc" id="L177">			penaltyType = &quot;Nichts&quot;;</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">		} else if (wrongMove == WrongMove.POINT_LOSS) {</span>
+<span class="nc" id="L179">			penaltyType = &quot;Verlust von Punkten&quot;;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">		} else if (wrongMove == WrongMove.KICK) {</span>
+<span class="nc" id="L181">			penaltyType = &quot;Kick&quot;;</span>
+<span class="nc" id="L182">		} else</span>
+<span class="nc" id="L183">			penaltyType = &quot;None&quot;;</span>
+<span class="nc" id="L184">		label_wrongMove.setText(&quot;Bestrafung für falschen Spielzug: &quot; + penaltyType);</span>
+<span class="nc" id="L185">	}</span>
+
+	/**
+	 * Sets label_wrongMovePenalty to the given penalty
+	 * 
+	 * @param wrongMovePenalty
+	 */
+	public void setWrongMovePenalty(int wrongMovePenalty) {
+<span class="nc" id="L193">		label_wrongMovePenalty.setText(&quot;Punktabzug für falschen Spielzug: &quot; + wrongMovePenalty);</span>
+<span class="nc" id="L194">	}</span>
+	
+	/**
+	 * Checks the value of slow move penaltyType and 
+	 * sets label_slowMovePenalty to the given penalty in the game configuration
+	 * 
+	 * @param slowMovePenalty
+	 */
+	public void setSlowMove(SlowMove slowMove) {
+		String penaltyType;
+<span class="nc bnc" id="L204" title="All 2 branches missed.">		if(slowMove == SlowMove.KICK) {</span>
+<span class="nc" id="L205">			penaltyType = &quot;Kick&quot;;</span>
+<span class="nc" id="L206">		}</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">		else if(slowMove == SlowMove.POINT_LOSS) {</span>
+<span class="nc" id="L208">			penaltyType = &quot;Verlust von Punkten&quot;;</span>
+<span class="nc" id="L209">		}</span>
+		else {
+<span class="nc" id="L211">			penaltyType = &quot;None&quot;;</span>
+		}
+<span class="nc" id="L213">		label_slowMove.setText(&quot;Bestrafung für langsamen Spielzug: &quot; +  penaltyType);</span>
+<span class="nc" id="L214">	}</span>
+
+	/**
+	 * Sets label_slowMovePenalty to the given penalty
+	 * 
+	 * @param slowMovePenalty
+	 */
+	public void setSlowMovePenalty(int slowMovePenalty) {
+<span class="nc" id="L222">		label_slowMovePenalty.setText(&quot;Punktabzug für langsamen Spielzug: &quot; + slowMovePenalty);</span>
+<span class="nc" id="L223">	}</span>
+
+	/**
+	 * Sets label_maxPlayerAmount to maximum amount of players possible in a game
+	 * 
+	 * @param maxPlayerNumber
+	 */
+	public void setMaxPlayerAmount(int maxPlayerNumber) {
+<span class="nc" id="L231">		label_maxPlayerAmount.setText(&quot;Maximale Spieleranzahl: &quot; + Integer.toString(maxPlayerNumber));</span>
+<span class="nc" id="L232">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>

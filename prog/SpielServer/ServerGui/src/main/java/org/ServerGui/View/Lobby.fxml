@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="596.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane id="pane_topLobby" prefHeight="63.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button id="button_lobbyLogout" fx:id="button_terminateServer" layoutX="705.0" layoutY="14.0" mnemonicParsing="false" text="Server beenden" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="14.0" />
+            <Button id="button_lobbyLogout" fx:id="button_createGame" layoutX="16.0" layoutY="14.0" mnemonicParsing="false" text="Spiel hinzufügen" />
+            <Button id="button_lobbyLogout" fx:id="button_addTournament" layoutX="180.0" layoutY="14.0" mnemonicParsing="false" text="Turnier hinzufügen" />
+         </children>
+      </AnchorPane>
+      <TabPane layoutY="63.0" prefHeight="533.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="63.0">
+        <tabs>
+            <Tab id="tab_started" fx:id="tab_started" text="Gestartet">
+               <content>
+                  <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox id="vbox_started" fx:id="vbox_started" prefHeight="504.0" prefWidth="800.0" spacing="10.0">
+                           <padding>
+                              <Insets left="15.0" right="23.0" top="25.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+          <Tab id="tab_notStarted" fx:id="tab_notStarted" text="Wartend">
+               <content>
+                  <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox fx:id="vbox_notStarted" prefHeight="504.0" prefWidth="800.0" spacing="10.0">
+                           <padding>
+                              <Insets left="15.0" right="23.0" top="25.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+          <Tab id="tab_ended" fx:id="tab_ended" text="Beendet">
+               <content>
+                  <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox fx:id="vbox_ended" prefHeight="504.0" prefWidth="800.0" spacing="10.0">
+                           <padding>
+                              <Insets left="15.0" right="23.0" top="25.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+          </Tab>
+            <Tab id="tab_tournament" fx:id="tab_tournament" text="Turniere">
+               <content>
+                  <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox fx:id="vbox_tournament" prefHeight="504.0" prefWidth="800.0" spacing="10.0">
+                           <padding>
+                              <Insets left="15.0" right="23.0" top="25.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Lobby.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (25.01.2019 15:53:41)</a> &gt; <a href="../../index.html" class="el_group">GameLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">org.GameLogic.Handler</a> &gt; <span class="el_source">Lobby.java</span></div><h1>Lobby.java</h1><pre class="source lang-java linenums">package org.GameLogic.Handler;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.GameLogic.Util.MessageCodes;
+import org.GameLogic.Util.Tournament;
+import org.NetworkInterface.MessageWithClientId;
+import org.ServerGui.Model.GuiCommunication;
+
+import de.upb.swtpra1819interface.messages.AccessDenied;
+import de.upb.swtpra1819interface.messages.GameJoinRequest;
+import de.upb.swtpra1819interface.messages.GameListResponse;
+import de.upb.swtpra1819interface.messages.Message;
+import de.upb.swtpra1819interface.messages.NotAllowed;
+import de.upb.swtpra1819interface.messages.SpectatorJoinRequest;
+import de.upb.swtpra1819interface.models.Client;
+import de.upb.swtpra1819interface.models.ClientType;
+import de.upb.swtpra1819interface.models.Game;
+import de.upb.swtpra1819interface.models.GameState;
+
+import org.BasicCommunication.BasicCommunicationHandler;
+import org.CostumMessages.ChangeGameState;
+import org.CostumMessages.ClientConnect;
+import org.CostumMessages.ClientJoinGame;
+import org.CostumMessages.MoveToGame;
+import org.CostumMessages.NewGame;
+import org.CostumMessages.NewTournament;
+import org.CostumMessages.Disconnect;
+import org.CostumMessages.FinishGame;
+import org.CostumMessages.FinishTournament;
+import org.CostumMessages.GameAbortError;
+import org.CostumMessages.GamePausedError;
+import org.CostumMessages.GameResumeError;
+import org.CostumMessages.GameStartError;
+
+/**
+ * 
+ * Lobby of the game server
+ *
+ */
+public class Lobby extends BasicCommunicationHandler {
+
+	private GameManagement gameManagement;
+	private Map&lt;Integer, Client&gt; idMapping;
+	private Map&lt;Integer, Game&gt; gameMapping;
+	private Set&lt;Client&gt; clientsInLobby;
+	private GuiCommunication guiCommunication;
+	private Map&lt;Integer, Tournament&gt; tournamentMapping;
+
+<span class="nc" id="L55">	public Lobby(GameManagement gameManagement, GuiCommunication guiCommunication) {</span>
+<span class="nc" id="L56">		this.gameManagement = gameManagement;</span>
+<span class="nc" id="L57">		this.guiCommunication = guiCommunication;</span>
+
+<span class="nc" id="L59">		this.clientsInLobby = new HashSet&lt;Client&gt;();</span>
+<span class="nc" id="L60">		this.idMapping = new HashMap&lt;Integer, Client&gt;();</span>
+<span class="nc" id="L61">		this.gameMapping = new HashMap&lt;Integer, Game&gt;();</span>
+<span class="nc" id="L62">		this.tournamentMapping = new HashMap&lt;Integer, Tournament&gt;();</span>
+<span class="nc" id="L63">	}</span>
+
+	/**
+	 * 
+	 * Joins a client as a player to a game
+	 * 
+	 * @param gameJoinRequest gameJoinRequest Request that should be handled
+	 * @param clientId
+	 */
+	public void gameJoin(GameJoinRequest gameJoinRequest, int clientId) {
+<span class="nc" id="L73">		Game game = gameMapping.get(gameJoinRequest.getGameId());</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">		if (idMapping.get(clientId).getClientType() == ClientType.PLAYER &amp;&amp; game.isTournament() == false</span>
+<span class="nc bnc" id="L75" title="All 4 branches missed.">				&amp;&amp; clientsInLobby.contains(idMapping.get(clientId)) &amp;&amp; game.getGameState() == GameState.NOT_STARTED</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">				&amp;&amp; game.getConfig().getMaxPlayerNumber() &gt; getClientsWithoutSpectators(game.getPlayers()).size()) {</span>
+<span class="nc" id="L77">			gameMapping.get(gameJoinRequest.getGameId()).getPlayers().add(idMapping.get(clientId));</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">			if (!gameManagement.moveToGame(gameMapping.get(gameJoinRequest.getGameId()), idMapping.get(clientId))) {</span>
+<span class="nc" id="L79">				throw new RuntimeException(&quot;wrong usage, not correct&quot;);</span>
+			} else {
+<span class="nc" id="L81">				Client playerToRemove = idMapping.remove(clientId);</span>
+<span class="nc" id="L82">				guiCommunication.addToMessageQueue(</span>
+<span class="nc" id="L83">						new ClientJoinGame(gameMapping.get(gameJoinRequest.getGameId()), playerToRemove));</span>
+<span class="nc" id="L84">				clientsInLobby.remove(playerToRemove);</span>
+			}
+<span class="nc" id="L86">		} else {</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">			if (idMapping.get(clientId).getClientType() == ClientType.PLAYER) {</span>
+<span class="nc" id="L88">				gameManagement.sendMsg(new NotAllowed(</span>
+<span class="nc" id="L89">						&quot;Client nicht in der Lobby oder Game schon gestartet/beendet oder Game voll oder Tournament&quot;,</span>
+<span class="nc" id="L90">						MessageCodes.GAMEJOINREQUEST), clientId);</span>
+<span class="nc" id="L91">			} else {</span>
+<span class="nc" id="L92">				gameManagement.sendMsg(new AccessDenied(&quot;Not a Player&quot;, MessageCodes.GAMEJOINREQUEST), clientId);</span>
+			}
+		}
+<span class="nc" id="L95">	}</span>
+
+	/**
+	 * 
+	 * Joins a client as a spectator to a game
+	 * 
+	 * @param spectatorJoinRequest Request that should be handled
+	 * @param clientId
+	 */
+	public void spectatorJoin(SpectatorJoinRequest spectatorJoinRequest, int clientId) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">		if (clientsInLobby.contains(idMapping.get(clientId))) {</span>
+<span class="nc" id="L106">			Client spectatorClient = idMapping.get(clientId);</span>
+<span class="nc" id="L107">			spectatorClient.setClientType(ClientType.SPECTATOR);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">			if (!gameManagement.moveToGame(gameMapping.get(spectatorJoinRequest.getGameId()), spectatorClient)) {</span>
+<span class="nc" id="L109">				throw new RuntimeException(&quot;wrong usage, not correct&quot;);</span>
+			} else {
+<span class="nc" id="L111">				Client spectatorToRemove = idMapping.remove(clientId);</span>
+<span class="nc" id="L112">				Game game = gameMapping.get(spectatorJoinRequest.getGameId());</span>
+<span class="nc" id="L113">				guiCommunication.addToMessageQueue(new ClientJoinGame(game, spectatorClient));</span>
+<span class="nc" id="L114">				clientsInLobby.remove(spectatorToRemove);</span>
+			}
+<span class="nc" id="L116">		} else {</span>
+<span class="nc" id="L117">			gameManagement.sendMsg(new NotAllowed(&quot;Client nicht in der Lobby&quot;, MessageCodes.GAMEJOINREQUEST), clientId);</span>
+		}
+<span class="nc" id="L119">	}</span>
+
+	/**
+	 * 
+	 * Removes all Spectators from a list of Clients
+	 * 
+	 * @param clientsList List of players of a game
+	 * @return list of Players of a game without the Spectators
+	 */
+	private HashSet&lt;Client&gt; getClientsWithoutSpectators(Collection&lt;Client&gt; clientsList) {
+
+<span class="nc" id="L130">		HashSet&lt;Client&gt; clearedList = new HashSet&lt;Client&gt;();</span>
+<span class="nc" id="L131">		HashSet&lt;Client&gt; clients = new HashSet&lt;Client&gt;(clientsList);</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		for (Client j : clients) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">			if (j.getClientType() == ClientType.PLAYER) {</span>
+<span class="nc" id="L134">				clearedList.add(j);</span>
+			}
+		}
+<span class="nc" id="L137">		return clearedList;</span>
+	}
+
+	/**
+	 * 
+	 * Creates a new tournament and starts the first round
+	 * 
+	 * @param newTournament Message object of a new tournament
+	 */
+	private void createNewTournament(NewTournament newTournament) {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">		if (tournamentMapping.get(newTournament.getTournamentId()) != null) {</span>
+<span class="nc" id="L148">			throw new RuntimeException(&quot;Such a tournament already exists&quot;);</span>
+		} else {
+<span class="nc" id="L150">			guiCommunication.addToMessageQueue(newTournament);</span>
+<span class="nc" id="L151">			Tournament tournament = new Tournament(newTournament.getTournamentName(), newTournament.getConfig());</span>
+<span class="nc" id="L152">			tournament.setClientsNotInGame(newTournament.getClients());</span>
+<span class="nc" id="L153">			tournamentMapping.put(newTournament.getTournamentId(), tournament);</span>
+<span class="nc" id="L154">			createGamesAndMoveClientsForTournament(newTournament.getTournamentId());</span>
+		}
+<span class="nc" id="L156">	}</span>
+
+	/**
+	 * 
+	 * Creates a new round of a tournament if needed
+	 * 
+	 * @param tournamentId Id of the tournament
+	 */
+	private void nextTournamentRound(int tournamentId) {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		if (tournamentMapping.get(tournamentId).getClients().size() &lt; 2) {</span>
+<span class="nc" id="L166">			System.out.println(&quot;Tournament &quot; + tournamentMapping.get(tournamentId).getTournamentName() + &quot; finished&quot;);</span>
+<span class="nc" id="L167">			guiCommunication.addToMessageQueue(</span>
+<span class="nc" id="L168">					new FinishTournament(tournamentId, tournamentMapping.get(tournamentId).getClients().get(0)));</span>
+<span class="nc" id="L169">		} else {</span>
+<span class="nc" id="L170">			createGamesAndMoveClientsForTournament(tournamentId);</span>
+		}
+<span class="nc" id="L172">	}</span>
+
+	/**
+	 * 
+	 * Creates the right number of games for a tournament. If the number of players
+	 * are uneven a 1 vs 1 vs 1 is created.
+	 * 
+	 * @param tournamentId Id of the tournament
+	 */
+	private void createGamesAndMoveClientsForTournament(int tournamentId) {
+<span class="nc" id="L182">		int clientCount = tournamentMapping.get(tournamentId).getClients().size();</span>
+<span class="nc" id="L183">		int clientIndex = 0;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">		for (int i = 0; i &lt; Math.floor(clientCount / 2); i++) {</span>
+			// create message for GUI
+<span class="nc" id="L186">			NewGame newGame = new NewGame(&quot;TournamentId:&quot; + tournamentId + &quot; Game &quot; + i, true,</span>
+<span class="nc" id="L187">					tournamentMapping.get(tournamentId).getConfig());</span>
+
+<span class="nc" id="L189">			newGame.setGameId(gameManagement.createGame(newGame.getGame()));</span>
+
+			// create Game
+<span class="nc" id="L192">			gameMapping.put(newGame.getGameId(), newGame.getGame());</span>
+<span class="nc" id="L193">			gameMapping.get(newGame.getGameId()).setPlayers(new ArrayList&lt;Client&gt;());</span>
+<span class="nc" id="L194">			newGame.setTournamentId(tournamentId);</span>
+<span class="nc" id="L195">			guiCommunication.addToMessageQueue(newGame);</span>
+<span class="nc" id="L196">			tournamentMapping.get(tournamentId).getGames().add(newGame.getGame());</span>
+
+<span class="nc bnc" id="L198" title="All 2 branches missed.">			for (int j = 0; j &lt; 2; j++) {</span>
+				// move Clients into the game
+<span class="nc" id="L200">				Client movedClient = idMapping</span>
+<span class="nc" id="L201">						.get(tournamentMapping.get(tournamentId).getClients().get(clientIndex).getClientId());</span>
+<span class="nc" id="L202">				movedClient.setClientType(</span>
+<span class="nc" id="L203">						tournamentMapping.get(tournamentId).getClients().get(clientIndex).getClientType());</span>
+
+<span class="nc bnc" id="L205" title="All 2 branches missed.">				if (!gameManagement.moveToGame(gameMapping.get(newGame.getGameId()), movedClient)) {</span>
+<span class="nc" id="L206">					clientCount--;</span>
+<span class="nc" id="L207">					System.out.println(&quot;Disqualified Player &quot; + movedClient.getClientName() + &quot;because not in lobby.&quot;);</span>
+<span class="nc" id="L208">				} else {</span>
+<span class="nc" id="L209">					Client clientToRemove = idMapping.remove(movedClient.getClientId());</span>
+<span class="nc" id="L210">					guiCommunication</span>
+<span class="nc" id="L211">							.addToMessageQueue(new ClientJoinGame(gameMapping.get(newGame.getGameId()), movedClient));</span>
+<span class="nc" id="L212">					clientsInLobby.remove(clientToRemove);</span>
+				}
+
+				// handle uneven client count
+<span class="nc" id="L216">				clientIndex++;</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">				if (clientIndex + 1 == clientCount) {</span>
+<span class="nc" id="L218">					j--;</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">				} else if (clientIndex &gt;= clientCount) {</span>
+<span class="nc" id="L220">					break;</span>
+				}
+			}
+
+			// autostart each game
+<span class="nc" id="L225">			gameMapping.get(newGame.getGameId()).setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L226">			gameManagement.startGame(newGame.getGameId());</span>
+		}
+<span class="nc" id="L228">	}</span>
+
+	/**
+	 * 
+	 * Removes a client from a game
+	 * 
+	 * @param client Client to be removed
+	 * @param gameId Id of the game to remove from
+	 * @return whether the removal was a success
+	 */
+	public boolean removeClientFromGame(Client client, int gameId) {
+<span class="nc" id="L239">		return (gameMapping.get(gameId).getPlayers().remove(client));</span>
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+<span class="nc" id="L249">		System.out.println(&quot;Lobby startup..&quot;);</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">		while (canReceiveMessage()) {</span>
+<span class="nc" id="L251">			MessageWithClientId messageWithClientId = pollNextMessage();</span>
+
+<span class="nc bnc" id="L253" title="All 2 branches missed.">			if (messageWithClientId != null) {</span>
+<span class="nc" id="L254">				Message message = messageWithClientId.getMsg();</span>
+<span class="nc" id="L255">				int clientId = messageWithClientId.getClientId();</span>
+
+<span class="nc bnc" id="L257" title="All 16 branches missed.">				switch (message.getUniqueId()) {</span>
+				case MessageCodes.GAMELISTREQUEST:
+<span class="nc" id="L259">					HashSet&lt;Game&gt; games = new HashSet&lt;Game&gt;(gameMapping.values());</span>
+
+<span class="nc bnc" id="L261" title="All 2 branches missed.">					for (Game i : games) {</span>
+<span class="nc" id="L262">						i.setPlayers(getClientsWithoutSpectators(i.getPlayers()));</span>
+					}
+
+<span class="nc" id="L265">					gameManagement.sendMsg(new GameListResponse(games), clientId);</span>
+<span class="nc" id="L266">					break;</span>
+				case MessageCodes.GAMEJOINREQUEST:
+<span class="nc" id="L268">					gameJoin((GameJoinRequest) message, clientId);</span>
+<span class="nc" id="L269">					break;</span>
+				case MessageCodes.SPECTATORJOINREQUEST:
+<span class="nc" id="L271">					spectatorJoin((SpectatorJoinRequest) message, clientId);</span>
+<span class="nc" id="L272">					break;</span>
+				case MessageCodes.CLIENTCONNECT:
+<span class="nc" id="L274">					Client connectClient = ((ClientConnect) message).getClient();</span>
+<span class="nc" id="L275">					idMapping.put(connectClient.getClientId(), connectClient);</span>
+<span class="nc" id="L276">					clientsInLobby.add(connectClient);</span>
+<span class="nc" id="L277">					guiCommunication.addToMessageQueue(message);</span>
+<span class="nc" id="L278">					break;</span>
+				case MessageCodes.NEWGAME:
+<span class="nc" id="L280">					System.out.println(&quot;New Game&quot;);</span>
+<span class="nc" id="L281">					NewGame newGame = (NewGame) message;</span>
+<span class="nc" id="L282">					newGame.setGameId(gameManagement.createGame(newGame.getGame()));</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">					if (newGame.getGameId() != -1) {</span>
+<span class="nc" id="L284">						gameMapping.put(newGame.getGameId(), newGame.getGame());</span>
+<span class="nc" id="L285">						gameMapping.get(newGame.getGameId()).setPlayers(new ArrayList&lt;Client&gt;());</span>
+<span class="nc" id="L286">						guiCommunication.addToMessageQueue(newGame);</span>
+<span class="nc" id="L287">					} else {</span>
+<span class="nc" id="L288">						throw new RuntimeException(&quot;wrong usage of Newgame, missing data&quot;);</span>
+					}
+					break;
+				case MessageCodes.CHANGEGAMESTATE:
+<span class="nc" id="L292">					System.out.println(&quot;GameStatechanged&quot;);</span>
+<span class="nc" id="L293">					ChangeGameState changeGameState = (ChangeGameState) message;</span>
+<span class="nc bnc" id="L294" title="All 4 branches missed.">					switch (changeGameState.getState()) {</span>
+					case IN_PROGRESS:
+<span class="nc bnc" id="L296" title="All 2 branches missed.">						if (gameMapping.get(changeGameState.getGameId()).getGameState() == GameState.NOT_STARTED) {</span>
+<span class="nc" id="L297">							gameManagement.startGame(changeGameState.getGameId());</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">						} else if (gameMapping.get(changeGameState.getGameId()).getGameState() == GameState.PAUSED) {</span>
+<span class="nc" id="L299">							gameManagement.resumeGame(changeGameState.getGameId());</span>
+						}
+<span class="nc" id="L301">						gameMapping.get(changeGameState.getGameId()).setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L302">						break;</span>
+					case PAUSED:
+<span class="nc" id="L304">						gameMapping.get(changeGameState.getGameId()).setGameState(GameState.PAUSED);</span>
+<span class="nc" id="L305">						gameManagement.pauseGame(changeGameState.getGameId());</span>
+<span class="nc" id="L306">						break;</span>
+					case ENDED:
+<span class="nc" id="L308">						gameMapping.get(changeGameState.getGameId()).setGameState(GameState.ENDED);</span>
+<span class="nc" id="L309">						gameManagement.abortGame(changeGameState.getGameId(), changeGameState.getClient());</span>
+					default:
+						break;
+					}
+
+<span class="nc" id="L314">					break;</span>
+				case MessageCodes.SHUTDOWN:
+<span class="nc" id="L316">					System.out.println(&quot;Shutdown&quot;);</span>
+<span class="nc" id="L317">					gameManagement.notRunning();</span>
+<span class="nc" id="L318">					break;</span>
+				case MessageCodes.MOVETOGAME:
+<span class="nc" id="L320">					MoveToGame moveToGame = (MoveToGame) message;</span>
+<span class="nc" id="L321">					Client movedClient = idMapping.get(moveToGame.getClientId());</span>
+<span class="nc" id="L322">					movedClient.setClientType(moveToGame.getClientType());</span>
+
+<span class="nc bnc" id="L324" title="All 2 branches missed.">					if (!gameManagement.moveToGame(gameMapping.get(moveToGame.getGameId()), movedClient)) {</span>
+<span class="nc" id="L325">						throw new RuntimeException(&quot;wrong usage, not correct&quot;);</span>
+					} else {
+
+<span class="nc" id="L328">						Client clientToRemove = idMapping.remove(movedClient.getClientId());</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">						if (clientToRemove.getClientType() != ClientType.SPECTATOR) {</span>
+<span class="nc" id="L330">							gameMapping.get(moveToGame.getGameId()).getPlayers().add(clientToRemove);</span>
+						}
+
+<span class="nc" id="L333">						guiCommunication.addToMessageQueue(</span>
+<span class="nc" id="L334">								new ClientJoinGame(gameMapping.get(moveToGame.getGameId()), movedClient));</span>
+<span class="nc" id="L335">						clientsInLobby.remove(clientToRemove);</span>
+					}
+
+<span class="nc" id="L338">					break;</span>
+				case MessageCodes.FINISHGAME:
+<span class="nc" id="L340">					FinishGame finishGame = (FinishGame) message;</span>
+<span class="nc" id="L341">					finishGame.setGame(gameMapping.get(finishGame.getGameId()));</span>
+<span class="nc" id="L342">					guiCommunication.addToMessageQueue(finishGame);</span>
+
+<span class="nc" id="L344">					gameMapping.get(finishGame.getGameId()).setGameState(GameState.ENDED);</span>
+
+<span class="nc bnc" id="L346" title="All 2 branches missed.">					if (gameMapping.get(finishGame.getGameId()).isTournament()) {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">						for (Map.Entry&lt;Integer, Tournament&gt; entry : tournamentMapping.entrySet()) {</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">							if (entry.getValue().getGames().contains(gameMapping.get(finishGame.getGameId()))) {</span>
+<span class="nc" id="L349">								entry.getValue().getGames().remove(gameMapping.get(finishGame.getGameId()));</span>
+<span class="nc" id="L350">								entry.getValue().getClients().add(finishGame.getWinner().getClient());</span>
+<span class="nc bnc" id="L351" title="All 2 branches missed.">								if (entry.getValue().getGames().isEmpty()) {</span>
+<span class="nc" id="L352">									nextTournamentRound(entry.getKey());</span>
+								}
+							}
+						}
+					}
+
+<span class="nc" id="L358">					break;</span>
+				case MessageCodes.DISCONNECT:
+<span class="nc" id="L360">					Disconnect disconnect = (Disconnect) message;</span>
+<span class="nc" id="L361">					guiCommunication.addToMessageQueue(message);</span>
+
+<span class="nc" id="L363">					clientsInLobby.remove(idMapping.remove(disconnect.getClientId()));</span>
+<span class="nc" id="L364">					break;</span>
+
+				case MessageCodes.GAMESTARTERROR:
+<span class="nc" id="L367">					GameStartError gameStartError = (GameStartError) message;</span>
+<span class="nc" id="L368">					guiCommunication.addToMessageQueue(message);</span>
+<span class="nc" id="L369">					gameMapping.get(gameStartError.getGameId()).setGameState(GameState.NOT_STARTED);</span>
+<span class="nc" id="L370">					break;</span>
+				case MessageCodes.GAMEABORTERROR:
+<span class="nc" id="L372">					GameAbortError gameAbortError = (GameAbortError) message;</span>
+<span class="nc" id="L373">					guiCommunication.addToMessageQueue(message);</span>
+<span class="nc" id="L374">					gameMapping.get(gameAbortError.getGameId()).setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L375">					break;</span>
+				case MessageCodes.GAMEPAUSEDERROR:
+<span class="nc" id="L377">					GamePausedError gamePausedError = (GamePausedError) message;</span>
+<span class="nc" id="L378">					guiCommunication.addToMessageQueue(message);</span>
+<span class="nc" id="L379">					gameMapping.get(gamePausedError.getGameId()).setGameState(GameState.IN_PROGRESS);</span>
+<span class="nc" id="L380">					break;</span>
+				case MessageCodes.GAMERESUMEERROR:
+<span class="nc" id="L382">					GameResumeError gameResumeError = (GameResumeError) message;</span>
+<span class="nc" id="L383">					guiCommunication.addToMessageQueue(message);</span>
+<span class="nc" id="L384">					gameMapping.get(gameResumeError.getGameId()).setGameState(GameState.PAUSED);</span>
+<span class="nc" id="L385">					break;</span>
+				case MessageCodes.NEWTOURNAMENT:
+<span class="nc" id="L387">					NewTournament newTournament = (NewTournament) message;</span>
+<span class="nc" id="L388">					createNewTournament(newTournament);</span>
+				}
+<span class="nc" id="L390">			} else {</span>
+				try {
+<span class="nc" id="L392">					Thread.sleep(10);</span>
+<span class="nc" id="L393">				} catch (InterruptedException e) {</span>
+<span class="nc" id="L394">					e.printStackTrace();</span>
+				}
+			}
+		}
+<span class="nc" id="L398">		System.out.println(&quot;Lobby shutdown..&quot;);</span>
+<span class="nc" id="L399">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Merged (25.01.2019 15:53:41)</div></body></html>

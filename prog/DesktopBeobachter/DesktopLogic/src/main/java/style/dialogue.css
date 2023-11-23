@@ -1,0 +1,9 @@
+#label_titleFenster{
+	-fx-text-fill: #46494c;
+	-fx-font-size: 25px;
+	-fx-font-weight: BOLD;
+}
+
+#label_dialogfeld{
+	-fx-font-size: 18px;
+}

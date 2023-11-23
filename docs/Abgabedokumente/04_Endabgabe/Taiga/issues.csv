@@ -1,0 +1,261 @@
+ref,subject,description,sprint,sprint_estimated_start,sprint_estimated_finish,owner,owner_full_name,assigned_to,assigned_to_full_name,status,severity,priority,type,is_closed,attachments,external_reference,tags,watchers,voters,created_date,modified_date,finished_date,due_date,due_date_reason
+152,Do not validate same tiles in a line,"If two same tiles are in one line, the move may not be validated",,,,lgehring,Lukas Gehring,lgehring,Lukas Gehring,Done,Critical,Normal,Bug,True,0,,,[],0,2018-11-28 12:33:19.793455+00:00,2018-11-30 15:40:07.592632+00:00,2018-11-30 15:40:07.595634+00:00,,
+156,GameHandler not working with new Interface,The gamehandler needs to updated due to a new interface implementation.,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,Normal,Bug,True,0,,,[],0,2018-12-17 11:01:12.976504+00:00,2019-01-08 10:38:50.202130+00:00,2019-01-08 10:38:50.205043+00:00,,
+165,Game start is not being sent to the game management,,,,,dahmt,Tim Dahm,dahmt,Tim Dahm,Done,Normal,High,Bug,True,0,,,[],0,2019-01-02 13:34:45.654488+00:00,2019-01-02 13:34:45.672164+00:00,,,
+166,Threads are not closed when x is pressed,,,,,dahmt,Tim Dahm,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-02 14:02:17.841025+00:00,2019-01-10 16:26:59.500206+00:00,2019-01-10 16:26:59.503298+00:00,,
+167,Gamelists not reset after Disconnect,"The Gamelists in the desktopobserver should reset after Disconnecting from Server.
+All other variables should set to default also.",,,,denniss2,Dennis Suermann,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,0,,,[],1,2019-01-02 15:29:06.588257+00:00,2019-01-18 00:03:41.950426+00:00,2019-01-18 00:03:41.953686+00:00,,
+168,Network connection reads empty string,The Bufferedreader of the networkimplementation in the android client reads a empty string,,,,denniss2,Dennis Suermann,Steffen,Steffen Sassalla,Done,Important,High,Bug,True,0,,,[],0,2019-01-02 15:31:34.492046+00:00,2019-01-05 15:07:58.155484+00:00,2019-01-05 15:07:58.158636+00:00,,
+169,High cpu usage in server,,,,,dahmt,Tim Dahm,linusjun,Linus Jungemann,Done,Important,Normal,Bug,True,0,,,[98],0,2019-01-02 15:32:25.684099+00:00,2019-01-08 10:21:54.480237+00:00,,,
+170,ClientIDs in Lobby are not equal to ClientID from MessageWithClientId,https://pastebin.com/FaWi0GZa,,,,dahmt,Tim Dahm,linusjun,Linus Jungemann,Done,Critical,High,Bug,True,0,,,[],0,2019-01-02 15:33:49.255785+00:00,2019-01-04 10:16:21.751178+00:00,2019-01-04 10:16:21.754068+00:00,,
+171,GUI vbox null in assignplayercontroller,,,,,dahmt,Tim Dahm,dahmt,Tim Dahm,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-02 15:34:58.526487+00:00,2019-01-03 15:23:17.249220+00:00,,,
+172,Config null and not working,,,,,dahmt,Tim Dahm,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-02 15:36:26.163168+00:00,2019-01-04 14:40:35.060658+00:00,,,
+173,Leave game window is not scaled,,,,,dahmt,Tim Dahm,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-02 15:38:08.651554+00:00,2019-01-18 17:30:12.713698+00:00,2019-01-18 17:30:12.716690+00:00,,
+174,Client join nullpointer gamehandler,,,,,dahmt,Tim Dahm,bluk,Lukas Boschanski,Done,Normal,Normal,Bug,True,0,,,[98],0,2019-01-02 16:17:40.420835+00:00,2019-01-03 14:27:38.869929+00:00,2019-01-03 14:25:49.340031+00:00,,
+175,"When game is finished, finishing player gets +6 or +maxColorShape ?",Only defined in ruleset,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Normal,Normal,Question,True,0,,,[],0,2019-01-03 14:32:16.275178+00:00,2019-01-16 10:34:44.077863+00:00,2019-01-16 10:34:44.080933+00:00,,
+176,NullPointer thrown creating GameDataRequest,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,High,Bug,True,0,,,[98],0,2019-01-04 09:29:35.027947+00:00,2019-01-04 17:11:32.168491+00:00,2019-01-04 17:11:32.171480+00:00,,
+177,Some Threads are not closed down on Server closing,,,,,linusjun,Linus Jungemann,linusjun,Linus Jungemann,Done,Normal,Low,Bug,True,0,,,[],0,2019-01-04 10:22:28.658138+00:00,2019-01-10 17:26:30.730002+00:00,2019-01-10 17:26:30.734523+00:00,,
+178,Clients can not be assigned to a game,Clients are not displayed in the Gui and can not be assigned to a game. (Interface Doc. ver. 1.1 ch. 4.2 (p.5)),,,,linusjun,Linus Jungemann,dahmt,Tim Dahm,Done,Critical,High,Bug,True,0,,,[],0,2019-01-04 11:19:58.650402+00:00,2019-01-05 17:59:48.215765+00:00,,,
+179,Scale error,There is a problem with scene field. Scale is not set properly.,,,,lgehring,Lukas Gehring,bogna,Bogna Wierzbinska,Done,Minor,Low,Bug,True,0,,,[],0,2019-01-04 13:28:41.458053+00:00,2019-01-24 08:29:07.472153+00:00,2019-01-24 08:29:07.475222+00:00,,
+180,Game starts when pressing button setting order in lobby.,,,,,lgehring,Lukas Gehring,dahmt,Tim Dahm,Done,Normal,High,Bug,True,0,,,[],0,2019-01-04 14:39:55.569549+00:00,2019-01-16 17:23:54.773598+00:00,2019-01-16 17:23:54.776728+00:00,,
+181,GameJoinRquest accepted when game is started,"When Client tries to join started game, GameJoinRequested will be accepted and declined both.",,,,lgehring,Lukas Gehring,linusjun,Linus Jungemann,Done,Critical,High,Bug,True,0,,,[],0,2019-01-04 14:56:33.740296+00:00,2019-01-04 17:10:34.393171+00:00,2019-01-04 17:10:34.396051+00:00,,
+182,Make sure networktraffic is UTF8 encoded,,,,,linusjun,Linus Jungemann,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-04 17:12:37.828299+00:00,2019-01-06 19:20:19.757459+00:00,2019-01-06 19:20:19.767869+00:00,,
+183,Equal ip addresses will be saved in login,,,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Minor,Low,Bug,True,0,,,[],0,2019-01-05 15:13:48.192805+00:00,2019-01-07 13:02:01.823540+00:00,2019-01-07 13:02:01.826424+00:00,,
+184,No limit showing saved ip addresses in login,,,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Minor,Low,Bug,True,0,,,[],0,2019-01-05 15:15:01.762770+00:00,2019-01-07 13:01:59.384335+00:00,2019-01-07 13:01:59.387280+00:00,,
+185,Login timeout desktop,,,,,waizy,Mohness Waizy,Steffen,Steffen Sassalla,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-07 14:09:50.643459+00:00,2019-01-08 17:21:32.532125+00:00,2019-01-08 17:21:32.534997+00:00,,
+186,Login freezes,Login Javafx thread freezes when connecting to server,,,,denniss2,Dennis Suermann,Steffen,Steffen Sassalla,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-07 14:21:18.356834+00:00,2019-01-08 17:21:07.023743+00:00,2019-01-08 17:21:07.026785+00:00,,
+187,NullPointer exception while joining a game,"The app crashed while joining a game.
+Look attachments for error.",,,,denniss2,Dennis Suermann,artemb,Artem Burchanow,Done,Important,High,Bug,True,1,,,[],0,2019-01-07 14:26:51.578398+00:00,2019-01-19 16:36:23.396796+00:00,2019-01-19 16:36:23.399796+00:00,,
+188,Chat scrolled to top when a new Message occures,The chats does not scroll with new messages,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Minor,Low,Bug,True,0,,,[],0,2019-01-07 15:37:51.668818+00:00,2019-01-18 17:40:27.734896+00:00,2019-01-18 17:40:27.737793+00:00,,
+189,NullPointer in updatePlayerHand,Error occures in game when the updatePlayHand function gets called.,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-07 15:51:20.934529+00:00,2019-01-09 16:59:16.763577+00:00,2019-01-09 16:59:16.766585+00:00,,
+190,Pause screen displayes not properly,"When the game gets paused, the screen gets not displayed properly.",,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Low,Bug,True,0,,,[],0,2019-01-07 15:53:16.956198+00:00,2019-01-07 19:46:07.621988+00:00,,,
+191,Field does not get updated,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-07 17:52:06.314716+00:00,2019-01-07 19:49:16.391877+00:00,,,
+192,Maybe score of players isn´t displayed correctly (Specator Desktop),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-07 17:57:11.742156+00:00,2019-01-19 20:30:31.770323+00:00,2019-01-19 20:30:31.773240+00:00,,
+193,Gitlab Ci/CD mit multiproject maven Projekt,"Die Pipeline schließt nie ab, da der Build immer hängen, als auf ""Stuck"", bleibt.
+Außerdem wie kann man verschiedene Systeme wie Gradle und mMven in einer Pipeline zusammenschließen?",,,,gitlab-de7b019babce4f29a3dd849b19716528,GitLab,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,"['gitlab', 'https://git.cs.upb.de/swtpra1819/swtpra04/issues/1']",,[],0,2019-01-07 18:36:58.925209+00:00,2019-01-21 13:25:36.153628+00:00,2019-01-21 13:25:36.156633+00:00,,
+194,AI move is not alway valid,The AI move is not alway valid on server side,,,,lgehring,Lukas Gehring,lgehring,Lukas Gehring,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-07 23:02:30.951393+00:00,2019-01-08 10:37:09.348499+00:00,2019-01-08 10:37:09.351596+00:00,,
+195,Catch disconnect on AI,"Catch the error, if server closes connection.",,,,lgehring,Lukas Gehring,lgehring,Lukas Gehring,Done,Normal,Low,Bug,True,0,,,[],0,2019-01-07 23:04:01.795274+00:00,2019-01-25 17:42:56.939268+00:00,2019-01-25 17:42:56.942321+00:00,,
+196,Config open and automatic assignment to game by server,,,,,waizy,Mohness Waizy,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-08 10:32:35.885751+00:00,2019-01-12 15:25:26.022615+00:00,2019-01-12 15:25:26.025506+00:00,,
+197,Presenter does not check if Activity is active,,,,,denniss2,Dennis Suermann,,,Rejected,Minor,Low,Bug,True,0,,,[],0,2019-01-08 10:38:23.112192+00:00,2019-01-24 08:20:15.893749+00:00,2019-01-24 08:20:15.896880+00:00,,
+198,Cyclelist error while removing Elements,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-08 10:46:04.742272+00:00,2019-01-16 10:34:41.503851+00:00,2019-01-16 10:34:41.506836+00:00,,
+199,Clock works to fast,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Normal,Normal,Bug,True,0,,,[98],0,2019-01-08 10:48:00.493669+00:00,2019-01-08 10:50:21.227154+00:00,2019-01-08 10:50:21.230244+00:00,,
+200,PlayTiles sends CurrentPlayer before visualisation time,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,High,Bug,True,0,,,[98],0,2019-01-08 10:48:48.203168+00:00,2019-01-08 10:53:20.816810+00:00,2019-01-08 10:53:20.819839+00:00,,
+201,Player.HasTiles(tiles) always false,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,High,Bug,True,0,,,[98],0,2019-01-08 10:49:19.768380+00:00,2019-01-08 10:52:22.082867+00:00,2019-01-08 10:52:22.085762+00:00,,
+202,GameId is always set to -1,,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Important,High,Bug,True,0,,,[98],0,2019-01-08 10:49:45.391002+00:00,2019-01-08 10:51:56.349516+00:00,2019-01-08 10:51:56.352516+00:00,,
+203,GUI: Edit configuration does not work,"""Standard"" config is still used / Error is thrown",,,,bluk,Lukas Boschanski,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[98],0,2019-01-08 10:56:17.197846+00:00,2019-01-09 14:12:00.138972+00:00,2019-01-09 14:11:40.441427+00:00,,
+204,Dekstop field grid not correct,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Important,High,Bug,True,0,,,[],0,2019-01-08 12:50:47.419332+00:00,2019-01-09 12:18:15.437586+00:00,2019-01-09 12:18:15.445441+00:00,,
+205,Desktop field not infinite,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-08 12:51:06.542550+00:00,2019-01-09 12:18:02.973817+00:00,2019-01-09 12:18:02.976896+00:00,,
+206,Gui Errors,"1) Beim erstellen eines Spieles per Config ist bei ""Konsequenz bei abgelaufener Zeit"" mit RadioButton auf Punktabzug das Inputfeld nicht veränderbar !
+2) Bei Regelwidriger Spielzug kann das Punktabzug nur Positiv und nicht Negativ sein( Und dieser sollte standardmäßig negativ sein)
+3) Visualisierungszeit = 0 Todo ? Bedenkzeit = 0 Todo ?
+4) Man kann Spiele mit negativen Werten bei ""Häufigkeit der Spielsteine "" trotzdem starten (Werte können z.B mit StrgC reinkopiert werden)",,,,bluk,Lukas Boschanski,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[39],0,2019-01-08 15:19:56.113886+00:00,2019-01-21 17:33:57.259089+00:00,2019-01-21 17:33:57.261971+00:00,,
+207,AI don't react to the winner message,"If a game is over, the AI doesn't react to message 407 (Winner)",,,,lgehring,Lukas Gehring,lgehring,Lukas Gehring,Done,Minor,Normal,Bug,True,0,,,[],0,2019-01-08 18:26:16.631850+00:00,2019-01-09 14:06:39.730051+00:00,2019-01-09 14:06:39.732898+00:00,,
+208,Lobby isn´t loading games (Android),,,,,Steffen,Steffen Sassalla,waizy,Mohness Waizy,Done,Critical,High,Bug,True,0,,,[],0,2019-01-08 18:27:12.494973+00:00,2019-01-09 08:13:42.598401+00:00,2019-01-09 08:13:42.601365+00:00,,
+210,Swap tiles is always invalid,"If the KI tries to swap tiles, the server responds with invalid swap message",,,,lgehring,Lukas Gehring,bluk,Lukas Boschanski,Done,Normal,High,Bug,True,0,,,[],0,2019-01-08 19:30:31.750139+00:00,2019-01-08 19:51:46.782185+00:00,2019-01-08 19:51:46.786290+00:00,,
+211,Vilidate move skipped tile,,,,,denniss2,Dennis Suermann,lgehring,Lukas Gehring,Done,Critical,High,Bug,True,0,,,[],0,2019-01-09 11:29:17.200323+00:00,2019-01-20 10:33:48.299059+00:00,2019-01-20 10:33:48.301965+00:00,,
+212,Gui player add to game,"Adding a player to the game using ""Spieler hinzufügen"" and often pressing ""Spieler Laden"" does result in an exploding VBox.",,,,bluk,Lukas Boschanski,dahmt,Tim Dahm,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-09 13:49:11.473961+00:00,2019-01-14 14:42:15.143768+00:00,2019-01-14 14:42:15.146707+00:00,,
+213,Can not remove players from Game with GUI,"1 - Lobby bug
+2 - Gui bug 
+
+""Exception in thread ""Thread-6"" java.lang.RuntimeException: wrong usage, not correct
+	at org.GameLogic.Handler.Lobby.run(Lobby.java:190)
+	at java.lang.Thread.run(Thread.java:748)
+""",,,,bluk,Lukas Boschanski,,,Rejected,Normal,Normal,Bug,True,0,,,[],0,2019-01-09 14:09:31.138710+00:00,2019-01-10 08:36:46.942417+00:00,2019-01-10 08:36:46.945404+00:00,,
+215,Bag update is not correct,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-09 14:22:21.673796+00:00,2019-01-09 14:22:27.231324+00:00,2019-01-09 14:22:27.234444+00:00,,
+216,It is not possible to reconnect to server when socket is closed before (normal disconnect).,,,,,Steffen,Steffen Sassalla,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-09 19:00:12.988989+00:00,2019-01-10 16:24:52.618611+00:00,2019-01-10 16:24:52.621588+00:00,,
+217,No players when joining started game,"The Fieldcontroller cannot get the Players in game within a started game.
+The players have to get passed within the Lobbywrapper class. The Client list is in the Game class.",,,,denniss2,Dennis Suermann,waizy,Mohness Waizy,Done,Important,High,Bug,True,0,,,[],0,2019-01-14 12:28:59.810197+00:00,2019-01-15 17:24:13.691712+00:00,2019-01-15 17:24:13.694641+00:00,,
+218,NotAllowed bug,"Throws NotAllowed exception, when trying to spectate a started game",,,,artemb,Artem Burchanow,bluk,Lukas Boschanski,Done,Critical,High,Bug,True,0,,,[],0,2019-01-15 10:00:15.274862+00:00,2019-01-15 10:03:39.925738+00:00,2019-01-15 10:03:39.928581+00:00,,
+219,Winner message repeats etc.,,,,,linusjun,Linus Jungemann,bluk,Lukas Boschanski,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-15 10:28:39.425593+00:00,2019-01-17 10:01:35.340360+00:00,2019-01-17 10:01:35.343380+00:00,,
+221,Assigned Players in Server,Players assigned to a game are not shown in the game panel,,,,artemb,Artem Burchanow,linusjun,Linus Jungemann,Rejected,Normal,Normal,Bug,True,0,,,[39],0,2019-01-15 13:47:02.655072+00:00,2019-01-17 14:14:56.114443+00:00,2019-01-17 14:14:56.117341+00:00,,
+222,AC Show games faster in lobby,,,,,waizy,Mohness Waizy,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-15 14:32:40.294186+00:00,2019-01-20 23:01:40.471841+00:00,2019-01-20 23:01:40.474723+00:00,,
+223,Total time is wrong,Total Time starts at 3 minutes and 21 seconds.,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[31],0,2019-01-15 15:29:36.388591+00:00,2019-01-19 15:39:56.196220+00:00,2019-01-19 15:39:56.199135+00:00,,
+224,Finished Game do not move to closed games,Server,,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[39],0,2019-01-15 15:50:46.881445+00:00,2019-01-21 18:05:37.518074+00:00,2019-01-21 18:05:37.521279+00:00,,
+225,Excpetion when game is finished (Server),Have a look at attachment,,,,Steffen,Steffen Sassalla,bluk,Lukas Boschanski,Done,Critical,High,Bug,True,1,,,[31],0,2019-01-15 15:59:46.188853+00:00,2019-01-17 10:01:39.249162+00:00,2019-01-17 10:01:39.252174+00:00,,
+226,App closes when game is finished (Android),See attachment (Exception),,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Critical,High,Bug,True,1,,,[],0,2019-01-15 16:12:59.353582+00:00,2019-01-25 16:00:40.817536+00:00,2019-01-25 16:00:40.820605+00:00,,
+227,Turn time and visualization time isn´t set correctly (Server),- Please check the whole Config!,,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Important,High,Bug,True,0,,,"[39, 31]",0,2019-01-15 16:17:34.069874+00:00,2019-01-16 18:07:41.717330+00:00,2019-01-16 18:07:41.720404+00:00,,
+228,"When game is finished, gamestate is incorrect and should be finished (Server)",,,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-15 16:20:35.153581+00:00,2019-01-21 17:16:06.570334+00:00,2019-01-21 17:16:06.573253+00:00,,
+229,Config could not be loaded,"Steps to reproduce error:
+1.) Load saved config, do not start game
+2.) Close Window and press ""Spiel hinzufügen"" again
+3.) Click ""Neues Spiel erstellen"" and change config data
+4.) Close Window again
+5.) There is no possiblity to add a game anymore",,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-15 16:27:39.503020+00:00,2019-01-17 16:04:25.304774+00:00,2019-01-17 16:04:25.307783+00:00,,
+230,Client/Player is displayed multiple times in lobby,"When Spectator is joining and leaving game, client or player will be displayed twice.
+See attachment.",,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,1,,,[39],0,2019-01-15 16:32:09.254578+00:00,2019-01-21 17:46:17.848664+00:00,2019-01-21 17:46:17.851615+00:00,,
+231,"When server forces spectator to join, exception will be thrown (Android)",Have a look at attachment,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Critical,High,Bug,True,1,,,[],0,2019-01-15 16:34:32.080840+00:00,2019-01-19 16:29:58.405076+00:00,2019-01-19 16:29:58.407991+00:00,,
+232,"When trying to join as a player, exception will be thrown",,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Critical,High,Bug,True,0,,,[31],0,2019-01-15 16:36:04.235142+00:00,2019-01-19 16:18:50.421717+00:00,2019-01-19 16:18:50.424754+00:00,,
+233,Spectator not removed from Lobby screen when spectating game,,,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-15 16:40:54.988659+00:00,2019-01-22 12:16:52.207247+00:00,2019-01-22 12:16:52.210358+00:00,,
+234,Setting sequence do not work,See attachment,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-15 16:43:33.987813+00:00,2019-01-21 18:48:58.292317+00:00,2019-01-21 18:48:58.295281+00:00,,
+235,"When game is finished, winner and amount of player aren´t showed correclty",See attachment,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-15 16:48:58.578091+00:00,2019-01-22 16:45:32.129989+00:00,2019-01-22 16:45:32.132872+00:00,,
+236,When trying to load config file that´s not json exception will be thrown,See attachment,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Important,High,Bug,True,1,,,[],0,2019-01-15 17:30:18.049649+00:00,2019-01-17 11:52:23.705808+00:00,2019-01-17 11:52:23.708782+00:00,,
+237,When spectator is forced to specatate game and will be removed in gui exception will be thrown,"See attachment
+Steps to reproduce:
+1.) Add Spectator to Game
+2.) Remove Spectator from Game",,,,Steffen,Steffen Sassalla,linusjun,Linus Jungemann,Rejected,Important,Normal,Bug,True,1,,,[],0,2019-01-15 17:37:03.896598+00:00,2019-01-16 08:31:45.476730+00:00,2019-01-16 08:31:45.479672+00:00,,
+238,Total time is wrong when game paused and resumed,"Adding 1 to hour of game time every time game will be paused and resumed.
+See attachment, paused three times.",,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-15 17:47:50.604864+00:00,2019-01-19 12:38:48.326856+00:00,2019-01-19 12:38:48.329918+00:00,,
+239,When input an empty string in turn time input field exception will be thrown (Server),Have a look at attachment.,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-16 06:02:24.121567+00:00,2019-01-20 13:13:46.033128+00:00,2019-01-20 13:13:46.036075+00:00,,
+240,Remove option to remove a client from a game per gui,,,,,linusjun,Linus Jungemann,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-16 08:36:23.249677+00:00,2019-01-21 18:58:38.295339+00:00,2019-01-21 18:58:38.298255+00:00,,
+241,When game is aborted server response with finish list,,,,,lgehring,Lukas Gehring,bluk,Lukas Boschanski,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-16 09:51:30.970375+00:00,2019-01-16 18:02:40.140049+00:00,2019-01-16 18:02:40.143112+00:00,,
+242,Server sends on GamelistResponse DB,"When the client joins a Game, leaves it afterwards and gets to the Lobby, no new Games are shown.  Even though the Client sends GameListRequests.",,,,waizy,Mohness Waizy,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-16 12:57:29.009190+00:00,2019-01-17 15:15:58.253170+00:00,2019-01-17 15:15:58.256220+00:00,,
+243,Can start a game with zero players on a server,,,,,bluk,Lukas Boschanski,dahmt,Tim Dahm,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-16 18:13:06.678445+00:00,2019-01-21 19:33:32.508624+00:00,2019-01-21 19:33:32.511647+00:00,,
+244,Winner is null in Lobby,"Exception in thread ""Lobby"" java.lang.NullPointerException
+	at org.GameLogic.Handler.Lobby.run(Lobby.java:209)
+	at java.lang.Thread.run(Unknown Source)",,,,dahmt,Tim Dahm,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-16 20:45:02.266383+00:00,2019-01-17 08:44:47.590313+00:00,2019-01-17 08:44:47.593361+00:00,,
+245,Gamestate isn´t shown when joining a game as a specator and game isn´t started (Desktop),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 09:30:13.291209+00:00,2019-01-19 18:35:40.109670+00:00,2019-01-19 18:35:40.112610+00:00,,
+246,"Configuration throws error if textinput is empty, also setting playtime to 1000 does not work","Bei allen Textfeldern: Fall Textfeld leer ist, wird eine exception geworfen
+
+Bedenkzeit = 1000 -> ""Bedenkzeit muss mindestens 100 sein"", aber es ist tausend",,,,bluk,Lukas Boschanski,evahle,Ella Vahle,Done,Minor,Normal,Bug,True,0,,,[98],0,2019-01-17 09:50:32.518792+00:00,2019-01-18 15:22:09.813099+00:00,2019-01-18 15:22:09.816006+00:00,,
+247,Disconnect from Server while game is running,"Exception in thread ""game1"" java.lang.NullPointerException
+	at org.GameLogic.GameManagement.GameManagement.moveToLobby(GameManagement.java:453)
+	at org.GameLogic.Communication.CommunicationHandler.callbackGameFinish(CommunicationHandler.java:353)
+	at org.GameLogic.Handler.GameHandler.requestRemove(GameHandler.java:177)
+	at org.GameLogic.Communication.CommunicationHandler.run(CommunicationHandler.java:159)
+	at java.lang.Thread.run(Thread.java:748)
+{""uniqueId"":417} message 2 clientId
+Exception in thread ""main"" java.lang.NullPointerException
+	at org.GameLogic.GameManagement.GameManagement.route(GameManagement.java:246)
+	at org.GameLogic.GameManagement.GameManagement.main(GameManagement.java:135)
+GamePanelStartedGame@7ff07cde
+Socket for client 0 shutdown..
+
+Exception in thread ""game1"" java.lang.NullPointerException
+	at org.GameLogic.GameManagement.GameManagement.moveToLobby(GameManagement.java:453)
+	at org.GameLogic.Communication.CommunicationHandler.callbackGameFinish(CommunicationHandler.java:353)
+	at org.GameLogic.Handler.GameHandler.requestRemove(GameHandler.java:177)
+	at org.GameLogic.Communication.CommunicationHandler.run(CommunicationHandler.java:159)
+	at java.lang.Thread.run(Thread.java:748)
+{""uniqueId"":417} message 2 clientId
+Exception in thread ""main"" java.lang.NullPointerException
+	at org.GameLogic.GameManagement.GameManagement.route(GameManagement.java:246)
+	at org.GameLogic.GameManagement.GameManagement.main(GameManagement.java:135)
+GamePanelStartedGame@39f4f845",,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 10:05:26.212249+00:00,2019-01-17 10:18:35.322811+00:00,2019-01-17 10:18:35.325726+00:00,,
+248,Game is finished but player do have tiles on hand,Please refresh Tiles on Hand and Bag when getting finished response from server.,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,2,,,[31],0,2019-01-17 10:15:43.576551+00:00,2019-01-20 12:29:09.515545+00:00,2019-01-20 12:29:09.518554+00:00,,
+249,Spectator doesn't get notified when server shutdown,"When the Spectator spectates a game and the Server is terminated the Spectator still sees the game and can return to the Lobby, where all the games are still shown.",,,,evahle,Ella Vahle,denniss2,Dennis Suermann,Rejected,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 10:15:48.007167+00:00,2019-01-21 19:36:30.836909+00:00,2019-01-21 19:36:30.840001+00:00,,
+250,Tile amount in bag missing,The amount of tiles left in the bag needs to be displayed,,,,evahle,Ella Vahle,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 10:16:59.114173+00:00,2019-01-18 21:40:55.009460+00:00,2019-01-18 21:40:55.012369+00:00,,
+251,Time to make move not shown correctly,"In one case the turn time was stuck on one value, the other time it was ridiculously high (see Picture).",,,,evahle,Ella Vahle,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,1,,,[38],0,2019-01-17 10:22:43.264103+00:00,2019-01-20 11:54:02.253762+00:00,2019-01-20 11:54:02.256843+00:00,,
+252,Hand gets not updated properly in android client,,,,,denniss2,Dennis Suermann,artemb,Artem Burchanow,Done,Important,High,Bug,True,0,,,[],0,2019-01-17 12:19:54.748133+00:00,2019-01-20 20:13:41.881216+00:00,2019-01-20 20:13:41.884089+00:00,,
+253,Server needs to save ended game,Spectator can join an ended game and see tiles that are placed on the map,,,,bluk,Lukas Boschanski,bluk,Lukas Boschanski,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 15:23:42.106599+00:00,2019-01-22 10:43:09.867638+00:00,2019-01-22 10:43:09.870606+00:00,,
+254,Input field disabled (Server),"""Konsequenz bei abgelaufener Zeit"" is disabled when open create new game",,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 15:52:30.796456+00:00,2019-01-18 14:44:42.821863+00:00,2019-01-18 14:44:42.824826+00:00,,
+255,Enable possiblity to set time under 1000 milliseconds,,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 15:53:43.778495+00:00,2019-01-18 14:45:40.979081+00:00,2019-01-18 14:45:40.982087+00:00,,
+256,"Enable negative integers in input fields, see description down below","in ""Konsequenzen bei regelwidrigen Spielzug"" and ""Konsequenzen bei abgelaufener Zeit""",,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 15:55:03.071005+00:00,2019-01-18 14:57:28.046516+00:00,2019-01-18 14:57:28.049553+00:00,,
+257,Unable to create game with a special game setting,,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-17 15:57:19.323705+00:00,2019-01-20 19:40:46.099168+00:00,2019-01-20 19:40:46.102033+00:00,,
+258,Show information if client joins ended Game,"--> Gamepanel goes to Ended
+
+--> Specatator wants to join ==> No Game Information are shown",,,,waizy,Mohness Waizy,artemb,Artem Burchanow,Rejected,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 16:04:40.773363+00:00,2019-01-19 16:35:32.086805+00:00,2019-01-19 16:35:32.089866+00:00,,
+259,Wrong Tiles are laied and on players are shown,"--> AIs join Game
+--> Host starts Game
+--> Spectator Jons ==> ERROR",,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 16:09:35.681849+00:00,2019-01-20 21:37:01.194761+00:00,2019-01-20 21:37:01.197638+00:00,,
+260,When two players have the same score at end of the game no winner is shown,,,,,waizy,Mohness Waizy,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-17 16:18:53.960943+00:00,2019-01-20 14:03:26.043988+00:00,2019-01-20 14:03:26.046905+00:00,,
+261,Often KIs will be kicked because of invalid turns,"Steps do reproduce situation:
+1.) Create Game and enbale kick in config
+2.) Let 5 KIs play 
+3.) After some seconds, KI will be kicked because of invalid turn
+
+TurnTime: 1500 milliseconds
+VisualizationTime: 1001 milliseconds",,,,Steffen,Steffen Sassalla,lgehring,Lukas Gehring,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-17 16:24:21.319723+00:00,2019-01-20 11:32:31.269504+00:00,2019-01-20 11:32:31.272440+00:00,,
+262,"When leaving game, delete canvas objects because of ram usage","When playing with more than 7 KIs and many tiles, a very large amount of memory will be used (it's ok).
+After leaving the game, the ram usage will be not set free. Please delete Objects after leaving field.",,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-17 17:09:56.189050+00:00,2019-01-17 21:59:03.622313+00:00,2019-01-17 21:59:03.625220+00:00,,
+263,Player Hand gets not updated properly,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Important,High,Bug,True,0,,,[],0,2019-01-18 10:44:37.317455+00:00,2019-01-18 17:19:09.350290+00:00,2019-01-18 17:19:09.353322+00:00,,
+264,Exception is thrown when game is finished (Android Client),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Rejected,Critical,High,Bug,True,0,,,[],0,2019-01-18 14:29:10.379218+00:00,2019-01-19 17:08:53.101996+00:00,2019-01-19 17:08:53.104935+00:00,,
+265,"Exception in Lobby, see description","1.) Play game and finish game
+2.) Disconnect KI´s (not over GUI)
+3.) Create new game and try to add player to game",,,,Steffen,Steffen Sassalla,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-18 14:33:19.762396+00:00,2019-01-18 18:39:37.234389+00:00,2019-01-18 18:39:37.237346+00:00,,
+266,Display of an ended game is not shown properly,"When joining an ended game, the gamestate is not shown and the total time is running.",,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 14:38:46.631956+00:00,2019-01-25 18:52:01.372907+00:00,2019-01-25 18:52:01.376351+00:00,,
+267,Game can be started with only one player and one spectator,Only GUI will show,,,,Steffen,Steffen Sassalla,dahmt,Tim Dahm,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-18 14:41:29.601574+00:00,2019-01-21 19:33:28.163457+00:00,2019-01-21 19:33:28.167187+00:00,,
+268,Adjust default values,"createGame, createTournament",,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 14:42:58.767396+00:00,2019-01-20 17:34:46.108903+00:00,2019-01-20 17:34:46.111835+00:00,,
+269,Change seconds to miliseconds in tournament gui,,,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 14:58:08.151410+00:00,2019-01-18 15:05:05.379174+00:00,2019-01-18 15:05:05.382107+00:00,,
+270,Exception is thrown when player will be kicked by server,,,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Critical,High,Bug,True,0,,,[],0,2019-01-18 14:58:13.557772+00:00,2019-01-24 12:42:13.763182+00:00,2019-01-24 12:42:13.766335+00:00,,
+271,Turn time is not displayed correctly (Android),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Critical,High,Bug,True,0,,,[],0,2019-01-18 14:59:39.310921+00:00,2019-01-23 20:08:23.716652+00:00,2019-01-23 20:08:23.719730+00:00,,
+272,Bag is not displayed correctly (Android),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Critical,High,Bug,True,0,,,[],0,2019-01-18 15:00:10.411577+00:00,2019-01-20 14:28:54.094946+00:00,2019-01-20 14:28:54.097863+00:00,,
+273,Adjust tournament gui,Add functionality described in product vision,,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 15:02:02.077731+00:00,2019-01-20 19:10:53.532352+00:00,2019-01-20 19:10:53.535356+00:00,,
+274,"When trying to join in a started game, exception will be thrown",,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-18 15:03:02.140262+00:00,2019-01-25 14:25:19.991917+00:00,2019-01-25 14:25:19.994860+00:00,,
+275,"KI cannot do move, see server config in description (KI)","Config:
+1.) Anzahl Farben: 6
+2.) Anzahl Steine: 12
+3.) Steine auf der Hand: 20
+4.) Zeit für einen Zug: 1001
+5.) Visualisierungszeit: 1001
+6.) Bestrafung für falschen Spielzug: keine
+7.) Bestrafung für langsamen Spielzug: keine
+8.) Maximale Spieleranzahl: 10
+
+Logged in with 7 KI's.",,,,Steffen,Steffen Sassalla,lgehring,Lukas Gehring,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 15:24:15.993601+00:00,2019-01-20 11:32:26.878149+00:00,2019-01-20 11:32:26.881072+00:00,,
+276,Config is not showed correctly (Server),Have a look at attachments.,,,,Steffen,Steffen Sassalla,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,2,,,[],0,2019-01-18 15:27:42.595148+00:00,2019-01-20 21:31:45.186108+00:00,2019-01-20 21:31:45.189121+00:00,,
+277,KI should be closed when game is finished or KI is kicked,,,,,Steffen,Steffen Sassalla,lgehring,Lukas Gehring,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 15:37:27.775568+00:00,2019-01-20 11:32:19.864261+00:00,2019-01-20 11:32:19.867272+00:00,,
+278,Config is not showed correctly (Android),refer to ticket #276,,,,Steffen,Steffen Sassalla,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 15:46:44.410805+00:00,2019-01-20 20:57:38.582086+00:00,2019-01-20 20:57:38.585034+00:00,,
+279,Config is not showed correctly (desktop spectator),refer ticket #276,,,,Steffen,Steffen Sassalla,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-18 15:47:04.739968+00:00,2019-01-20 19:19:42.453528+00:00,2019-01-20 19:19:42.456600+00:00,,
+280,Exception will be thrown when android client is in spectator mode and server has config (description) and game starts,see attachment,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Rejected,Normal,Normal,Bug,True,1,,,[],0,2019-01-18 15:51:32.862424+00:00,2019-01-25 17:33:58.047450+00:00,2019-01-25 17:33:58.050707+00:00,,
+281,When joining a running game the spectator doesn't get already played tiles,"Steps to reproduce:
+Start a game with 2 Ai
+Join with Spectator after a while",,,,linusjun,Linus Jungemann,denniss2,Dennis Suermann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-18 18:14:09.067811+00:00,2019-01-21 17:15:51.935577+00:00,2019-01-21 17:15:51.938511+00:00,,
+282,"When game is aborted, winner has to be selected (Server)",,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Critical,High,Bug,True,1,,,[],0,2019-01-19 15:25:23.172410+00:00,2019-01-24 18:36:34.498055+00:00,2019-01-24 18:36:34.501529+00:00,,
+283,Fields for possible moves do not get cleared (Android),"When you select a tile for a move and clear your selections, the possible fields for the move are still marked.",,,,artemb,Artem Burchanow,denniss2,Dennis Suermann,Done,Minor,Low,Bug,True,0,,,[],0,2019-01-19 15:38:07.816204+00:00,2019-01-22 21:04:58.648541+00:00,2019-01-22 21:04:58.651653+00:00,,
+284,GameListResponse does not contain playerlist,,,,,artemb,Artem Burchanow,linusjun,Linus Jungemann,Done,Important,High,Bug,True,0,,,[],0,2019-01-19 20:17:55.094987+00:00,2019-01-20 19:01:26.970274+00:00,2019-01-20 19:01:26.973286+00:00,,
+285,Reset after Spectator leaves game does not work properly,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Important,High,Bug,True,1,,,[],0,2019-01-20 12:36:00.615981+00:00,2019-01-25 18:03:10.696560+00:00,2019-01-25 18:03:10.699597+00:00,,
+286,No toast is shown when the move was valid,,,,,artemb,Artem Burchanow,denniss2,Dennis Suermann,Rejected,Minor,Low,Bug,True,0,,,[],0,2019-01-20 13:15:56.254068+00:00,2019-01-21 13:14:15.876186+00:00,2019-01-21 13:14:15.879183+00:00,,
+287,Exception when the App sleeps while in a game,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-20 13:16:23.247305+00:00,2019-01-24 18:49:42.644976+00:00,2019-01-24 18:49:42.647964+00:00,,
+288,Server sends wrong config to DB,"If you select a Conifiguration with the Server UI, just WorngMovePenalty = 1 und SlowMovePenalty = 1 are sent.
+
+Server sends correkt information(Display is wrong)",,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-20 19:18:42.872322+00:00,2019-01-22 21:32:35.215932+00:00,2019-01-22 21:32:35.218797+00:00,,
+289,Player can not swap one tile,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Important,High,Bug,True,0,,,[],0,2019-01-20 19:55:42.862405+00:00,2019-01-21 16:53:00.664862+00:00,2019-01-21 16:53:00.667755+00:00,,
+290,Config Button under other button,,,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-21 11:49:53.693015+00:00,2019-01-22 07:35:45.266861+00:00,2019-01-22 07:35:45.269873+00:00,,
+291,Cant create game with 2 shapes/ colours,,,,,artemb,Artem Burchanow,evahle,Ella Vahle,Done,Normal,Low,Bug,True,0,,,[],0,2019-01-21 15:45:00.286069+00:00,2019-01-21 17:33:08.373950+00:00,2019-01-21 17:33:08.377236+00:00,,
+292,"When Game is paused, the turn time becomes extremely low",,,,,artemb,Artem Burchanow,Steffen,Steffen Sassalla,Done,Normal,High,Bug,True,0,,,[],0,2019-01-21 16:12:22.649459+00:00,2019-01-24 08:20:55.466104+00:00,2019-01-24 08:20:55.469034+00:00,,
+293,Wrong number of clients in game object,"When joining a started game, the game object, sent by the server, contains 3 players, although there are only 2.",,,,artemb,Artem Burchanow,linusjun,Linus Jungemann,Done,Important,High,Bug,True,0,,,[],0,2019-01-21 17:10:02.346558+00:00,2019-01-22 10:43:33.170827+00:00,2019-01-22 10:43:33.173782+00:00,,
+294,Turn Time can not be higher than 60 sec,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-21 20:10:58.642268+00:00,2019-01-22 18:26:10.814586+00:00,2019-01-22 18:26:10.817521+00:00,,
+295,Keep Android client awake while in a game,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Low,Bug,True,0,,,[],0,2019-01-21 20:18:12.702549+00:00,2019-01-21 20:18:18.260180+00:00,2019-01-21 20:18:18.263063+00:00,,
+296,Cannot create multiple games,,,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Important,High,Bug,True,0,,,[],0,2019-01-21 21:35:16.665925+00:00,2019-01-22 11:33:56.143890+00:00,2019-01-22 11:33:56.146849+00:00,,
+297,Save Ip when logged in,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-22 11:24:55.457150+00:00,2019-01-22 14:31:00.766663+00:00,2019-01-22 14:31:00.769546+00:00,,
+298,Player number in game is not correct,,,,,denniss2,Dennis Suermann,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-22 11:25:16.617972+00:00,2019-01-22 17:58:41.370579+00:00,2019-01-22 17:58:41.373512+00:00,,
+299,Android crashes when zooming without start,,,,,denniss2,Dennis Suermann,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-22 11:28:48.979753+00:00,2019-01-22 14:30:56.371877+00:00,2019-01-22 14:30:56.374832+00:00,,
+300,In the beginning of a game the bag counter for the players is 0,,,,,waizy,Mohness Waizy,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-22 11:49:35.358984+00:00,2019-01-23 20:54:21.154240+00:00,2019-01-23 20:54:21.157227+00:00,,
+301,Info Tab at server shows wrong Config,"{""gameId"":2,""gameName"":""test3"",""gameState"":""NOT_STARTED"",""isTournament"":false,""players"":[],""config"":{""colorShapeCount"":6,""tileCount"":1,""maxHandTiles"":6,""turnTime"":30000,""timeVisualization"":10000,""wrongMove"":""POINT_LOSS"",""wrongMovePenalty"":6,""slowMove"":""POINT_LOSS"",""slowMovePenalty"":5,""maxPlayerNumber"":4}}",,,,linusjun,Linus Jungemann,waizy,Mohness Waizy,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-22 13:02:53.900745+00:00,2019-01-24 10:42:56.687317+00:00,2019-01-24 10:42:56.690386+00:00,,
+302,Check MaxPlayers in AssignPlayers,,,,,evahle,Ella Vahle,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-22 14:06:53.526702+00:00,2019-01-22 17:36:34.306067+00:00,2019-01-22 17:36:34.309057+00:00,,
+303,"When game is paused and you abort game, exception is thrown",,,,,Steffen,Steffen Sassalla,bluk,Lukas Boschanski,Rejected,Normal,Normal,Bug,True,1,,,[98],0,2019-01-22 16:10:13.092106+00:00,2019-01-24 15:45:47.371772+00:00,2019-01-24 15:45:34.601499+00:00,,
+304,Make button to add Client in Server smaller,"Decrease size of ""Client hinzufügen"" Button or long names aren't displayed fully.",,,,linusjun,Linus Jungemann,evahle,Ella Vahle,Done,Normal,Normal,Improvement,True,0,,,[],0,2019-01-22 17:32:11.899302+00:00,2019-01-22 20:18:18.917826+00:00,2019-01-22 20:18:18.920817+00:00,,
+305,"Every time server is started, a started game is displayed",,,,,Steffen,Steffen Sassalla,evahle,Ella Vahle,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-22 18:27:56.737725+00:00,2019-01-23 10:52:12.592676+00:00,2019-01-23 10:52:12.595558+00:00,,
+306,Receiving a GameJoinRequest when sending a SpectatorJoinrequest,,,,,artemb,Artem Burchanow,linusjun,Linus Jungemann,Done,Normal,High,Bug,True,0,,,[],0,2019-01-23 20:28:44.939827+00:00,2019-01-24 09:28:08.979292+00:00,2019-01-24 09:28:08.982237+00:00,,
+307,"When closing socket connection in android or desktop, exception in server will be thrown",- When exception is thrown a reconnect is not possible!,,,,Steffen,Steffen Sassalla,linusjun,Linus Jungemann,Done,Critical,High,Bug,True,1,,,[],0,2019-01-24 07:56:08.903693+00:00,2019-01-24 09:27:58.678278+00:00,2019-01-24 09:27:58.681121+00:00,,
+308,"When android client is forced to join a game and wants to leave, exception is thrown","1.) Server forces android client to join game
+2.) Android changes view from lobby to game
+3.) When android wants to leave game after, exception will be thrown and app will be closed",,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Critical,Normal,Bug,True,1,,,[],0,2019-01-24 08:01:23.816503+00:00,2019-01-24 12:42:01.108915+00:00,2019-01-24 12:42:01.112191+00:00,,
+309,"When Desktop is forced to join a game and wants to leave, no reaction of leave button","1.) Create game on server and connect desktop spectator to server
+2.) Move Spectator to game, do not start game
+3.) Press button to leave in desktop spectator, there is no movement back to lobby",,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-24 08:04:30.518699+00:00,2019-01-24 09:32:36.188186+00:00,2019-01-24 09:32:36.191113+00:00,,
+310,It is not possible to spectate a game with android client,"1.) Android clients will always connect as player to server.
+2.) When android client wants to spectate a game, SpecatorJoinRequest will be send, but android client is asked to play tiles when game is started!",,,,Steffen,Steffen Sassalla,linusjun,Linus Jungemann,Done,Critical,High,Bug,True,0,,,[],0,2019-01-24 08:14:03.036913+00:00,2019-01-24 09:27:45.160525+00:00,2019-01-24 09:27:45.163657+00:00,,
+311,It´s not possible to connect to server with hostname (Desktop),,,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Rejected,Critical,High,Bug,True,0,,,[],0,2019-01-24 11:29:48.321162+00:00,2019-01-24 11:51:05.892593+00:00,2019-01-24 11:51:05.895544+00:00,,
+312,"When game is created an player join, if one player leaves the other player will be kicked (Server)","1.) Create game, do not start game.
+2.) Join game with two players.
+3.) Leave with one player. Then the other player will be kicked.
+
+Created by Steffen.",,,,waizy,Mohness Waizy,bluk,Lukas Boschanski,Rejected,Critical,High,Bug,True,0,,,[],0,2019-01-24 16:53:42.704266+00:00,2019-01-25 18:51:27.129183+00:00,2019-01-25 18:51:27.132831+00:00,,
+313,Winner isn´t shown in finished game acitivity (Android),,,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-24 16:57:18.300208+00:00,2019-01-25 16:00:34.026324+00:00,2019-01-25 16:00:34.029556+00:00,,
+314,When player is kicked app is closed (Android),,,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Critical,High,Bug,True,0,,,[],0,2019-01-24 16:58:26.296553+00:00,2019-01-24 18:28:04.668217+00:00,2019-01-24 18:28:04.671165+00:00,,
+315,When joining a game as spectator and leaving game after it´s not possible to join game as a player,"1.) Create game.
+2.) Do not start game.
+3.) Join as spectator.
+4.) Leave game.
+5.) Join game as player. You will get message response you are not a player.",,,,waizy,Mohness Waizy,linusjun,Linus Jungemann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-24 17:01:13.331161+00:00,2019-01-24 18:35:18.524944+00:00,2019-01-24 18:35:09.158079+00:00,,
+316,"When one other player in game is kicked, app will be closed (Android)","1.) Join game.
+2.) Join another player.
+3.) Leave with one player, Exception is thrown, see attachment.",,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Critical,High,Bug,True,1,,,[],0,2019-01-24 17:21:39.962133+00:00,2019-01-25 12:58:49.456473+00:00,2019-01-25 12:58:49.459458+00:00,,
+317,Chat does not work in player mode (Android),,,,,waizy,Mohness Waizy,denniss2,Dennis Suermann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-24 17:43:33.695421+00:00,2019-01-25 16:58:05.186564+00:00,2019-01-25 16:58:05.193233+00:00,,
+318,Adding a spec. that already joined the game will crash entire Server,,,,,bluk,Lukas Boschanski,evahle,Ella Vahle,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-24 18:37:00.979235+00:00,2019-01-25 18:50:42.687536+00:00,2019-01-25 18:50:42.690599+00:00,,
+319,"Exception, when disconnecting in the lobby (Android)",,,,,artemb,Artem Burchanow,denniss2,Dennis Suermann,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 10:12:49.417279+00:00,2019-01-25 13:06:59.694800+00:00,2019-01-25 13:06:59.697834+00:00,,
+320,Change Window to template window when trying to exit game (Desktop),,,,,Steffen,Steffen Sassalla,denniss2,Dennis Suermann,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-25 10:26:52.329468+00:00,2019-01-25 14:57:37.700119+00:00,2019-01-25 14:57:37.707971+00:00,,
+321,"When joining finished game, game total time is counted (Desktop)",,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,0,,,[],0,2019-01-25 10:27:28.127462+00:00,2019-01-25 13:27:21.176786+00:00,2019-01-25 13:27:21.179745+00:00,,
+322,When joining a fisnished game exception will be thrown (Desktop),,,,,Steffen,Steffen Sassalla,artemb,Artem Burchanow,Done,Important,Normal,Bug,True,1,,,[],0,2019-01-25 10:30:39.879797+00:00,2019-01-25 13:27:23.641074+00:00,2019-01-25 13:27:23.644057+00:00,,
+323,Games in the server lobby are not moved properly,"1. Ended games do not get moved to 'Beendet'
+2. Started Games do not get deleted from 'Wartend'",,,,artemb,Artem Burchanow,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 10:32:35.984901+00:00,2019-01-25 17:47:51.584791+00:00,2019-01-25 17:47:51.588033+00:00,,
+324,Spectator can be choosen as winner when game is gets abborted,,,,,artemb,Artem Burchanow,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 10:55:01.486525+00:00,2019-01-25 18:50:40.518574+00:00,2019-01-25 18:50:40.521461+00:00,,
+325,Can't start KI second time on same server,"When a ki is started on Server and then stopped, the ki can't connect again, probably doesn't get connect accept back (see Picture)",,,,evahle,Ella Vahle,linusjun,Linus Jungemann,Done,Normal,Normal,Bug,True,1,,,[],0,2019-01-25 11:51:25.973571+00:00,2019-01-25 17:34:48.761090+00:00,2019-01-25 17:34:48.764151+00:00,,
+326,When creating a tournament with the server GUI throws Nullpointer,"--> Connect one Player to Server
+--> Press create tournament
+--> load players throws Exception",,,,waizy,Mohness Waizy,linusjun,Linus Jungemann,Rejected,Important,High,Bug,True,0,,,[],0,2019-01-25 12:36:42.668490+00:00,2019-01-25 16:58:23.093621+00:00,2019-01-25 16:58:23.096697+00:00,,
+329,Exception when game is abborted,,,,,artemb,Artem Burchanow,evahle,Ella Vahle,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 13:15:10.176944+00:00,2019-01-25 18:50:38.763418+00:00,2019-01-25 18:50:38.766358+00:00,,
+330,Game layout of android client is buggy,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 16:16:29.207952+00:00,2019-01-25 18:51:59.274060+00:00,2019-01-25 18:51:59.277212+00:00,,
+331,Errors in desktop client are not displayed,,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Rejected,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 16:17:11.760047+00:00,2019-01-25 17:43:02.806908+00:00,2019-01-25 17:43:02.809913+00:00,,
+332,Status of the game is not shown correctly (Android),,,,,artemb,Artem Burchanow,artemb,Artem Burchanow,Done,Normal,Normal,Bug,True,0,,,[],0,2019-01-25 17:49:38.671939+00:00,2019-01-25 18:02:57.687546+00:00,2019-01-25 18:02:57.690601+00:00,,

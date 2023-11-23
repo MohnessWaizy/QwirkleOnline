@@ -1,0 +1,53 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.root{
+	-fx-font-family: "tahoma";
+}
+
+.button{
+	-fx-font-size: 12;
+	-fx-background-color: #C2C5C7;
+}
+
+.button:hover{
+	-fx-background-color: #8C9195;
+}
+
+.bottomBar{
+	-fx-background-color: #6B7074;
+}
+ 
+.button{
+	-fx-font-size: 12;
+	-fx-background-color:#C2C5C7;
+	-fx-text-fill: #6b7074;
+}
+.anchorPane{
+	-fx-background-color: #f4f4f4;
+	-fx-text-fill: #C2C5C7;
+}
+
+.label{
+	-fx-text-fill: 	#f1ffff;
+}
+
+
+.titledPane{
+	-fx-background-color: #6B7074;
+}
+
+
+.textField{
+	-fx-focus-color: transparent;
+}
+
+#textField_shapes{
+	-fx-focus-color: transparent;
+}
+
+#pane_bottomBar{
+	-fx-background-color: #46494c;
+}
+
+#pane_mainPane{
+	-fx-background-color: #f4f4f4;
+}

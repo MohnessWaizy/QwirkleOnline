@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ImageLoader.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (24.01.2019 07:03:58)</a> &gt; <a href="../../index.html" class="el_group">DesktopLogic</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">ImageLoader.java</span></div><h1>ImageLoader.java</h1><pre class="source lang-java linenums">package model;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.zip.ZipInputStream;
+
+import javax.imageio.ImageIO;
+
+import main.App;
+
+
+/**
+ * The class that loads the Images for the Game from a zip file
+ * 
+ * @author Dennis
+ *
+ */
+public class ImageLoader {
+
+	private BufferedImage[][] images;
+	private static int[][] colorMapping;
+
+	/**
+	 * Konstruktor for the ImageLoader class
+	 * In which all images get loaded
+	 * 
+	 * @param url the url from the zip file 
+	 */
+<span class="fc" id="L33">	public ImageLoader(String url) {</span>
+<span class="fc" id="L34">		colorMapping = makeColor();</span>
+<span class="fc" id="L35">		images = loadToColor(colorMapping, url);</span>
+<span class="fc" id="L36">	}</span>
+
+	/**
+	 * Getter for the Buffered Image Array
+	 * BufferedImage[indexOfColor][indexOfShape] 
+	 * 
+	 * @return BufferedImage[][]
+	 */
+	public BufferedImage[][] getImages() {
+<span class="fc" id="L45">		return this.images;</span>
+	}
+
+	
+	/**
+	 * Loads the Images to the Colored Images
+	 * 
+	 * @param colorMapping
+	 * @return BufferedImage[][] The Colorised Images
+	 */
+	private BufferedImage[][] loadToColor(int[][] colorMapping, String url) {
+
+		try {
+<span class="fc" id="L58">			BufferedImage[] img = loadImages(url);</span>
+<span class="fc" id="L59">			BufferedImage[][] colorImages = new BufferedImage[12][12];</span>
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">			for (int i = 0; i &lt; 12; i++) {</span>
+<span class="fc" id="L62">				int r = colorMapping[i][0];</span>
+<span class="fc" id="L63">				int g = colorMapping[i][1];</span>
+<span class="fc" id="L64">				int b = colorMapping[i][2];</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">				for (int j = 0; j &lt; 12; j++) {</span>
+<span class="fc" id="L66">					colorImages[i][j] = colorTile(img[j], r, g, b);</span>
+				}
+			}
+<span class="fc" id="L69">			return colorImages;</span>
+<span class="fc" id="L70">		} catch (IOException e) {</span>
+<span class="fc" id="L71">			return null;</span>
+		} 
+
+	}
+
+	/**
+	 * Loads the images and checks if there are 12 images inside the File
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private BufferedImage[] loadImages(String url) throws IOException {
+<span class="fc" id="L84">		ArrayList&lt;BufferedImage&gt; textures = loadZip(</span>
+<span class="fc" id="L85">				 App.class.getClassLoader().getResourceAsStream(url));</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		if (textures.size() == 12) {</span>
+<span class="fc" id="L87">			return textures.toArray(new BufferedImage[12]);</span>
+		} else {
+<span class="fc" id="L89">			throw new IOException(&quot;There are more or less than 12 pictures&quot;);</span>
+		}
+
+	}
+
+	
+	/**
+	 * Loads the ZipFile and Returns a ArrayList of Buffered Images
+	 * 
+	 * @param Input Stream file
+	 * @return ArrayList&lt;BufferedImage&gt; The Images inside of the zip
+	 * @throws IOException
+	 */
+	private ArrayList&lt;BufferedImage&gt; loadZip(InputStream file) throws IOException {
+<span class="fc" id="L103">		ZipInputStream zip = new ZipInputStream(file);</span>
+
+<span class="fc" id="L105">			ArrayList&lt;BufferedImage&gt; textures = new ArrayList&lt;BufferedImage&gt;();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">			while (zip.getNextEntry() != null) {</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">				if (zip.available() &gt; 0) {</span>
+<span class="fc" id="L108">					textures.add(convertToRgb(ImageIO.read(zip)));</span>
+				}
+			}
+
+<span class="fc" id="L112">			return textures;</span>
+		
+	}
+
+	/**
+	 * Converts a BufferedImage to a Rgb BufferedImage
+	 * 
+	 * @param BufferedImage img
+	 * @return BufferedImage
+	 */
+	private BufferedImage convertToRgb(BufferedImage img) {
+<span class="fc" id="L123">		BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);</span>
+<span class="fc" id="L124">		newImg.getGraphics().drawImage(img, 0, 0, null);</span>
+
+<span class="fc" id="L126">		return newImg;</span>
+	}
+
+	
+	/**
+	 * Colors the given BufferedImage with the RGB value
+	 * 
+	 * @param img
+	 * @param R Red Value
+	 * @param G Yellow Value
+	 * @param B Blue Value
+	 * @return
+	 */
+	private BufferedImage colorTile(BufferedImage img, int R, int G, int B) {
+<span class="fc" id="L140">		BufferedImage newImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);</span>
+
+<span class="fc" id="L142">		int width = img.getWidth();</span>
+<span class="fc" id="L143">		int height = img.getHeight();</span>
+
+<span class="fc" id="L145">		WritableRaster raster = img.getRaster();</span>
+<span class="fc" id="L146">		WritableRaster raster2 = newImage.getRaster();</span>
+
+<span class="fc" id="L148">		int[] color = { R, G, B, 255 };</span>
+
+<span class="fc bfc" id="L150" title="All 2 branches covered.">		for (int x = 0; x &lt; width; x++) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">			for (int y = 0; y &lt; height; y++) {</span>
+
+<span class="fc" id="L153">				int[] pixels = raster.getPixel(x, y, new int[4]);</span>
+<span class="pc bpc" id="L154" title="2 of 6 branches missed.">				if (pixels[0] != 255 || pixels[1] != 255 || pixels[2] != 255) {</span>
+<span class="fc" id="L155">					raster2.setPixel(x, y, color);</span>
+<span class="fc" id="L156">				} else {</span>
+<span class="fc" id="L157">					raster2.setPixel(x, y, pixels);</span>
+				}
+
+			}
+
+		}
+<span class="fc" id="L163">		return newImage;</span>
+
+	}
+
+	/**
+	 * Makes the Color mapping Array
+	 * @return int[][]
+	 */
+	private static int[][] makeColor() {
+<span class="fc" id="L172">		int[][] colors = new int[12][3];</span>
+
+<span class="fc" id="L174">		colors[0][0] = 204;</span>
+<span class="fc" id="L175">		colors[0][1] = 0;</span>
+<span class="fc" id="L176">		colors[0][2] = 0;</span>
+
+<span class="fc" id="L178">		colors[1][0] = 153;</span>
+<span class="fc" id="L179">		colors[1][1] = 102;</span>
+<span class="fc" id="L180">		colors[1][2] = 0;</span>
+
+<span class="fc" id="L182">		colors[2][0] = 204;</span>
+<span class="fc" id="L183">		colors[2][1] = 0;</span>
+<span class="fc" id="L184">		colors[2][2] = 102;</span>
+
+<span class="fc" id="L186">		colors[3][0] = 204;</span>
+<span class="fc" id="L187">		colors[3][1] = 0;</span>
+<span class="fc" id="L188">		colors[3][2] = 204;</span>
+
+<span class="fc" id="L190">		colors[4][0] = 102;</span>
+<span class="fc" id="L191">		colors[4][1] = 0;</span>
+<span class="fc" id="L192">		colors[4][2] = 204;</span>
+
+<span class="fc" id="L194">		colors[5][0] = 178;</span>
+<span class="fc" id="L195">		colors[5][1] = 178;</span>
+<span class="fc" id="L196">		colors[5][2] = 178;</span>
+
+<span class="fc" id="L198">		colors[6][0] = 0;</span>
+<span class="fc" id="L199">		colors[6][1] = 102;</span>
+<span class="fc" id="L200">		colors[6][2] = 204;</span>
+
+<span class="fc" id="L202">		colors[7][0] = 0;</span>
+<span class="fc" id="L203">		colors[7][1] = 153;</span>
+<span class="fc" id="L204">		colors[7][2] = 153;</span>
+
+<span class="fc" id="L206">		colors[8][0] = 0;</span>
+<span class="fc" id="L207">		colors[8][1] = 153;</span>
+<span class="fc" id="L208">		colors[8][2] = 51;</span>
+
+<span class="fc" id="L210">		colors[9][0] = 102;</span>
+<span class="fc" id="L211">		colors[9][1] = 204;</span>
+<span class="fc" id="L212">		colors[9][2] = 0;</span>
+
+<span class="fc" id="L214">		colors[10][0] = 102;</span>
+<span class="fc" id="L215">		colors[10][1] = 51;</span>
+<span class="fc" id="L216">		colors[10][2] = 0;</span>
+
+<span class="fc" id="L218">		colors[11][0] = 204;</span>
+<span class="fc" id="L219">		colors[11][1] = 153;</span>
+<span class="fc" id="L220">		colors[11][2] = 0;</span>
+
+<span class="fc" id="L222">		return colors;</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>Merged (24.01.2019 07:03:58)</div></body></html>
